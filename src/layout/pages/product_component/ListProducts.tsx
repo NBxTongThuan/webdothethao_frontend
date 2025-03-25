@@ -1,30 +1,53 @@
 import { useEffect, useState } from "react";
 import ProductModel from "../../../model/ProductModel";
-import { get4Products } from "../../../api/ProductsAPI";
 import { error } from "console";
 import ProductProps from "./ProductProps";
+import { getAllProducts, getProductsByCategoryIdAndProductName } from "../../../api/ProductsAPI";
+import { Pagination } from "../../../util/Pagination";
 
+interface ListProductInterface {
+    searchKeyword: string;
+    categoryId: number;
+}
 
-const ListProduct: React.FC = () => {
+const ListProduct: React.FC<ListProductInterface> = (props) => {
 
-    const [listProduct,setListProduct] = useState<ProductModel[]>([]);
-    const [loadingData,setLoadingData] = useState(true);
-    const [errorReport,setErrorReport] = useState("");
-    useEffect(()=>{
+    const [listProduct, setListProduct] = useState<ProductModel[]>([]);
+    const [loadingData, setLoadingData] = useState(true);
+    const [errorReport, setErrorReport] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(0);
+
+    useEffect(() => {
         setLoadingData(true);
-        get4Products(0)
-        .then(
-            responeData=>{
-                setListProduct(responeData);
+
+        const fetchData = async () => {
+            try {
+                let response;
+                // console.log(`SearchKeyword:${props.searchKeyword}allo`);
+                if (!props.searchKeyword && props.categoryId === 0) {
+                    response = await getAllProducts(currentPage - 1);
+
+                }
+                else {
+                    response = await getProductsByCategoryIdAndProductName(props.categoryId, props.searchKeyword, currentPage - 1);
+                }
+                setListProduct(response.listProduct);
+                setTotalPage(response.totalPage);
+            } catch (error) {
+                setErrorReport(error + "");
+                alert("Lỗi: " + error);
+            } finally {
                 setLoadingData(false);
             }
-        )
-        .catch(
-            error=>{
-                    setErrorReport(error);
-            }
-        )
-    },[])
+        }
+
+        fetchData();
+    }, [currentPage, props.searchKeyword, props.categoryId]);
+
+    // console.log("ListProduct: ", listProduct);
+
+    const setPage = (page: number) => setCurrentPage(page);
 
     if (loadingData) {
         return (
@@ -48,17 +71,19 @@ const ListProduct: React.FC = () => {
 
     return (
         <div className="container">
-        <div className="row mt-4">
-            {
-                listProduct.map((product) => (
-                    <ProductProps key={product.product_id} product={product} />
-                ))
-            }
+            <div className="row mt-4">
+                {
+                    listProduct.map((product) => (
+                        <ProductProps key={product.product_id} product={product} />
+                    ))
+                }
+            </div>
+            <br>
+            </br>
+            {/* <PhanTrang pageNumber={trangHienTai} tongSoTrang={tongSoTrang} setTrang={setTrang} /> */}
+
+            <Pagination currentPage={currentPage} setPage={setPage} totalPage={totalPage}></Pagination>
         </div>
-        <br>
-        </br>
-        {/* <PhanTrang pageNumber={trangHienTai} tongSoTrang={tongSoTrang} setTrang={setTrang} /> */}
-    </div>
     );
 
 }

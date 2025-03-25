@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ProductModel from "../../../model/ProductModel";
 import ImageModel from "../../../model/ImageModel";
-import get1Image from "../../../api/ImagesAPI";
+
 import { Link } from "react-router-dom";
+import { get1Image } from "../../../api/ImagesAPI";
+import NumberFormat from "../../../util/NumberFormat";
+import { getListReview } from "../../../api/ReviewsAPI";
+import renderRate from "../../../util/Stars";
 
 
 interface ProductPropsInterface {
@@ -15,6 +19,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     const [productImage, setProductImage] = useState<ImageModel | null>(null);
     const [loadingData, setLoadingData] = useState(true);
     const [errorReport, setErrorReport] = useState("");
+    const [productRating, setProductRating] = useState(0);
 
 
     useEffect(() => {
@@ -27,11 +32,33 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
             )
             .catch(
                 error => {
-                    setErrorReport(error);
+                    setErrorReport("lỗi khi tải ảnh sản phẩm: " + error);
                 }
             )
-    }, [])
+    }, []);
 
+    useEffect(() => {
+        getListReview(productId)
+            .then(
+                responseDATA => {
+                    let sumRating = 0;
+                    let countRating = 0;
+                    responseDATA.map((review) => {
+                        sumRating += review.rating;
+                        countRating++;
+                    });
+                    if (countRating > 0) {
+                        setProductRating(sumRating / countRating);
+                    }
+                }
+            )
+            .catch(
+                error => {
+                    setErrorReport("lỗi khi tải đánh giá sản phẩm: " + error);
+                }
+            )
+
+    }, []);
 
     if (loadingData) {
         return (
@@ -56,26 +83,27 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     return (
         <div className="col-md-3 mt-2">
             <div className="card">
-               <Link to={`/productdetail/${productId}`}>
-               {productImage?.data && <img
-                        src={productImage.data}
+                <Link to={`/productdetail/${productId}`}>
+                    {productImage ? <img
+                        src={productImage.data ? productImage.data : "abc"}
+                        alt="product"
                         className="card-img-top"
                         style={{ height: '200px' }}
-                    />}</Link>
+                    /> : <p>Không có ảnh đại diện!</p>}</Link>
                 <div className="card-body">
 
                     <h5 className="card-title">{props.product.product_name}</h5>
                     <p className="card-text">{props.product.description}</p>
                     <div className="price">
                         <span className="discounted-price">
-                            <strong>{props.product.price}</strong>
+                            <strong>{NumberFormat(props.product.price)} VNĐ</strong>
                         </span>
                     </div>
                     <div className="row mt-2" role="group">
                         <div className="col-6">
-                            <a href="#" className="btn btn-secondary btn-block">
-                                <i className="fas fa-heart"></i>
-                            </a>
+                            <p>
+                                {renderRate(productRating)}
+                            </p>
                         </div>
                         <div className="col-6">
                             <button className="btn btn-danger btn-block">
