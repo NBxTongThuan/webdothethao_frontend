@@ -7,7 +7,8 @@ import Footer from './layout/component/footer/Footer';
 import HomePage from './layout/pages/HomePage';
 import ProductDetail from './layout/pages/product/ProductDetail';
 import Login from './layout/pages/user/Login';
-import Register from './layout/pages/Register';
+import Register from './layout/pages/user/Register';
+import ActiveAccount from './layout/pages/user/ActiveAccount';
 
 function App() {
 
@@ -23,6 +24,8 @@ function App() {
           <Route path='/productdetail/:productId' element={<ProductDetail />} ></Route>
           <Route path='/Login' element={<Login />} ></Route>
           <Route path='/Register' element={<Register />} ></Route>
+          <Route path='/Active/:email/:activeCode' element={<ActiveAccount/>}/>
+          
         </Routes>
         <Footer />
       </BrowserRouter>
