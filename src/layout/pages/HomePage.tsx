@@ -18,15 +18,9 @@ const HomePage: React.FC<HomePageInterface> = (props) => {
         categoryIdNumber = 0;
         console.log(error);
     } 
-
-    console.log("HomePage: ", categoryIdNumber);
-
     if(Number.isNaN(categoryIdNumber)){
         categoryIdNumber = 0;
     }
-
-    console.log("HomePage: ", categoryIdNumber);
-
     return (
         <div>
             <Carousel />

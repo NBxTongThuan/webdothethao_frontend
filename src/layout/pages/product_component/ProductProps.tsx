@@ -60,6 +60,8 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
 
     }, []);
 
+    const token = localStorage.getItem('token');
+
     if (loadingData) {
         return (
             <div>
@@ -83,7 +85,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     return (
         <div className="col-md-3 mt-2">
             <div className="card">
-                <Link to={`/productdetail/${productId}`}>
+                  <Link to={token ? `/productdetail/${productId}` : `/Login`} >
                     {productImage ? <img
                         src={productImage.data ? productImage.data : "abc"}
                         alt="product"
