@@ -1,15 +1,57 @@
+
+import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getUserRole } from '../../../util/JwtService';
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         // Handle login logic here
         console.log('username:', username);
         console.log('Password:', password);
+
+        handleLogin();
     };
+
+
+    const handleLogin = async () => {
+        const url = 'http://localhost:8080/api/account/Login';
+        const data = {
+            userName: username,
+            passWord: password
+        }
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            console.log(response);
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('token', data.jwt);
+                console.log(data.jwt);
+                const de = jwtDecode(data.jwt);
+                console.log(de);
+                // navigate('/');
+                console.log(getUserRole());
+                
+            } else {
+                alert('Login failed');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     const containerStyle = {
         backgroundColor: 'white',
         padding: '10px',
@@ -48,7 +90,7 @@ const Login: React.FC = () => {
             <div className='row container mt-3 mb-4 justify-content-end'>
                 <div className='row col-6'> 
                     <div className='col-6'>
-                        <a href='/register'>Register</a>
+                       <Link to='/Register'>Register</Link>
                     </div>
                     <div className='col-6'>
                         <a href='/forgot-password'>Forgot password</a>
