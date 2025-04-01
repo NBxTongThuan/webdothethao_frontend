@@ -83,43 +83,40 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     }
 
     return (
-        <div className="col-md-3 mt-2">
-            <div className="card">
-                  <Link to={token ? `/productdetail/${productId}` : `/Login`} >
-                    {productImage ? <img
-                        src={productImage.data ? productImage.data : "abc"}
-                        alt="product"
-                        className="card-img-top"
-                        style={{ height: '200px' }}
-                    /> : <p>Không có ảnh đại diện!</p>}</Link>
-                <div className="card-body">
-
-                    <h5 className="card-title">{props.product.product_name}</h5>
-                    <p className="card-text">{props.product.description}</p>
-                    <div className="price">
-                        <span className="discounted-price">
-                            <strong>{NumberFormat(props.product.price)} VNĐ</strong>
-                        </span>
-                    </div>
-                    <div className="row mt-2" role="group">
-                        <div className="col-6">
-                            <p>
-                                {renderRate(productRating)}
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <button className="btn btn-danger btn-block">
-                                <i className="fas fa-shopping-cart"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div className="w-full md:w-1/2 p-4">
+        <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-transform transform hover:scale-105">
+          <Link to={token ? `/productdetail/${productId}` : `/Login`}>
+            {productImage ? (
+              <img
+                src={productImage.data || "abc"}
+                alt="product"
+                className="w-full h-72 object-cover"
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-72 bg-gray-200">
+                <p className="text-gray-600">Không có ảnh đại diện!</p>
+              </div>
+            )}
+          </Link>
+          <div className="p-6">
+            <h5 className="text-xl font-semibold text-gray-900 truncate">
+              {props.product.product_name}
+            </h5>
+            <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+              {props.product.description}
+            </p>
+            <div className="mt-4 flex justify-between items-center">
+              <span className="text-2xl font-bold text-red-500">
+                {NumberFormat(props.product.price)} VNĐ
+              </span>
+              <button className="bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition">
+                <i className="fas fa-shopping-cart"></i>
+              </button>
             </div>
-
-            <div className="container mt-3">
-            </div>
-
+            <div className="flex items-center space-x-1 mt-2">{renderRate(productRating)}</div>
+          </div>
         </div>
+      </div>
     );
 };
 

@@ -70,19 +70,17 @@ const ListProduct: React.FC<ListProductInterface> = (props) => {
     }
 
     return (
-        <div className="container">
-            <div className="row mt-4">
-                {
-                    listProduct.map((product) => (
-                        <ProductProps key={product.product_id} product={product} />
-                    ))
-                }
+        <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+            {
+                listProduct.map((product) => (
+                <ProductProps key={product.product_id} product={product} />
+                ))
+            }
             </div>
-            <br>
-            </br>
-            {/* <PhanTrang pageNumber={trangHienTai} tongSoTrang={tongSoTrang} setTrang={setTrang} /> */}
-
-            <Pagination currentPage={currentPage} setPage={setPage} totalPage={totalPage}></Pagination>
+            <div className="mt-6 flex justify-center">
+            <Pagination currentPage={currentPage} setPage={setPage} totalPage={totalPage} />
+            </div>
         </div>
     );
 

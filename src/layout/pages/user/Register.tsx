@@ -167,69 +167,76 @@ const Register: React.FC = () => {
 
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card p-4 rounded">
-                        <h2 className="text-center mb-4">ĐĂNG KÝ</h2>
-                        <form onSubmit={handleSubmit} className='form'>
-                            <div className="form-group mb-3">
-                                <label htmlFor="username">Tên đăng nhập</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="username"
-                                    placeholder="Enter username"
-                                    value={userName}
-                                    onChange={handleUserNameChange}
-                                    required />
-                                <div style={{ color: "red" }}>{errorUserName}</div>
-                            </div>
-                            <div className="form-group mb-3">
-                                <label htmlFor="email">Địa chỉ Email</label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="email"
-                                    placeholder="Enter email"
-                                    onChange={handleEmailChange}
-                                    value={email}
-                                    required />
-                                <div style={{ color: "red" }}>{errorEmail}</div>
-                            </div>
-                            <div className="form-group mb-3">
-                                <label htmlFor="password">Mật khẩu</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="password"
-                                    placeholder="Password"
-                                    onChange={handlePasswordChange}
-                                    value={password}
-                                    required />
-                                <div style={{ color: "red" }}>{errorPassword}</div>
-                            </div>
-                            <div className="form-group mb-3">
-                                <label htmlFor="repassword">Mật khẩu nhập lại</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    id="repassword"
-                                    placeholder="Re-enter Password"
-                                    onChange={handleRePasswordChange}
-                                    value={rePassword}
-                                    required />
-                                <div style={{ color: "red" }}>{errorRePassword}</div>
-                            </div>
-                            <button
-                                type="submit"
-                                className="btn btn-primary w-100">Đăng ký</button>
-                                <div style={{ color: "green" }}>{annouce}</div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-4">ĐĂNG KÝ</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block font-medium">Tên đăng nhập</label>
+            <input
+              type="text"
+              id="username"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Enter username"
+              value={userName}
+              onChange={handleUserNameChange}
+              required
+            />
+            <div className="text-red-500 text-sm">{errorUserName}</div>
+          </div>
+          
+          <div>
+            <label htmlFor="email" className="block font-medium">Địa chỉ Email</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Enter email"
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
+            <div className="text-red-500 text-sm">{errorEmail}</div>
+          </div>
+          
+          <div>
+            <label htmlFor="password" className="block font-medium">Mật khẩu</label>
+            <input
+              type="password"
+              id="password"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
+            />
+            <div className="text-red-500 text-sm">{errorPassword}</div>
+          </div>
+          
+          <div>
+            <label htmlFor="repassword" className="block font-medium">Mật khẩu nhập lại</label>
+            <input
+              type="password"
+              id="repassword"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Re-enter Password"
+              value={rePassword}
+              onChange={handleRePasswordChange}
+              required
+            />
+            <div className="text-red-500 text-sm">{errorRePassword}</div>
+          </div>
+          
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Đăng ký
+          </button>
+          
+          <div className="text-green-600 text-sm">{annouce}</div>
+        </form>
+      </div>
+      
     );
 }
 

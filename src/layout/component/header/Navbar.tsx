@@ -1,5 +1,5 @@
 import { use, useEffect, useState } from "react";
-import { Search } from "react-bootstrap-icons";
+import { Cart, Search } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/CategoriesAPI";
@@ -38,67 +38,60 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
   }, []);
 
+  const CartID = localStorage.getItem('cartID');
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="/">Yousport</a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
+    <nav className="bg-gray-800">
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+      <a className="text-white text-lg font-bold" href="/">Yousport</a>
+      <button className="text-white md:hidden" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="fas fa-bars"></span>
+      </button>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 mx-5 gap-4">
-            <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">Trang chủ</Link>
+      <div className="hidden md:flex items-center space-x-6" id="navbarSupportedContent">
+        <ul className="flex items-center space-x-6">
+        <li>
+          <Link className="text-white hover:text-gray-300" to="/">Trang chủ</Link>
+        </li>
+        <li className="relative group">
+          <a className="text-white hover:text-gray-300 cursor-pointer">Danh mục sản phẩm</a>
+          <ul className="absolute left-0 mt-2 bg-white text-gray-800 shadow-lg rounded hidden group-hover:block">
+          {listCate.map((cate, index) => (
+            <li key={index} className="px-4 py-2 hover:bg-gray-100">
+            <Link to={`/${cate.categories_id}`}>{cate.name}</Link>
             </li>
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Danh mục sản phẩm
-              </a>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown1">
-                {listCate.map((cate, index) => (
-                  <li key={index}>
-                    <Link className="dropdown-item" to={`/${cate.categories_id}`}>{cate.name}</Link>
-                  </li>
-                ))}
-
-              </ul>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Quy định bán hàng</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Liên hệ</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">Giới thiệu</a>
-            </li>
+          ))}
           </ul>
-        </div>
-
-        {/* Tìm kiếm */}
-        <div className="d-flex ms-3">
-          <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()} />
-          <button className="btn btn-outline-light" onClick={onSearchButtonClicked}><Search /></button>
-        </div>
-
-        {/* Biểu tượng giỏ hàng */}
-        <ul className="navbar-nav ms-3">
-          <li className="nav-item">
-            <a className="nav-link" href="#">
-              <i className="fas fa-shopping-cart"></i>
-            </a>
-          </li>
+        </li>
+        <li>
+          <a className="text-white hover:text-gray-300" href="#">Quy định bán hàng</a>
+        </li>
+        <li>
+          <a className="text-white hover:text-gray-300" href="#">Liên hệ</a>
+        </li>
+        <li>
+          <a className="text-white hover:text-gray-300" href="#">Giới thiệu</a>
+        </li>
         </ul>
+      </div>
+
+      {/* Tìm kiếm */}
+      <div className="flex items-center space-x-2">
+        <input className="px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()} />
+        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={onSearchButtonClicked}><Search /></button>
+      </div>
+
+      {/* Biểu tượng giỏ hàng */}
+      <div className="flex items-center space-x-4">
+        <Link className="text-white hover:text-gray-300" to={CartID ? `/Cart/${CartID}` : '/Login'}>
+        <Cart className="w-6 h-6" />
+        </Link>
 
         {/* Biểu tượng đăng nhập */}
-        <ul className="navbar-nav ms-2">
-          <li className="nav-item">
-            <Link className="nav-link" to="/Login">
-              <i className="fas fa-user"></i>
-            </Link>
-          </li>
-        </ul>
+        <Link className="text-white hover:text-gray-300" to="/Login">
+        <i className="fas fa-user"></i>
+        </Link>
+      </div>
       </div>
     </nav>
 

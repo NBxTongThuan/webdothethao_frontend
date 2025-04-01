@@ -21,8 +21,7 @@ export function isHasToken(): boolean {
     return !!token;
 }
 
-export function getUserName() {
-    const token = localStorage.getItem('token');
+export function getUserName(token:string) {
     if(token)
     {
         return jwtDecode(token).sub;

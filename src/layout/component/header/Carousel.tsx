@@ -1,32 +1,35 @@
- import React from "react";
+import { useState } from "react";
 
-const Carousel: React.FC = () => {
+const images = ["slide-web-th8.jpg", "Bannerbongtruyen.png", "Bannerbongtruyen.png"];
+
+export default function Carousel() {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const prevSlide = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    };
+
+    const nextSlide = () => {
+        setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    };
+
     return (
-        <div>
-            <div id="carouselExampleDark" className="carousel carousel-dark slide">
-                <div className="carousel-inner">
-                    {["slide-web-th8.jpg", "Bannerbongtruyen.png", "Bannerbongtruyen.png"].map((image, index) => (
-                        <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`} data-bs-interval="10000">
-                            <img
-                                src={`/images/banner/${image}`}
-                                className="d-block w-100"
-                                style={{ height: "auto", maxHeight: "400px", objectFit: "contain" }}
-                                alt={`Slide ${index + 1}`}
-                            />
-                        </div>
-                    ))}
-                </div>
-                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                    <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Previous</span>
-                </button>
-                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                    <span className="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span className="visually-hidden">Next</span>
-                </button>
+        <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-lg shadow-lg">
+            <div className="flex transition-transform duration-700 ease-in-out" style={{ transform: `translateX(-${currentIndex * 100}%)` }}>
+                {images.map((image, index) => (
+                    <div key={index} className="w-full flex-shrink-0">
+                        <img src={`/images/banner/${image}`} className="w-full h-auto max-h-[300px] object-contain" alt={`Slide ${index + 1}`} />
+                    </div>
+                ))}
             </div>
+
+            {/* Nút điều hướng */}
+            <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-gray-700 p-2 rounded-full text-white hover:bg-gray-900">
+                ❮
+            </button>
+            <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-gray-700 p-2 rounded-full text-white hover:bg-gray-900">
+                ❯
+            </button>
         </div>
     );
-};
-
-export default Carousel;
+}

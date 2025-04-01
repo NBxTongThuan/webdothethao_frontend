@@ -9,6 +9,7 @@ import ProductDetail from './layout/pages/product/ProductDetail';
 import Login from './layout/pages/user/Login';
 import Register from './layout/pages/user/Register';
 import ActiveAccount from './layout/pages/user/ActiveAccount';
+import Cart from './layout/pages/user/Cart';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Route path='/Login' element={<Login />} ></Route>
           <Route path='/Register' element={<Register />} ></Route>
           <Route path='/Active/:email/:activeCode' element={<ActiveAccount/>}/>
+          <Route path='/Cart/:cartID' element={<Cart />}/>
           
         </Routes>
         <Footer />

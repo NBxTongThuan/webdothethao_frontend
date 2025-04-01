@@ -1,9 +1,9 @@
 import ImageModel from "../model/ImageModel";
 import requestAPI from "./RequestApi";
 
-export async function getListImage(imageId: string): Promise<ImageModel[]> {
+export async function getListImage(productId: string): Promise<ImageModel[]> {
 
-    const link: string = `http://localhost:8080/api/images/getListImages?productId=${imageId}`;
+    const link: string = `http://localhost:8080/api/images/getListImages?productId=${productId}`;
 
     const response = await requestAPI(link);
 
@@ -26,9 +26,9 @@ export async function getListImage(imageId: string): Promise<ImageModel[]> {
 }
 
 
-export async function get1Image(imageId: string): Promise<ImageModel | null> {
+export async function get1Image(productId: string): Promise<ImageModel | null> {
 
-    const link: string = `http://localhost:8080/api/images/getFirstImage?productId=${imageId}`;
+    const link: string = `http://localhost:8080/api/images/getFirstImage?productId=${productId}`;
 
     const response = await requestAPI(link);
 

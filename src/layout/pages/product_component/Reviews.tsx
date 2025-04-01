@@ -21,7 +21,7 @@ const Reviews: React.FC<ReviewsPropsInterface> = (props) => {
             .catch( error => {
                 console.log("Lỗi khi tải đánh giá sản phẩm: " + error);
             });
-    }, [[props.productId]]);
+    }, [props.productId]);
 
 
     return (

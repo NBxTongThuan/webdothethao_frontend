@@ -2,7 +2,7 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUserRole } from '../../../util/JwtService';
+import { getCartID } from '../../../api/CartAPI';
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -37,12 +37,17 @@ const Login: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
-                console.log(data.jwt);
-                const de = jwtDecode(data.jwt);
-                console.log(de);
-                // navigate('/');
-                console.log(getUserRole());
-                
+
+                getCartID(username)
+                .then((cartID) => {
+                    localStorage.setItem('cartID', cartID);
+                    console.log(cartID);
+                })
+                    .catch((error) => {
+                        console.error('Error fetching cart ID:', error);
+                    }
+                    );
+                navigate('/');
             } else {
                 alert('Login failed');
             }
@@ -50,6 +55,7 @@ const Login: React.FC = () => {
             console.log(error);
         }
     }
+
 
 
     const containerStyle = {
@@ -60,44 +66,44 @@ const Login: React.FC = () => {
         margin: '0 auto'
     };
     return (
-        <div className="container mt-5 mb-5" style={{ backgroundColor: 'white', padding: '20px', borderRadius: '5px' }}>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="email">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="form-control"
-                        value={username}
-                        onChange={(e) => setUserName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary mt-3">Login</button>
-            </form>
-            <div className='row container mt-3 mb-4 justify-content-end'>
-                <div className='row col-6'> 
-                    <div className='col-6'>
-                       <Link to='/Register'>Register</Link>
-                    </div>
-                    <div className='col-6'>
-                        <a href='/forgot-password'>Forgot password</a>
-                    </div>
-                </div>
-            </div>
+        <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg mb-4">
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block font-medium">Username:</label>
+            <input
+              type="text"
+              id="username"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block font-medium">Password:</label>
+            <input
+              type="password"
+              id="password"
+              className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Login
+          </button>
+        </form>
+        <div className="flex justify-between mt-4 text-sm">
+          <Link to="/Register" className="text-blue-600 hover:underline">Register</Link>
+          <a href="/forgot-password" className="text-blue-600 hover:underline">Forgot password?</a>
         </div>
+      </div>
+      
     );
 };
 

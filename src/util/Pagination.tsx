@@ -45,21 +45,41 @@ export const Pagination: React.FC<PaginationInterface> = (props) => {
 
 
     return (
-        <nav aria-label="..." className="mt-6">
-            <ul className="pagination">
-                <li className="page-item" onClick={() => props.setPage(1)}>
-                    <button className="page-link">Trang Đầu</button>
-                </li>
-                {listPage.map(page => (
-                    <li className={`page-item ${props.currentPage === page ? "active" : ""}`} key={page} onClick={() => props.setPage(page)}>
-                        <button className="page-link">{page}</button>
-                    </li>
-                ))}
-                <li className="page-item" onClick={() => props.totalPage === 0 ? props.setPage(1) : props.setPage(props.totalPage)}>
-                    <button className="page-link">Trang Cuối</button>
-                </li>
-            </ul>
-        </nav>
+        <nav aria-label="Pagination" className="mt-6 flex justify-center">
+    <ul className="flex items-center gap-2">
+        {/* Nút Trang Đầu */}
+        <li>
+            <button 
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                onClick={() => props.setPage(1)}
+            >
+                Trang Đầu
+            </button>
+        </li>
+
+        {/* Các trang */}
+        {listPage.map(page => (
+            <li key={page}>
+                <button 
+                    className={`px-4 py-2 rounded-lg transition ${props.currentPage === page ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
+                    onClick={() => props.setPage(page)}
+                >
+                    {page}
+                </button>
+            </li>
+        ))}
+
+        {/* Nút Trang Cuối */}
+        <li>
+            <button 
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                onClick={() => props.totalPage === 0 ? props.setPage(1) : props.setPage(props.totalPage)}
+            >
+                Trang Cuối
+            </button>
+        </li>
+    </ul>
+</nav>
 
     );
 
