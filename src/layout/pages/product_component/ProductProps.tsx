@@ -83,40 +83,51 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     }
 
     return (
-        <div className="w-full md:w-1/2 p-4">
-        <div className="bg-white shadow-lg rounded-xl overflow-hidden transition-transform transform hover:scale-105">
-          <Link to={token ? `/productdetail/${productId}` : `/Login`}>
-            {productImage ? (
-              <img
-                src={productImage.data || "abc"}
-                alt="product"
-                className="w-full h-72 object-cover"
-              />
-            ) : (
-              <div className="flex items-center justify-center w-full h-72 bg-gray-200">
-                <p className="text-gray-600">Không có ảnh đại diện!</p>
-              </div>
-            )}
-          </Link>
-          <div className="p-6">
-            <h5 className="text-xl font-semibold text-gray-900 truncate">
-              {props.product.product_name}
-            </h5>
-            <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-              {props.product.description}
-            </p>
-            <div className="mt-4 flex justify-between items-center">
-              <span className="text-2xl font-bold text-red-500">
-                {NumberFormat(props.product.price)} VNĐ
-              </span>
-              <button className="bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition">
-                <i className="fas fa-shopping-cart"></i>
-              </button>
+        <div className="h-full">
+            <div className="h-full group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
+                <Link to={token ? `/productdetail/${productId}` : `/Login`} className="block relative overflow-hidden">
+                    {productImage ? (
+                        <div className="relative">
+                            <img
+                                src={productImage.data || "abc"}
+                                alt="product"
+                                className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center w-full h-64 bg-gray-100">
+                            <p className="text-gray-400 font-medium">Không có ảnh đại diện!</p>
+                        </div>
+                    )}
+                </Link>
+                <div className="p-4">
+                    <div className="mb-3">
+                        <h5 className="text-lg font-bold text-gray-900 truncate hover:text-red-500 transition-colors duration-200">
+                            {props.product.product_name}
+                        </h5>
+                        <div className="flex items-center space-x-1 mt-1">
+                            {renderRate(productRating)}
+                        </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
+                        {props.product.description}
+                    </p>
+                    <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-red-500">
+                            {NumberFormat(props.product.price)} VNĐ
+                        </span>
+                        <button 
+                            className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-1 transform hover:scale-105"
+                            aria-label="Add to cart"
+                        >
+                            <i className="fas fa-shopping-cart"></i>
+                            <span className="text-sm">Thêm</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div className="flex items-center space-x-1 mt-2">{renderRate(productRating)}</div>
-          </div>
         </div>
-      </div>
     );
 };
 
