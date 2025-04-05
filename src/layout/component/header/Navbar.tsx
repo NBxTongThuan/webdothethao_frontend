@@ -1,8 +1,9 @@
 import { use, useEffect, useState } from "react";
-import { Cart, Search } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash } from "react-bootstrap-icons";
+import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/CategoriesAPI";
+import { getUserName, logOut } from "../../../util/JwtService";
 
 interface NavbarInterface {
   searchKeywords: string;
@@ -12,7 +13,26 @@ interface NavbarInterface {
 const Navbar: React.FC<NavbarInterface> = (props) => {
   const [temporaryKeywords, setTemporaryKeywords] = useState('');
   const [listCate, setListCate] = useState<CategoriesModel[]>([]);
-  const CartID = localStorage.getItem('cartID');
+  const [cartID, setCartID] = useState<string | null>(localStorage.getItem('cartID'));
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const navigate = useNavigate();
+
+  // Theo dõi sự thay đổi của localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCartID(localStorage.getItem('cartID')); // Cập nhật lại cartID khi localStorage thay đổi
+      setToken(localStorage.getItem('token'));
+    };
+
+    window.addEventListener("storage", handleStorageChange); // Lắng nghe sự kiện thay đổi
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+
+
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTemporaryKeywords(event.target.value);
@@ -20,6 +40,10 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
   const onSearchButtonClicked = () => {
     props.setSearchKeywords(temporaryKeywords);
+  }
+
+  const handleLogout = () => {
+    logOut(navigate);
   }
 
   useEffect(() => {
@@ -47,7 +71,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
             </li>
             <li className="relative group">
               <a className="text-white hover:text-gray-300 cursor-pointer">Danh mục sản phẩm</a>
-              <ul className="absolute left-0 mt-2 bg-white text-gray-800 shadow-lg rounded hidden group-hover:block z-50">
+              <ul className="absolute left-0 bg-white text-gray-800 shadow-lg rounded hidden group-hover:block z-50">
                 {listCate.map((cate, index) => (
                   <li key={index} className="px-4 py-2 hover:bg-gray-100">
                     <Link to={`/${cate.categories_id}`} className="block w-full min-w-[200px] whitespace-nowrap">{cate.name}</Link>
@@ -59,7 +83,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
               <a className="text-white hover:text-gray-300" href="#">Quy định bán hàng</a>
             </li>
             <li>
-             <Link to="/aboutUS" className="text-white hover:text-gray-300">Giới thiệu</Link>
+              <Link to="/aboutUS" className="text-white hover:text-gray-300">Giới thiệu</Link>
             </li>
             <li>
               <Link to="/contact" className="text-white hover:text-gray-300">Liên hệ</Link>
@@ -69,16 +93,16 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
         {/* Tìm kiếm */}
         <div className="flex items-center space-x-2">
-          <input 
-            className="px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" 
-            type="search" 
-            placeholder="Tìm kiếm" 
-            aria-label="Search" 
-            onChange={onSearchInputChange} 
-            onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()} 
+          <input
+            className="px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            type="search"
+            placeholder="Tìm kiếm"
+            aria-label="Search"
+            onChange={onSearchInputChange}
+            onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()}
           />
-          <button 
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" 
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             onClick={onSearchButtonClicked}
           >
             <Search />
@@ -87,14 +111,55 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
         {/* Biểu tượng giỏ hàng */}
         <div className="flex items-center space-x-4">
-          <Link className="text-white hover:text-gray-300" to={CartID ? `/Cart/${CartID}` : '/Login'}>
+          <Link className="text-white hover:text-gray-300" to={cartID ? `/Cart/${cartID}` : '/Login'}>
             <Cart className="w-6 h-6" />
           </Link>
 
-          {/* Biểu tượng đăng nhập */}
-          <Link className="text-white hover:text-gray-300" to="/Login">
-            <i className="fas fa-user"></i>
-          </Link>
+
+          {/* User Menu */}
+          <div className="relative group" style={{marginRight: '10px'}}>
+            <button className="flex items-center justify-center space-x-2 text-white hover:text-gray-300">
+              <Person className="w-5 h-5" />
+              <span>{token ? 'Xin chào ' + getUserName(token) : 'Tài khoản'}</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+
+            {/* Dropdown Menu */}
+            <div className="absolute right-0 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block z-50">
+              {!token && <Link
+                to="/Login"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+              >
+                <BoxArrowInRight className="w-4 h-4 mr-2" />
+                Đăng nhập
+              </Link>}
+
+              {!token && <Link
+                to="/Register"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+              >
+                <PersonPlus className="w-4 h-4 mr-2" />
+                Đăng ký
+              </Link>}
+
+              {token && <Link
+                to="/Register"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
+              >
+                <PersonDash className="w-4 h-4 mr-2" />
+                Thông tin tài khoản
+              </Link>}
+              {token && <Link
+                to="/Login"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+                onClick={handleLogout}
+              >
+                <BoxArrowInLeft className="w-4 h-4 mr-2" />
+                Đăng Xuất
+              </Link>}
+              
+            </div>
+          </div>
         </div>
       </div>
     </nav>

@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { CartItemModel } from "../../../model/CartItemModel";
 import { useEffect, useState } from "react";
 import { getListCartItemByCartID } from "../../../api/CartAPI";
-import CartItemProp from "../product_component/CartItemProp";
+import CartItemProp from "./CartItemProp";
 import NumberFormat from "../../../util/NumberFormat";
 import { useNavigate } from "react-router-dom";
 

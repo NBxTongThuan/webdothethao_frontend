@@ -2,6 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCartID } from '../../../api/CartAPI';
+import { getUserIsActive } from '../../../util/JwtService';
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -10,10 +11,6 @@ const Login: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('username:', username);
-        console.log('Password:', password);
-
         handleLogin();
     };
 
@@ -36,19 +33,24 @@ const Login: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
-
-                getCartID(username)
-                .then((cartID) => {
-                    localStorage.setItem('cartID', cartID);
-                    console.log(cartID);
-                })
-                    .catch((error) => {
-                        console.error('Error fetching cart ID:', error);
-                    }
-                    );
-                navigate('/');
+                if (!getUserIsActive()) {
+                    alert('Tài khoản của bạn chưa kích hoạt, vui lòng kích hoạt tài khoản để đăng nhập');
+                    localStorage.removeItem('token');
+                }
+                else {
+                    getCartID(username)
+                        .then((cartID) => {
+                            localStorage.setItem('cartID', cartID);
+                            window.dispatchEvent(new Event("storage"));
+                            navigate('/');
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching cart ID:', error);
+                        }
+                        );
+                }
             } else {
-                alert('Login failed');
+                alert('Thông tin tài khoản hoặc mật khẩu không chính xác');
             }
         } catch (error) {
             console.log(error);

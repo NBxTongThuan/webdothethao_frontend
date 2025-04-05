@@ -2,6 +2,7 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 
 interface ExtendedJwtPayload extends JwtPayload {
     ROLE?: string;
+    isActivated?: boolean;
 }
 
 export function isTokenExpired(token: string): boolean {
@@ -37,8 +38,18 @@ export function getUserRole() {
     }
 }
 
+export function getUserIsActive() {
+    const token = localStorage.getItem('token');
+    if(token)
+    {
+        return (jwtDecode(token) as ExtendedJwtPayload).isActivated;
+    }
+}
+
 export function logOut(navigate: any) {
     navigate('/Login');
     localStorage.removeItem('token');
+    localStorage.removeItem('cartID');
+    window.dispatchEvent(new Event("storage"));
 }
 
