@@ -1,14 +1,17 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CartItemModel } from "../../../model/CartItemModel";
 import { useEffect, useState } from "react";
 import { getListCartItemByCartID } from "../../../api/CartAPI";
 import CartItemProp from "./CartItemProp";
 import NumberFormat from "../../../util/NumberFormat";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart: React.FC = () => {
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -16,10 +19,54 @@ const Cart: React.FC = () => {
             })
             .catch((error) => {
                 console.error('Error fetching cart items:', error);
+            });
+    }, [cartID]);
+
+
+    const deleteCartItem = async (cartItemId: string) => {
+        const url = `http://localhost:8080/api/cart/deleteCartItem?cartItemID=${cartItemId}`;
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`
             }
-            );
+        });
+        console.log(response);
+        if (response.ok) {
+            setListCartItem(listCartItem.filter(item => item.cartItemId !== cartItemId));
+            toast.success('Đã xóa sản phẩm khỏi giỏ hàng');
+        } else {
+            toast.error('Không thể xóa sản phẩm khỏi giỏ hàng');
+        }
     }
-        , [cartID]);
+
+
+    if (listCartItem.length === 0) {
+        return (
+            <div className="min-h-[70vh] flex flex-col items-center justify-center bg-white">
+                <div className="text-center p-8 bg-gray-50 rounded-xl shadow-lg max-w-md mx-4">
+                    <div className="w-24 h-24 mx-auto mb-6 bg-white rounded-full flex items-center justify-center shadow-md">
+                        <svg className="w-12 h-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Giỏ hàng trống</h2>
+                    <p className="text-gray-600 mb-6">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+                    <button
+                        className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                        onClick={() => navigate('/')}
+                    >
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Quay lại mua sắm
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -31,7 +78,7 @@ const Cart: React.FC = () => {
                             <p className="mt-1 text-sm text-gray-500">Mã giỏ hàng: #{cartID}</p>
                         )}
                     </div>
-                    <button 
+                    <button
                         className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                     >
                         <i className="fas fa-shopping-bag mr-2"></i>
@@ -55,7 +102,7 @@ const Cart: React.FC = () => {
                     <>
                         <div className="space-y-4">
                             {listCartItem.map((item, index) => (
-                                <CartItemProp key={item.cartItemId} cartItem={item} />
+                                <CartItemProp key={item.cartItemId} cartItem={item} deleteCartItem={deleteCartItem} />
                             ))}
                         </div>
 
@@ -76,10 +123,10 @@ const Cart: React.FC = () => {
                                         {NumberFormat(listCartItem.reduce((sum, item) => sum + item.price * item.quantity, 0))} VNĐ
                                     </span>
                                 </div>
-                                <button className="w-full mt-6 bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2 font-medium">
+                                <Link to={`/checkOut/${cartID}`} className="w-full mt-6 bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2 font-medium">
                                     <i className="fas"></i>
                                     <span>Đặt hàng</span>
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </>

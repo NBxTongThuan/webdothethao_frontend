@@ -23,6 +23,7 @@ export async function getListCartItemByCartID(cartID: string): Promise<CartItemM
 
     const responseData = response;
 
+
     const listCart: CartItemModel[] = [];
 
     for (const key in responseData) {
@@ -34,6 +35,10 @@ export async function getListCartItemByCartID(cartID: string): Promise<CartItemM
             productId: responseData[key].productId,
             productName: responseData[key].productName,
             productDescription: responseData[key].description,
+            remainQuantity: responseData[key].remainQuantity,
+            color: responseData[key].color,
+            size: responseData[key].size
+         
         });
     }     
         return listCart;

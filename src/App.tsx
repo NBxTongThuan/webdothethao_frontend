@@ -14,6 +14,7 @@ import AboutUs from './layout/pages/static/AboutUs';
 import Contact from './layout/pages/static/Contact';
 import { Categories, Dashboard, Orders, Products, Settings, Users } from './layout/admin';
 import Checkout from './layout/pages/order/Checkout';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 
@@ -39,11 +40,16 @@ function App() {
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/categories" element={<Categories />} />
           <Route path="/admin/settings" element={<Settings />} />
-          <Route path="/checkOut" element={<Checkout />} />
+          <Route path="/checkOut/:cartID" element={<Checkout />} />
 
         </Routes>
         <Footer />
       </BrowserRouter>
+      <ToastContainer
+						position='bottom-center'
+						autoClose={3000}
+						pauseOnFocusLoss={false}
+					/>
     </div>
   );
 }

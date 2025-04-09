@@ -1,32 +1,115 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { CartItemModel } from '../../../model/CartItemModel';
+import { getListCartItemByCartID } from '../../../api/CartAPI';
+import OrderItemModel from '../../../model/OrderItemModel';
+import OrdersModel from '../../../model/OrdersModel';
+import OrderItem from './OrderItem';
+import { getProvinces, getDistricts, getWards, Province, District, Ward } from '../../../api/AddressAPI';
+
+interface FormData {
+    fullName: string;
+    email: string;
+    phone: string;
+    toProvince: string;
+    toDistrict: string;
+    toWard: string;
+    address: string;
+    note: string;
+    paymentMethod: string;
+}
 
 const Checkout: React.FC = () => {
-    const [cartItems] = useState([
-        {
-            id: 1,
-            name: 'Giày thể thao Nike Air Max',
-            price: 2500000,
-            quantity: 1,
-            image: 'https://via.placeholder.com/100'
-        },
-        {
-            id: 2,
-            name: 'Áo thể thao Adidas',
-            price: 800000,
-            quantity: 2,
-            image: 'https://via.placeholder.com/100'
-        }
-    ]);
 
-    const [formData, setFormData] = useState({
+    const { cartID } = useParams();
+    const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate();
+    useEffect(() => {
+        getListCartItemByCartID(cartID + "")
+            .then((cartItems) => {
+                setListCartItem(cartItems);
+            })
+            .catch((error) => {
+                console.error('Error fetching cart items:', error);
+            }
+            );
+    }, [cartID]);
+    
+    const [orderItems, setOrderItems] = useState<OrderItemModel[]>([]);
+
+    useEffect(() => {
+        setOrderItems(listCartItem.map(item => new OrderItemModel(item.price, item.quantity, item.productAttributeId)));
+    }, [listCartItem]);
+    
+    const [orders, setOrders] = useState<OrdersModel>(new OrdersModel(0, '', '', '', '', '', '', '', '', []));
+
+
+
+    const [formData, setFormData] = useState<FormData>({
         fullName: '',
         email: '',
         phone: '',
+        toProvince: '',
+        toDistrict: '',
+        toWard: '',
         address: '',
         note: '',
         paymentMethod: 'cod'
     });
+
+    const [provinces, setProvinces] = useState<Province[]>([]);
+    const [districts, setDistricts] = useState<District[]>([]);
+    const [wards, setWards] = useState<Ward[]>([]);
+
+    useEffect(() => {
+        // Load provinces when component mounts
+        const loadProvinces = async () => {
+            try {
+                const provincesData = await getProvinces();
+                setProvinces(provincesData);
+            } catch (error) {
+                console.error('Error loading provinces:', error);
+            }
+        };
+        loadProvinces();
+    }, []);
+
+    useEffect(() => {
+        // Load districts when province changes
+        const loadDistricts = async () => {
+            if (formData.toProvince) {
+                try {
+                    const districtsData = await getDistricts(Number(formData.toProvince));
+                    setDistricts(districtsData);
+                    setFormData(prev => ({ ...prev, toDistrict: '', toWard: '' }));
+                } catch (error) {
+                    console.error('Error loading districts:', error);
+                }
+            } else {
+                setDistricts([]);
+            }
+        };
+        loadDistricts();
+    }, [formData.toProvince]);
+
+    useEffect(() => {
+        // Load wards when district changes
+        const loadWards = async () => {
+            if (formData.toDistrict) {
+                try {
+                    const wardsData = await getWards(Number(formData.toDistrict));
+                    setWards(wardsData);
+                    setFormData(prev => ({ ...prev, toWard: '' }));
+                } catch (error) {
+                    console.error('Error loading wards:', error);
+                }
+            } else {
+                setWards([]);
+            }
+        };
+        loadWards();
+    }, [formData.toDistrict]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -36,18 +119,24 @@ const Checkout: React.FC = () => {
         }));
     };
 
-    const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const order = new OrdersModel(0, formData.note, formData.address, formData.toProvince, formData.toDistrict, formData.toWard, formData.phone, formData.fullName, formData.email, orderItems);
+        setOrders(order);
+    };
+
+
+    const total = listCartItem.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const shippingFee = 30000;
     const finalTotal = total + shippingFee;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="min-h-screen bg-white">
+            <div className="max-w-[95%] mx-auto px-2 py-8">
+                <h1 className="text-3xl font-bold text-gray-800 mb-8">Thanh toán</h1>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     {/* Thông tin giao hàng */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-1 space-y-6">
                         <div className="bg-white rounded-lg shadow p-6">
                             <h2 className="text-lg font-semibold mb-4">Thông tin giao hàng</h2>
                             <div className="space-y-4">
@@ -93,9 +182,70 @@ const Checkout: React.FC = () => {
                                     />
                                 </div>
 
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Tỉnh/Thành phố <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            name="toProvince"
+                                            value={formData.toProvince}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            required
+                                        >
+                                            <option value="">Chọn tỉnh/thành phố</option>
+                                            {provinces.map(province => (
+                                                <option key={province.ProvinceID} value={province.ProvinceID}>
+                                                    {province.ProvinceName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Quận/Huyện <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            name="toDistrict"
+                                            value={formData.toDistrict}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            required
+                                            disabled={!formData.toProvince}
+                                        >
+                                            <option value="">Chọn quận/huyện</option>
+                                            {districts.map(district => (
+                                                <option key={district.DistrictID} value={district.DistrictID}>
+                                                    {district.DistrictName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                                            Phường/Xã <span className="text-red-500">*</span>
+                                        </label>
+                                        <select
+                                            name="toWard"
+                                            value={formData.toWard}
+                                            onChange={handleChange}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                            required
+                                            disabled={!formData.toDistrict}
+                                        >
+                                            <option value="">Chọn phường/xã</option>
+                                            {wards.map(ward => (
+                                                <option key={ward.WardCode} value={ward.WardCode}>
+                                                    {ward.WardName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Địa chỉ <span className="text-red-500">*</span>
+                                        Địa chỉ chi tiết <span className="text-red-500">*</span>
                                     </label>
                                     <textarea
                                         name="address"
@@ -151,25 +301,22 @@ const Checkout: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Tóm tắt đơn hàng */}
-                    <div className="space-y-6">
+                    {/* Sản phẩm đã chọn */}
+                    <div className="lg:col-span-2 space-y-6">
                         <div className="bg-white rounded-lg shadow p-6">
-                            <h2 className="text-lg font-semibold mb-4">Đơn hàng của bạn</h2>
+                            <h2 className="text-lg font-semibold mb-4">Sản phẩm đã chọn</h2>
                             <div className="space-y-4">
-                                {cartItems.map(item => (
-                                    <div key={item.id} className="flex items-center space-x-4">
-                                        <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded" />
-                                        <div className="flex-1">
-                                            <h3 className="font-medium">{item.name}</h3>
-                                            <p className="text-sm text-gray-500">Số lượng: {item.quantity}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="font-medium">{(item.price * item.quantity).toLocaleString('vi-VN')}đ</p>
-                                        </div>
-                                    </div>
+                                {listCartItem.map(item => (
+                                    <OrderItem key={item.cartItemId} cartItem={item} />
                                 ))}
                             </div>
+                        </div>
+                    </div>
 
+                    {/* Tóm tắt đơn hàng */}
+                    <div className="lg:col-span-1 space-y-6">
+                        <div className="bg-white rounded-lg shadow p-6">
+                            <h2 className="text-lg font-semibold mb-4">Tóm tắt đơn hàng</h2>
                             <div className="border-t mt-4 pt-4 space-y-2">
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Tạm tính</span>

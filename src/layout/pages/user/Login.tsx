@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCartID } from '../../../api/CartAPI';
 import { getUserIsActive } from '../../../util/JwtService';
+import { toast} from 'react-toastify';
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -34,15 +35,19 @@ const Login: React.FC = () => {
                 const data = await response.json();
                 localStorage.setItem('token', data.jwt);
                 if (!getUserIsActive()) {
-                    alert('Tài khoản của bạn chưa kích hoạt, vui lòng kích hoạt tài khoản để đăng nhập');
+                    toast.error('Tài khoản của bạn chưa được kích hoạt');
                     localStorage.removeItem('token');
                 }
                 else {
+                   
                     getCartID(username)
                         .then((cartID) => {
+                            toast.success('Đăng nhập thành công');
                             localStorage.setItem('cartID', cartID);
                             window.dispatchEvent(new Event("storage"));
-                            navigate('/');
+                            // setTimeout(() => {
+                                navigate('/');
+                            // }, 1500); đợi 1,5 giây
                         })
                         .catch((error) => {
                             console.error('Error fetching cart ID:', error);
@@ -70,6 +75,7 @@ const Login: React.FC = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
                 {/* Logo và tiêu đề */}
+                
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-gray-900">Đăng nhập</h2>
                     <p className="mt-2 text-sm text-gray-600">
@@ -140,6 +146,7 @@ const Login: React.FC = () => {
                         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                     >
                         Đăng nhập
+                        {/* <ToastContainer /> */}
                     </button>
 
                     <div className="relative my-6">
@@ -176,6 +183,7 @@ const Login: React.FC = () => {
                     </Link>
                 </p>
             </div>
+            
         </div>
     );
 };

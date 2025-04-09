@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 interface CartItemPropInterface {
     cartItem: CartItemModel;
+    deleteCartItem: (cartItemId: string) => void;
 }
 
 const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
@@ -93,6 +94,7 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                         {/* Total and Action buttons */}
                         <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0 pt-4 border-t border-gray-100">
                             <button 
+                            onClick={() => prop.deleteCartItem(prop.cartItem.cartItemId)}
                                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2"
                                 aria-label="Xóa sản phẩm"
                             >
