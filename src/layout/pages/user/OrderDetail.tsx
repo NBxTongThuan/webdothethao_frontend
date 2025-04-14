@@ -4,6 +4,10 @@ import { getOrderById, OrderResponse } from "../../../api/OrderAPI";
 import { getOrderItemsByOrderId, OrderItemResponse } from "../../../api/OrderItemAPI";
 import { get1Image } from "../../../api/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
+import OrderCancel from "./OrderCancel";
+import { Button } from "antd";
+import OrderReview from "./OrderReview";
+import { getUserName } from "../../../util/JwtService";
 
 const OrderDetail: React.FC = () => {
     const { orderId } = useParams();
@@ -12,6 +16,12 @@ const OrderDetail: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [orderItems, setOrderItems] = useState<OrderItemResponse[]>([]);
     const [itemImages, setItemImages] = useState<{ [key: string]: string }>({});
+    const [showOrderCancel, setShowOrderCancel] = useState(false);
+    const [showOrderReview, setShowOrderReview] = useState(false);
+    const token = localStorage.getItem('token');
+    const userName = getUserName(token + "");
+
+    const [selectedItem, setSelectedItem] = useState<OrderItemResponse>();
 
     useEffect(() => {
         if (orderId) {
@@ -194,18 +204,25 @@ const OrderDetail: React.FC = () => {
                     </div>
                 )}
 
-                {(order.status == "PENDING" || order.status == "CONFIRMED") && (
+                {order.status == "PENDING" && (
                     <div className="mb-6 text-right">
-                       <Link
-                        to={`/order/cancel/${order.orderId}`}
-                        className="inline-flex items-center px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 hover:text-red-700 transition-colors duration-200 font-medium shadow-sm"
-                       >
-                        <i className="fas fa-times-circle mr-2"></i>
-                        Hủy đơn
-                       </Link>
+                        <button
+                            onClick={() => setShowOrderCancel(true)}
+                            className="inline-flex items-center px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 hover:text-red-700 transition-colors duration-200 font-medium shadow-sm"
+                        >
+                            <i className="fas fa-times-circle mr-2"></i>
+                            Hủy đơn
+                        </button>
                     </div>
+
                 )}
-                
+
+                {showOrderCancel && (
+                    <OrderCancel
+                        orderId={order.orderId}
+                        onClose={() => setShowOrderCancel(false)}
+                    />
+                )}
 
             </div>
 
@@ -251,32 +268,45 @@ const OrderDetail: React.FC = () => {
                                     <div className="text-left">
                                         {item.reviewed == false && order.status == "DELIVERED"
                                             &&
-                                            <Link
-                                                to={`/product/${item.productId}`}
-                                                className="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors duration-200"
+                                            <Button
+                                                onClick={() => {
+                                                    setShowOrderReview(true);
+                                                    setSelectedItem(item);
+                                                }}
+                                                className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors duration-200"
                                             >
                                                 <i className="fas fa-star mr-2"></i>
                                                 Đánh giá
-                                            </Link>
+                                            </Button>
                                         }
 
                                         {
                                             item.reviewed == true && order.status == "DELIVERED" &&
-                                                <Link
-                                                to={`/product/${item.productId}`}
-                                                className="inline-flex items-center px-3 py-1 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-colors duration-200"
+                                            <Button
+                                                className="inline-flex items-center px-3 py-1 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors duration-200"
                                             >
                                                 <i className="fas fa-eye mr-2"></i>
                                                 Xem đánh giá
-                                            </Link>
-                                            
+                                            </Button>
                                         }
+
 
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ))}
+                    {
+                        showOrderReview && (
+                            <OrderReview
+                                orderItemId={selectedItem?.orderItemId + ""}
+                                productId={selectedItem?.productId + ""}
+                                productAttributeId={selectedItem?.productAttributeId + ""}
+                                userName={userName + ""}
+                                onClose={() => setShowOrderReview(false)}
+                            />
+                        )
+                    }
                 </div>
             </div>
         </div>

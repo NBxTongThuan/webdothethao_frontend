@@ -14,6 +14,7 @@
     "@types/react-dom": "^19.0.4",
     "antd": "^5.24.6",
     "crypto-browserify": "^3.12.1",
+    "framer-motion": "^12.6.5",
     "http-proxy-middleware": "^3.0.4",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",

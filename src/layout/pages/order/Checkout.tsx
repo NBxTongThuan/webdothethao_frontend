@@ -30,6 +30,7 @@ const Checkout: React.FC = () => {
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+    const userName = getUserName(token + "");
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -129,7 +130,7 @@ const Checkout: React.FC = () => {
 
             const url = `http://localhost:8080/api/orders/codOrder`;
             const data = {
-                userName: formData.fullName,
+                userName: userName,
                 totalPrice: finalTotal,
                 shipFee: shippingFee,
                 orderNote: formData.note,
@@ -146,6 +147,8 @@ const Checkout: React.FC = () => {
                     productAttributeId: item.productAttributeId
                 }))
             }
+
+            console.log(data);
 
             try {
                 const response = await fetch(url,{
