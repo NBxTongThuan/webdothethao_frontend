@@ -1,5 +1,5 @@
 import { use, useEffect, useState } from "react";
-import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash } from "react-bootstrap-icons";
+import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/CategoriesAPI";
@@ -143,11 +143,19 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
               </Link>}
 
               {token && <Link
-                to="/Register"
+                to="/userDetail"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
               >
                 <PersonDash className="w-4 h-4 mr-2" />
                 Thông tin tài khoản
+              </Link>}
+
+              {token && <Link
+                to="/myOrder"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
+              >
+                <CartCheck className="w-4 h-4 mr-2" />
+                Đơn hàng của tôi
               </Link>}
               {token && <Link
                 to="/Login"

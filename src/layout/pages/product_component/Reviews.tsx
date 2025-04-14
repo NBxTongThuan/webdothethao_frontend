@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { ReviewsModel } from "../../../model/ReviewsModel";
-import { get } from "http";
 import { getListReview } from "../../../api/ReviewsAPI";
 import renderRate from "../../../util/Stars";
 
@@ -23,6 +22,12 @@ const Reviews: React.FC<ReviewsPropsInterface> = (props) => {
             });
     }, [props.productId]);
 
+    let productRating = 0;
+    if(listReview.length > 0){
+        productRating = listReview.reduce((sum, review) => sum + review.rating, 0) / listReview.length;
+    }
+
+
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -30,9 +35,9 @@ const Reviews: React.FC<ReviewsPropsInterface> = (props) => {
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-2xl font-bold text-gray-900">Đánh giá sản phẩm</h3>
                     <div className="flex items-center space-x-2">
-                        <span className="text-lg font-semibold text-gray-700">4.5</span>
-                        <div className="flex items-center">{renderRate(4.5)}</div>
-                        <span className="text-sm text-gray-500">(15 đánh giá)</span>
+                        <span className="text-lg font-semibold text-gray-700">{productRating}</span>
+                        <div className="flex items-center">{renderRate(productRating)}</div>
+                        <span className="text-sm text-gray-500">({listReview.length} đánh giá)</span>
                     </div>
                 </div>
 
@@ -42,22 +47,31 @@ const Reviews: React.FC<ReviewsPropsInterface> = (props) => {
                             <div className="flex items-start justify-between">
                                 <div className="flex items-center space-x-3">
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-red-600 flex items-center justify-center text-white font-medium">
-                                        {["NT", "HM", "LA", "KD", "TV"][Math.floor(Math.random() * 5)]}
+                                        {review.userName.substring(0, 2).toUpperCase()}
                                     </div>
-                                    <div>
-                                        <h5 className="font-medium text-gray-900">
-                                            {["Nguyễn Thành", "Hoàng Minh", "Lê Anh", "Kim Đạt", "Trần Vũ"][Math.floor(Math.random() * 5)]}
-                                        </h5>
-                                        <div className="flex items-center space-x-2 mt-1">
-                                            <div className="flex">{renderRate(review.rating)}</div>
-                                            <span className="text-sm text-gray-500">•</span>
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <h5 className="font-medium text-gray-900">
+                                                {review.userName}
+                                            </h5>
                                             <span className="text-sm text-gray-500">
                                                 {new Date(review.createdDate).toLocaleDateString('vi-VN', {
                                                     year: 'numeric',
                                                     month: 'long',
                                                     day: 'numeric'
                                                 })}
+                                                {review.edited && <span className="ml-1 text-gray-400">(đã chỉnh sửa)</span>}
                                             </span>
+                                        </div>
+                                        <div className="flex items-center space-x-2 mt-1">
+                                            <div className="flex">{renderRate(review.rating)}</div>
+                                        </div>
+                                        <div className="mt-2 text-sm text-gray-500">
+                                            <span className="font-medium">Phân loại:</span> 
+                                            <div className="inline-flex items-center ml-2">
+                                                Màu <div className="w-4 h-4 rounded-full mx-1 border border-gray-300" style={{ backgroundColor: review.color }}></div>
+                                                • Size {review.size}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -68,17 +82,6 @@ const Reviews: React.FC<ReviewsPropsInterface> = (props) => {
                             
                             <div className="mt-4 text-gray-600 text-base leading-relaxed">
                                 {review.comment}
-                            </div>
-
-                            <div className="mt-4 flex items-center space-x-4">
-                                <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors duration-200">
-                                    <i className="far fa-thumbs-up"></i>
-                                    <span className="text-sm">Hữu ích</span>
-                                </button>
-                                <button className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors duration-200">
-                                    <i className="far fa-comment"></i>
-                                    <span className="text-sm">Trả lời</span>
-                                </button>
                             </div>
                         </div>
                     ))}

@@ -1,6 +1,7 @@
 import { use, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ActiveAccount: React.FC = () => {
 
@@ -8,6 +9,7 @@ const ActiveAccount: React.FC = () => {
     const { activeCode } = useParams();
     const [isActivated, setIsActivated] = useState(false);
     const [annouce, setAnnouce] = useState('');
+    const navigate = useNavigate();
     console.log(email);
     console.log(activeCode);
    
@@ -26,6 +28,10 @@ const ActiveAccount: React.FC = () => {
          console.log(response);
          if(response.ok){
             setIsActivated(true);
+            toast.success("Kích hoạt tài khoản thành công");
+            setTimeout(() => {
+                navigate("/Login");
+            }, 3000);
          }else{
             setAnnouce(response.text+"");
          }

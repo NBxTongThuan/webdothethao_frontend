@@ -1,6 +1,7 @@
 import OrderItem from "./OrderItemModel";
 
 class OrdersModel {
+    userName: string;
     totalPrice: number;
     orderNote: string;
     toAddress: string;
@@ -11,7 +12,8 @@ class OrdersModel {
     toName: string;
     toEmail: string;
     orderItems: OrderItem[];
-    constructor(totalPrice: number, orderNote: string, toAddress: string, toProvince: string, toDistrict: string, toWard: string, toPhone: string, toName: string, toEmail: string, orderItems: OrderItem[]) {
+    constructor(userName: string, totalPrice: number, orderNote: string, toAddress: string, toProvince: string, toDistrict: string, toWard: string, toPhone: string, toName: string, toEmail: string, orderItems: OrderItem[]) {
+        this.userName = userName;
         this.totalPrice = totalPrice;
         this.orderNote = orderNote;
         this.toAddress = toAddress;

@@ -5,7 +5,7 @@ const Sidebar: React.FC = () => {
     const location = useLocation();
 
     const menuItems = [
-        { path: '/admin/dashboard', icon: 'bi-speedometer2', label: 'Dashboard' },
+        { path: '/admin', icon: 'bi-speedometer2', label: 'Dashboard' },
         { path: '/admin/users', icon: 'bi-people', label: 'Quản lý người dùng' },
         { path: '/admin/products', icon: 'bi-box', label: 'Quản lý sản phẩm' },
         { path: '/admin/orders', icon: 'bi-cart', label: 'Quản lý đơn hàng' },

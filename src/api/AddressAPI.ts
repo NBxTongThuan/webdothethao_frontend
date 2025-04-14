@@ -1,74 +1,85 @@
-const GHN_API_URL = `https://online-gateway.ghn.vn/shiip/public-api/`
-const GHN_TOKEN = 'f5050752-14f1-11f0-ae25-deeae188dbc1'; // Bạn cần đăng ký tài khoản GHN để lấy token
+const GHN_API_URL = `http://localhost:8080/api/`
 
 export interface Province {
-    ProvinceID: number;
+    ProvinceCode: string;
     ProvinceName: string;
 }
 
 export interface District {
-    DistrictID: number;
+    DistrictCode: string;
     DistrictName: string;
-    ProvinceID: number;
 }
 
 export interface Ward {
     WardCode: string;
     WardName: string;
-    DistrictID: number;
 }
 
 export const getProvinces = async (): Promise<Province[]> => {
     try {
-        const response = await fetch(`${GHN_API_URL}/province`, {
+        const response = await fetch(`${GHN_API_URL}provinces`, {
             headers: {
-                'Content-Type': 'application/json',
-                'Token': GHN_TOKEN
+                'Content-Type': 'application/json'
             }
         });
         if (!response.ok) {
             throw new Error('Failed to fetch provinces');
         }
         const data = await response.json();
-        return data.data;
+        return data.map((item: any) =>
+        (
+            {
+                ProvinceCode: item.code,
+                ProvinceName: item.name
+            }
+        ));
     } catch (error) {
         console.error('Error fetching provinces:', error);
         throw error;
     }
 };
 
-export const getDistricts = async (provinceId: number): Promise<District[]> => {
+
+export const getDistricts = async (provinceCode: number): Promise<District[]> => {
     try {
-        const response = await fetch(`${GHN_API_URL}/district?province_id=${provinceId}`, {
+        const response = await fetch(`${GHN_API_URL}districts?provinceCode=${provinceCode}`, {
             headers: {
-                'Content-Type': 'application/json',
-                'Token': GHN_TOKEN
+                'Content-Type': 'application/json'
             }
         });
         if (!response.ok) {
             throw new Error('Failed to fetch districts');
         }
         const data = await response.json();
-        return data.data;
+        return data.districts.map(
+            (item: any) => ({
+                DistrictCode: item.code,
+                DistrictName: item.name,
+            })
+        );
     } catch (error) {
         console.error('Error fetching districts:', error);
         throw error;
     }
 };
 
-export const getWards = async (districtId: number): Promise<Ward[]> => {
+export const getWards = async (districtCode: number): Promise<Ward[]> => {
     try {
-        const response = await fetch(`${GHN_API_URL}/ward?district_id=${districtId}`, {
+        const response = await fetch(`${GHN_API_URL}wards?districtCode=${districtCode}`, {
             headers: {
-                'Content-Type': 'application/json',
-                'Token': GHN_TOKEN
+                'Content-Type': 'application/json'
             }
         });
         if (!response.ok) {
             throw new Error('Failed to fetch wards');
         }
         const data = await response.json();
-        return data.data;
+        return data.wards.map(
+            (item: any) => ({
+                WardCode: item.code,
+                WardName: item.name
+            })
+        );
     } catch (error) {
         console.error('Error fetching wards:', error);
         throw error;

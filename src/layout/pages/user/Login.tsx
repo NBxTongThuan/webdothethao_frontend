@@ -55,7 +55,7 @@ const Login: React.FC = () => {
                         );
                 }
             } else {
-                alert('Thông tin tài khoản hoặc mật khẩu không chính xác');
+                toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
             }
         } catch (error) {
             console.log(error);

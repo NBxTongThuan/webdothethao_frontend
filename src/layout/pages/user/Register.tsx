@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Register: React.FC = () => {
 
@@ -51,17 +52,14 @@ const Register: React.FC = () => {
                 console.log(response.ok);
 
                 if (response.ok) {
-                    setAnnouce('Đăng ký thành công vui lòng kiểm tra email để kích hoạt tài khoản');
+                    toast.success("Đăng ký thành công, vui lòng kiểm tra email của bạn để kích hoạt tài khoản");
                 } else {
-                    setAnnouce('Đăng ký thất bại');
+                    toast.error("Đăng ký thất bại");
                 }
             } catch (err) {
-                alert('Lỗi: ' + err);
+                toast.error("Lỗi: " + err);
             }
-        }else{
-            setAnnouce('Đăng ký thất bại');
         }
-        
     }
 
 
@@ -303,12 +301,6 @@ const Register: React.FC = () => {
                         Đăng ký tài khoản
                     </button>
 
-                    {annouce && (
-                        <div className="p-4 rounded-xl bg-green-50 text-green-600 flex items-center">
-                            <i className="fas fa-check-circle mr-2"></i>
-                            {annouce}
-                        </div>
-                    )}
                 </form>
 
                 <p className="mt-8 text-center text-sm text-gray-600">

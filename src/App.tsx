@@ -15,7 +15,14 @@ import Contact from './layout/pages/static/Contact';
 import { Categories, Dashboard, Orders, Products, Settings, Users } from './layout/admin';
 import Checkout from './layout/pages/order/Checkout';
 import { ToastContainer } from 'react-toastify';
-
+import UserDetail from './layout/pages/user/UserDetail';
+import EditProfile from './layout/pages/user/EditProfile';
+import UserDetailModel from './model/UserDetailModel';
+import ChangePassword from './layout/pages/user/ChangePassword';
+import ForgotPassword from './layout/pages/user/ForgotPassword';
+import ResetPassword from './layout/pages/user/ResetPassword';
+import MyOrder from './layout/pages/user/MyOrder';
+import OrderDetail from './layout/pages/user/OrderDetail';
 function App() {
 
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -34,14 +41,20 @@ function App() {
           <Route path='/Cart/:cartID' element={<Cart />} />
           <Route path='/aboutUS' element={<AboutUs />} />
           <Route path='/contact' element={<Contact />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin" element={<Dashboard />} />
           <Route path="/admin/users" element={<Users />} />
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/categories" element={<Categories />} />
           <Route path="/admin/settings" element={<Settings />} />
           <Route path="/checkOut/:cartID" element={<Checkout />} />
-
+          <Route path="/userDetail" element={<UserDetail />} />
+          <Route path="/editProfile" element={<EditProfile />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword/:email/:forgotPasswordCode" element={<ResetPassword />} />
+          <Route path="/myOrder" element={<MyOrder />} />
+          <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
         </Routes>
         <Footer />
       </BrowserRouter>
