@@ -12,6 +12,9 @@ import NumberFormat from "../../../util/NumberFormat";
 import Reviews from "../product_component/Reviews";
 import { getUserName } from "../../../util/JwtService";
 import { toast } from "react-toastify";
+import { getListReview } from "../../../api/ReviewsAPI";
+import { ReviewsModel } from "../../../model/ReviewsModel";
+import renderRate from "../../../util/Stars";
 
 const ProductDetail: React.FC = () => {
 
@@ -25,6 +28,15 @@ const ProductDetail: React.FC = () => {
 
   const [listImage, setListImage] = useState<ImageModel[]>([]);
 
+  const [listReview,setListReview] = useState<ReviewsModel[]>([]);
+
+  let productRating = 0;
+  if (listReview.length > 0) {
+    productRating = Number(
+      (listReview.reduce((sum, review) => sum + review.rating, 0) / listReview.length).toFixed(1)
+    );
+  }
+  
 
 
   const { productId } = useParams();
@@ -49,6 +61,17 @@ const ProductDetail: React.FC = () => {
     };
 
     fetchData();
+  }, [product_id]);
+
+
+  useEffect(() => {
+      getListReview(product_id)
+          .then( responseDATA => {
+              setListReview(responseDATA);
+          })
+          .catch( error => {
+              console.log("Lỗi khi tải đánh giá sản phẩm: " + error);
+          });
   }, [product_id]);
 
   const [colors, setColors] = useState<string[]>([]);
@@ -174,21 +197,22 @@ const ProductDetail: React.FC = () => {
     <div className="mt-4 container mx-auto p-6 bg-white shadow-xl rounded-2xl">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Ảnh sản phẩm */}
-        <div>
+        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
           <div className="flex">
             {/* Carousel ảnh nhỏ */}
-            <div className="flex flex-col items-center gap-3 mr-4">
+            <div className="flex flex-col items-center gap-4 mr-4">
               {listImage.map((img, index) => (
                 <div
                   key={index}
-                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${mainImage === img.data ? "ring-2 ring-red-500" : ""
-                    }`}
+                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${
+                    mainImage === img.data ? "ring-2 ring-red-500 ring-offset-2" : ""
+                  }`}
                   onClick={() => setMainImage(img.data || "")}
                 >
                   <img
                     src={img.data}
                     alt={`Thumbnail ${index + 1}`}
-                    className="w-20 h-20 object-cover"
+                    className="w-24 h-24 object-cover"
                   />
                   {mainImage === img.data && (
                     <div className="absolute inset-0 bg-red-500 bg-opacity-10" />
@@ -202,9 +226,9 @@ const ProductDetail: React.FC = () => {
               <img
                 src={mainImage}
                 alt="Main Product"
-                className="w-full h-[500px] object-contain rounded-2xl bg-gray-50"
+                className="w-full h-[500px] object-contain rounded-xl bg-gray-50"
               />
-              <button className="absolute top-2 right-2 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-colors duration-200">
+              <button className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg hover:bg-white transition-colors duration-200">
                 <i className="far fa-heart text-xl text-gray-600 hover:text-red-500 transition-colors duration-200"></i>
               </button>
             </div>
@@ -212,55 +236,68 @@ const ProductDetail: React.FC = () => {
         </div>
 
         {/* Thông tin sản phẩm */}
-        <div className="space-y-6">
+        <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300 space-y-8">
           <div>
-            <h3 className="text-3xl font-bold text-gray-900">{product?.product_name}</h3>
-            <div className="mt-2 flex items-center space-x-4 text-sm text-gray-600">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">{product?.product_name}</h3>
+            <div className="flex items-center space-x-6 text-sm text-gray-600">
               <span className="flex items-center">
-                <i className="fas fa-tag mr-1"></i>
+                <i className="fas fa-tag text-red-500 mr-2"></i>
                 {brand?.brandName}
               </span>
-              <span>•</span>
-              <span>Mã SP: {product?.product_id}</span>
-              <span>•</span>
               <span className="flex items-center">
-                <i className="fas fa-star text-yellow-400 mr-1"></i>
-                4.5/5 (15 đánh giá)
+                <i className="fas fa-barcode text-red-500 mr-2"></i>
+                Mã SP: {product?.product_id}
+              </span>
+              <span className="flex items-center">
+                <i className="fas fa-star text-yellow-400 mr-2"></i>
+                {productRating} 
+                <div className="ml-2">
+                {listReview.length} lượt đánh giá
+                </div>
               </span>
             </div>
           </div>
 
-          <div className="flex items-baseline space-x-3">
+          <div className="flex items-baseline space-x-4">
             <h4 className="text-3xl font-bold text-red-600">{NumberFormat(product?.price)} VNĐ</h4>
-            <span className="text-sm text-gray-500">Đã bán: 150</span>
+            <span className="text-sm text-gray-500 flex items-center">
+              <i className="fas fa-shopping-bag mr-1"></i>
+              Đã bán: {product?.quantity_sold}
+            </span>
           </div>
 
           {/* Chọn màu sắc */}
           <div>
-            <h5 className="text-lg font-semibold mb-3">Màu sắc:</h5>
+            <h5 className="text-lg font-semibold mb-4 flex items-center">
+              <i className="fas fa-palette text-red-500 mr-2"></i>
+              Màu sắc:
+            </h5>
             <div className="flex flex-wrap gap-3">
               {colors.map((color) => (
                 <button
                   key={color}
-                  className={`group relative w-12 h-12 rounded-xl transition-transform transform hover:scale-105 ${selectedColor === color
-                    ? "ring-2 ring-red-500 ring-offset-2"
-                    : ""
-                    }`}
+                  className={`group relative w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-105 ${
+                    selectedColor === color
+                      ? "ring-2 ring-red-500 ring-offset-2"
+                      : ""
+                  }`}
                   onClick={() => setSelectedColor(color)}
                 >
                   <span
-                    className={`block w-full h-full rounded-xl border ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
-                      ? 'border-gray-300'
-                      : 'border-transparent'
-                      }`}
+                    className={`block w-full h-full rounded-xl border ${
+                      color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
+                        ? 'border-gray-300'
+                        : 'border-transparent'
+                    }`}
                     style={{ backgroundColor: color }}
                   />
                   {selectedColor === color && (
                     <span className="absolute inset-0 flex items-center justify-center">
-                      <i className={`fas fa-check text-lg ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
-                        ? 'text-gray-800'
-                        : 'text-white'
-                        }`}></i>
+                      <i className={`fas fa-check text-lg ${
+                        color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
+                          ? 'text-gray-800'
+                          : 'text-white'
+                      }`}></i>
                     </span>
                   )}
                 </button>
@@ -270,15 +307,19 @@ const ProductDetail: React.FC = () => {
 
           {/* Chọn kích thước */}
           <div>
-            <h5 className="text-lg font-semibold mb-3">Kích thước:</h5>
+            <h5 className="text-lg font-semibold mb-4 flex items-center">
+              <i className="fas fa-ruler text-red-500 mr-2"></i>
+              Kích thước:
+            </h5>
             <div className="flex flex-wrap gap-3">
               {sizes.map((size) => (
                 <button
                   key={size}
-                  className={`w-16 py-3 rounded-xl transition-all duration-200 font-medium ${selectedSize === size
-                    ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                  className={`w-16 py-3 rounded-xl transition-all duration-200 font-medium ${
+                    selectedSize === size
+                      ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
@@ -289,11 +330,17 @@ const ProductDetail: React.FC = () => {
 
           {/* Chọn số lượng */}
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <h5 className="text-lg font-semibold">Số lượng:</h5>
-              <span className="text-sm text-gray-600">Còn lại: {remainingQuantity}</span>
+            <div className="flex items-center justify-between mb-4">
+              <h5 className="text-lg font-semibold flex items-center">
+                <i className="fas fa-boxes text-red-500 mr-2"></i>
+                Số lượng:
+              </h5>
+              <span className="text-sm text-gray-600 flex items-center">
+                <i className="fas fa-box-open mr-1"></i>
+                Còn lại: {remainingQuantity}
+              </span>
             </div>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-2">
               <button
                 className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors duration-200 flex items-center justify-center disabled:opacity-50"
                 onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
@@ -302,7 +349,7 @@ const ProductDetail: React.FC = () => {
                 <i className="fas fa-minus text-gray-600"></i>
               </button>
               <input
-                className="w-20 h-12 text-center border border-gray-200 rounded-xl focus:outline-none focus:border-red-500 transition-colors duration-200"
+                className="w-20 h-12 text-center border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200"
                 type="number"
                 value={quantity}
                 onChange={handleQuantity}
@@ -321,10 +368,11 @@ const ProductDetail: React.FC = () => {
           <div className="flex gap-4 pt-4">
             <button
               onClick={handleSubmitAddToCart}
-              className={`flex-1 py-4 rounded-xl text-white font-bold transition-all duration-200 flex items-center justify-center space-x-2 ${remainingQuantity > 0
-                ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                : "bg-gray-400 cursor-not-allowed"
-                }`}
+              className={`flex-1 py-4 rounded-xl text-white font-bold transition-all duration-200 flex items-center justify-center space-x-2 ${
+                remainingQuantity > 0
+                  ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
               disabled={remainingQuantity === 0}
             >
               <i className="fas fa-shopping-cart"></i>
@@ -376,7 +424,7 @@ const ProductDetail: React.FC = () => {
         </div>
       </div>
       {/* Reviews */}
-      <Reviews productId={productId + ""} />
+      <Reviews listReview={listReview} />
     </div>
 
   );

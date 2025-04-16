@@ -1,31 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import StarRating from '../../../util/StarsRating';
 import { NotepadText } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-
-interface OrderReviewProps {
+import { getAReview, Review } from '../../../api/ReviewsAPI';
+interface SeeReviewProps {
     orderItemId: string;
-    productId: string;
-    productAttributeId: string;
     userName: string;
     onClose: () => void;
 }
 
 
 
-const OrderReview: React.FC<OrderReviewProps> = (props) => {
+const SeeReview:React.FC<SeeReviewProps> = (props) => {
 
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
+    const [review, setReview] = useState<Review | null>(null);
+
+    useEffect(() => {
+        const fetchReview = async () => {
+            const review = await getAReview(props.orderItemId);
+            setReview(review);
+            setRating(review?.rating ?? 0);
+            setComment(review?.comment ?? "");
+            setComment(review?.comment ?? "");
+        }
+        fetchReview();
+    }, [props.orderItemId]);
 
     console.log(props.orderItemId);
-    console.log(props.productId);
-    console.log(props.productAttributeId);
-    console.log(props.userName);
     console.log(rating);
     console.log(comment);
+
+    
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,38 +49,32 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
         }
 
         console.log(props.orderItemId);
-        console.log(props.productId);
-        console.log(props.productAttributeId);
-        console.log(props.userName);
         console.log(rating);
         console.log(comment);
 
         try {
-            const url = `http://localhost:8080/api/reviews/addReview`;
+            const url = `http://localhost:8080/api/reviews/updateReview`;
             const response = await fetch(url, {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
+                    "reviewId": review?.reviewId,
                     "rating": rating,
                     "comment": comment,
-                    "orderItemId": props.orderItemId,
-                    "productId": props.productId,
-                    "productAttributeId": props.productAttributeId,
-                    "userName": props.userName
                 })
             });
             if (response.ok) {
                 props.onClose();
-                toast.success("Cảm ơn bạn đã đánh giá sản phẩm");
+                toast.success("Cập nhật đánh giá thành công");
                 setTimeout(() => {
                     window.location.reload();
-                }, 2000);
+                }, 1500);
             }
             else {
                 props.onClose();
-                toast.error("Đánh giá sản phẩm thất bại");
+                toast.error("Cập nhật đánh giá thất bại");
             }
         } catch (error) {
             console.error(error);
@@ -96,7 +99,14 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center space-x-3">
                             <NotepadText className="text-2xl font-bold text-gray-800" />
-                            <h2 className="text-2xl font-bold text-gray-800">Đánh giá đơn hàng của bạn</h2>
+                            <h2 className="text-2xl font-bold text-gray-800">Xem đánh giá đơn hàng của bạn</h2>
+                        </div>
+                        <div className="flex justify-end items-center space-x-3">
+                            {review?.edited == false ? (
+                                <p className="text-gray-600 text-sm">Còn lại 1 lần chỉnh sửa</p>
+                            ) : (
+                                <p className="text-gray-600 text-sm">Đã cập nhật</p>
+                            )}
                         </div>
                         <button
                             onClick={props.onClose}
@@ -120,7 +130,7 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
                                 <div className="flex items-center space-x-2 mb-4">
                                     <StarRating
                                         max={5}
-                                        value={0}
+                                        value={review?.rating}
                                         onRate={(value: number) => setRating(value)}
                                     />
                                 </div>
@@ -138,6 +148,7 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
                                     onChange={(e) => setComment(e.target.value)}
                                     rows={4}
                                     required
+                                    disabled={review?.edited == true}
                                 />
                             </div>
                         </div>
@@ -151,11 +162,12 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
                                 <span>Hủy</span>
                             </button>
                             <button
+                                disabled={review?.edited == true}
                                 type="submit"
                                 className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium shadow-sm flex items-center space-x-2"
                             >
                                 <i className="fas fa-paper-plane"></i>
-                                <span>Gửi đánh giá</span>
+                                <span>Cập nhật đánh giá</span>
                             </button>
                         </div>
                     </form>
@@ -163,6 +175,5 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
             </motion.div>
         </AnimatePresence>
     );
-};
-
-export default OrderReview;
+}
+export default SeeReview;

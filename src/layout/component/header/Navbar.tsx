@@ -1,9 +1,9 @@
 import { use, useEffect, useState } from "react";
-import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck } from "react-bootstrap-icons";
+import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck, Key } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/CategoriesAPI";
-import { getUserName, logOut } from "../../../util/JwtService";
+import { getUserName, logOut, getCartId } from "../../../util/JwtService";
 
 interface NavbarInterface {
   searchKeywords: string;
@@ -13,7 +13,7 @@ interface NavbarInterface {
 const Navbar: React.FC<NavbarInterface> = (props) => {
   const [temporaryKeywords, setTemporaryKeywords] = useState('');
   const [listCate, setListCate] = useState<CategoriesModel[]>([]);
-  const [cartID, setCartID] = useState<string | null>(localStorage.getItem('cartID'));
+  const [cartID, setCartID] = useState<string | null>(getCartId() + "");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
   // Theo dõi sự thay đổi của localStorage
   useEffect(() => {
     const handleStorageChange = () => {
-      setCartID(localStorage.getItem('cartID')); // Cập nhật lại cartID khi localStorage thay đổi
       setToken(localStorage.getItem('token'));
     };
 
@@ -117,7 +116,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
 
           {/* User Menu */}
-          <div className="relative group" style={{marginRight: '10px'}}>
+          <div className="relative group" style={{ marginRight: '10px' }}>
             <button className="flex items-center justify-center space-x-2 text-white hover:text-gray-300">
               <Person className="w-5 h-5" />
               <span>{token ? 'Xin chào ' + getUserName(token) : 'Tài khoản'}</span>
@@ -147,7 +146,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
               >
                 <PersonDash className="w-4 h-4 mr-2" />
-                Thông tin tài khoản
+                Thông tin cá nhân
               </Link>}
 
               {token && <Link
@@ -157,6 +156,18 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 <CartCheck className="w-4 h-4 mr-2" />
                 Đơn hàng của tôi
               </Link>}
+
+
+              {
+                token && <Link
+                  to="/changePassword"
+                  className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
+                >
+                  <Key className="w-4 h-4 mr-2" />
+                  Đổi mật khẩu
+                </Link>
+              }
+
               {token && <Link
                 to="/Login"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
@@ -165,7 +176,16 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 <BoxArrowInLeft className="w-4 h-4 mr-2" />
                 Đăng Xuất
               </Link>}
-              
+
+              {!token && <Link
+                to="/forgotPassword"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
+              >
+                <Key className="w-4 h-4 mr-2" />
+                Quên mật khẩu
+              </Link>}
+
+
             </div>
           </div>
         </div>

@@ -1,21 +1,6 @@
 import { CartItemModel } from "../model/CartItemModel";
 import requestAPI from "./RequestApi";
 
-export async function getCartID(userName: string) {
-
-
-    const link: string = `http://localhost:8080/api/cart/getCartIDByUserName?userName=${userName}`;
-
-    console.log(link);
-    const response = await requestAPI(link);
-
-    const responseData = response.cartId;
-
-    console.log(responseData);
-
-    return responseData;
-}
-
 export async function getListCartItemByCartID(cartID: string): Promise<CartItemModel[]> {
     const link: string = `http://localhost:8080/api/cart/getListCartItem?cartId=${cartID}`;
 

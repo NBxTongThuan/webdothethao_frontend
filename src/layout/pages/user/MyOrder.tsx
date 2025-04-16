@@ -15,7 +15,7 @@ const MyOrder: React.FC = () => {
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [totalPage, setTotalPage] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [size, setSize] = useState<number>(2);
+    const [size, setSize] = useState<number>(8);
 
     const [filteredOrders, setFilteredOrders] = useState<OrderResponse[]>([]);
     const navigate = useNavigate();

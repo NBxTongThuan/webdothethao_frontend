@@ -8,6 +8,7 @@ import OrderCancel from "./OrderCancel";
 import { Button } from "antd";
 import OrderReview from "./OrderReview";
 import { getUserName } from "../../../util/JwtService";
+import SeeReview from "./SeeReview";
 
 const OrderDetail: React.FC = () => {
     const { orderId } = useParams();
@@ -18,6 +19,7 @@ const OrderDetail: React.FC = () => {
     const [itemImages, setItemImages] = useState<{ [key: string]: string }>({});
     const [showOrderCancel, setShowOrderCancel] = useState(false);
     const [showOrderReview, setShowOrderReview] = useState(false);
+    const [showSeeReview, setShowSeeReview] = useState(false);
     const token = localStorage.getItem('token');
     const userName = getUserName(token + "");
 
@@ -283,6 +285,10 @@ const OrderDetail: React.FC = () => {
                                         {
                                             item.reviewed == true && order.status == "DELIVERED" &&
                                             <Button
+                                                onClick={() => {
+                                                    setShowSeeReview(true);
+                                                    setSelectedItem(item);
+                                                }}
                                                 className="inline-flex items-center px-3 py-1 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors duration-200"
                                             >
                                                 <i className="fas fa-eye mr-2"></i>
@@ -304,6 +310,15 @@ const OrderDetail: React.FC = () => {
                                 productAttributeId={selectedItem?.productAttributeId + ""}
                                 userName={userName + ""}
                                 onClose={() => setShowOrderReview(false)}
+                            />
+                        )
+                    }
+                    {
+                        showSeeReview && (
+                            <SeeReview
+                                orderItemId={selectedItem?.orderItemId + ""}
+                                userName={userName + ""}
+                                onClose={() => setShowSeeReview(false)}
                             />
                         )
                     }

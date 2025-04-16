@@ -30,6 +30,9 @@ const OrderCancel: React.FC<ModalProps> = (props) => {
             if(response.ok){
                 props.onClose();
                 toast.success("Hủy đơn hàng thành công");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
             }  
             else{
                 props.onClose();

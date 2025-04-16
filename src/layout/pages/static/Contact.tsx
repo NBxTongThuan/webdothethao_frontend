@@ -36,8 +36,8 @@ const Contact: React.FC = () => {
             {/* Hero Section */}
             <div className="bg-red-500 text-white py-16">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold mb-4">Liên hệ với chúng tôi</h1>
-                    <p className="text-lg">Hãy để lại thông tin, chúng tôi sẽ phản hồi sớm nhất có thể</p>
+                    <h1 className="text-4xl font-bold mb-4 text-left">Liên hệ với chúng tôi</h1>
+                    <p className="text-lg text-left">Hãy để lại thông tin, chúng tôi sẽ phản hồi sớm nhất có thể</p>
                 </div>
             </div>
 
@@ -46,14 +46,14 @@ const Contact: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Contact Information */}
                     <div className="bg-white rounded-xl shadow-md p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Thông tin liên hệ</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">Thông tin liên hệ</h2>
                         
                         <div className="space-y-6">
                             <div className="flex items-start">
                                 <div className="bg-red-100 p-3 rounded-full mr-4">
                                     <i className="fas fa-map-marker-alt text-red-500"></i>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Địa chỉ</h3>
                                     <p className="text-gray-600">
                                         123 Đường ABC, Quận 1, TP.HCM<br />
@@ -66,7 +66,7 @@ const Contact: React.FC = () => {
                                 <div className="bg-red-100 p-3 rounded-full mr-4">
                                     <i className="fas fa-phone text-red-500"></i>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Điện thoại</h3>
                                     <p className="text-gray-600">
                                         +84 123 456 789<br />
@@ -79,7 +79,7 @@ const Contact: React.FC = () => {
                                 <div className="bg-red-100 p-3 rounded-full mr-4">
                                     <i className="fas fa-envelope text-red-500"></i>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
                                     <p className="text-gray-600">
                                         info@webdothethao.com<br />
@@ -92,7 +92,7 @@ const Contact: React.FC = () => {
                                 <div className="bg-red-100 p-3 rounded-full mr-4">
                                     <i className="fas fa-clock text-red-500"></i>
                                 </div>
-                                <div>
+                                <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Giờ làm việc</h3>
                                     <p className="text-gray-600">
                                         Thứ 2 - Thứ 6: 8:00 - 18:00<br />
@@ -105,9 +105,9 @@ const Contact: React.FC = () => {
 
                         {/* Social Media */}
                         <div className="mt-8">
-                            <h3 className="font-semibold text-gray-900 mb-4">Kết nối với chúng tôi</h3>
+                            <h3 className="font-semibold text-gray-900 mb-4 text-left">Kết nối với chúng tôi</h3>
                             <div className="flex space-x-4">
-                                <a href="#" className="bg-red-100 p-3 rounded-full text-red-500 hover:bg-red-200 transition-colors">
+                                <a href="https://www.facebook.com/thuan.tong.15092003" className="bg-red-100 p-3 rounded-full text-red-500 hover:bg-red-200 transition-colors">
                                     <i className="fab fa-facebook-f"></i>
                                 </a>
                                 <a href="#" className="bg-red-100 p-3 rounded-full text-red-500 hover:bg-red-200 transition-colors">
@@ -125,10 +125,10 @@ const Contact: React.FC = () => {
 
                     {/* Contact Form */}
                     <div className="bg-white rounded-xl shadow-md p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Gửi tin nhắn</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">Gửi tin nhắn</h2>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                     Họ tên
                                 </label>
                                 <input
@@ -142,7 +142,7 @@ const Contact: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                     Email
                                 </label>
                                 <input
@@ -156,7 +156,7 @@ const Contact: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                     Số điện thoại
                                 </label>
                                 <input
@@ -170,7 +170,7 @@ const Contact: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                     Chủ đề
                                 </label>
                                 <select
@@ -190,7 +190,7 @@ const Contact: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 mb-1 text-left">
                                     Nội dung
                                 </label>
                                 <textarea
@@ -216,7 +216,7 @@ const Contact: React.FC = () => {
                 {/* Map */}
                 <div className="mt-12">
                     <div className="bg-white rounded-xl shadow-md p-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Bản đồ</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 mb-6 text-left">Bản đồ</h2>
                         <div className="aspect-w-16 aspect-h-9">
                             <iframe
                                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.269311477489!2d106.70042331531915!3d10.779160392316246!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752d9a092f0363%3A0xfe352995d5743ff8!2sLandmark%2081!5e0!3m2!1svi!2s!4v1647689123456!5m2!1svi!2s"

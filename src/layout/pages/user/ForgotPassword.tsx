@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 interface formData {
@@ -7,6 +7,7 @@ interface formData {
 }
 
 const ForgotPassword = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<formData>({
         email: '',
     });
@@ -30,6 +31,9 @@ const ForgotPassword = () => {
 
             if(response.ok){
                 toast.success("Email tạo lại mật khẩu đã được gửi đến email của bạn!");
+                setTimeout(() => {
+                    navigate("/Login");
+                }, 3000);
             }else{
                 toast.error("Email không tồn tại hoặc gặp lỗi trong quá trình xử lý!");
             }

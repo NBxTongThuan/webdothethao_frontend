@@ -75,7 +75,7 @@ const AboutUs: React.FC = () => {
                             <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
                                 <i className="fas fa-user text-gray-500 text-4xl"></i>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900">Nguyễn Văn A</h3>
+                            <h3 className="text-xl font-semibold text-gray-900">Tống Như Thuần</h3>
                             <p className="text-gray-600">Giám đốc điều hành</p>
                         </div>
 
@@ -83,7 +83,7 @@ const AboutUs: React.FC = () => {
                             <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
                                 <i className="fas fa-user text-gray-500 text-4xl"></i>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900">Trần Thị B</h3>
+                            <h3 className="text-xl font-semibold text-gray-900">Tống Như Thuần</h3>
                             <p className="text-gray-600">Quản lý sản phẩm</p>
                         </div>
 
@@ -91,7 +91,7 @@ const AboutUs: React.FC = () => {
                             <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gray-200 flex items-center justify-center">
                                 <i className="fas fa-user text-gray-500 text-4xl"></i>
                             </div>
-                            <h3 className="text-xl font-semibold text-gray-900">Lê Văn C</h3>
+                            <h3 className="text-xl font-semibold text-gray-900">Tống Như Thuần</h3>
                             <p className="text-gray-600">Quản lý khách hàng</p>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getUserName } from "../../../util/JwtService";
+import { getUserName, logOut } from "../../../util/JwtService";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 interface formData {
@@ -9,13 +9,16 @@ interface formData {
     confirmPassword: string;
 }
 
-const ChangePassword = () => {  
+const passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+const ChangePassword = () => {
     const token = localStorage.getItem('token');
 
     const navigate = useNavigate();
+    const [errorRePassword, setErrorRePassword] = useState('');
 
     const [formData, setFormData] = useState<formData>({
-        username: token == null ? "" : getUserName(token+"")+"",
+        username: token == null ? "" : getUserName(token + "") + "",
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -24,9 +27,17 @@ const ChangePassword = () => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-    
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (formData.newPassword != formData.confirmPassword) {
+            toast.error("Mật khẩu không khớp");
+            return;
+        }
+        if (!passwordRegex.test(formData.newPassword)) {
+            setErrorRePassword("Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt");
+            return;
+        }
         console.log(formData);
         const url = `http://localhost:8080/api/account/changePassword`;
         const response = await fetch(url, {
@@ -40,12 +51,13 @@ const ChangePassword = () => {
                 newPassword: formData.newPassword
             }),
         });
-        if(response.ok){
+        if (response.ok) {
             toast.success("Đổi mật khẩu thành công");
+            
             setTimeout(() => {
-                navigate("/Login");
-            }, 1500);
-        }else{
+                logOut(navigate);
+            }, 3000);
+        } else {
             toast.error("Đổi mật khẩu thất bại");
         }
     };
@@ -119,6 +131,7 @@ const ChangePassword = () => {
                                 required
                             />
                         </div>
+                        {errorRePassword && <p className="text-red-500 text-sm">{errorRePassword}</p>}
                     </div>
 
                     <div>
@@ -165,7 +178,7 @@ const ChangePassword = () => {
                 </div>
             </div>
         </div>
-    );     
+    );
 }
 
 export default ChangePassword;

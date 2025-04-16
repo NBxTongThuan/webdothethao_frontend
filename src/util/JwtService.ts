@@ -3,12 +3,13 @@ import { jwtDecode, JwtPayload } from "jwt-decode";
 interface ExtendedJwtPayload extends JwtPayload {
     ROLE?: string;
     isActivated?: boolean;
+    cartId?: string;
 }
 
 export function isTokenExpired(token: string): boolean {
     const decodedToken = jwtDecode(token);
 
-    if(!decodedToken.exp) {
+    if (!decodedToken.exp) {
         return false;
     }
 
@@ -22,26 +23,29 @@ export function isHasToken(): boolean {
     return !!token;
 }
 
-export function getUserName(token:string) {
-    if(token)
-    {
+export function getUserName(token: string) {
+    if (token) {
         return jwtDecode(token).sub;
     }
 }
 
+export function getCartId(){
+    const token = localStorage.getItem('token');
+    if (token) {
+        return (jwtDecode(token) as ExtendedJwtPayload).cartId;
+    }
+}
 
 export function getUserRole() {
     const token = localStorage.getItem('token');
-    if(token)
-    {
+    if (token) {
         return (jwtDecode(token) as ExtendedJwtPayload).ROLE;
     }
 }
 
 export function getUserIsActive() {
     const token = localStorage.getItem('token');
-    if(token)
-    {
+    if (token) {
         return (jwtDecode(token) as ExtendedJwtPayload).isActivated;
     }
 }

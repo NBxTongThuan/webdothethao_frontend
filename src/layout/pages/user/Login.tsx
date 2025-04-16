@@ -1,7 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCartID } from '../../../api/CartAPI';
 import { getUserIsActive } from '../../../util/JwtService';
 import { toast} from 'react-toastify';
 
@@ -40,19 +39,12 @@ const Login: React.FC = () => {
                 }
                 else {
                    
-                    getCartID(username)
-                        .then((cartID) => {
+                    
                             toast.success('Đăng nhập thành công');
-                            localStorage.setItem('cartID', cartID);
                             window.dispatchEvent(new Event("storage"));
                             // setTimeout(() => {
                                 navigate('/');
                             // }, 1500); đợi 1,5 giây
-                        })
-                        .catch((error) => {
-                            console.error('Error fetching cart ID:', error);
-                        }
-                        );
                 }
             } else {
                 toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
