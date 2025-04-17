@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProductModel from "../../../model/ProductModel";
 import { error } from "console";
 import ProductProps from "./ProductProps";
-import { getAllProducts, getProductsByCategoryIdAndProductName } from "../../../api/ProductsAPI";
+import { getAllProducts, getProductsByCategoryIdAndProductName } from "../../../api/user/ProductsAPI";
 import { Pagination } from "../../../util/Pagination";
 
 interface ListProductInterface {

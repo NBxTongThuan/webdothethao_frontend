@@ -1,19 +1,8 @@
+import { District, Province, Ward } from "../interface/Responses";
+
 const GHN_API_URL = `http://localhost:8080/api/`
 
-export interface Province {
-    ProvinceCode: string;
-    ProvinceName: string;
-}
 
-export interface District {
-    DistrictCode: string;
-    DistrictName: string;
-}
-
-export interface Ward {
-    WardCode: string;
-    WardName: string;
-}
 
 export const getProvinces = async (): Promise<Province[]> => {
     try {

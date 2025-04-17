@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './layout/component/header/Navbar';
 import Footer from './layout/component/footer/Footer';
 import HomePage from './layout/pages/HomePage';
@@ -23,15 +23,24 @@ import ForgotPassword from './layout/pages/user/ForgotPassword';
 import ResetPassword from './layout/pages/user/ResetPassword';
 import MyOrder from './layout/pages/user/MyOrder';
 import OrderDetail from './layout/pages/user/OrderDetail';
-function App() {
+import LoginAdmin from './layout/admin/pages/LoginAdmin';
+import OrderDetailAdmin from './layout/admin/components/OrderDetailAdmin';
 
+
+const MyRoute = () =>{
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  return (
-    <div className="App">
-      <BrowserRouter>
-        <Navbar searchKeywords={searchKeyword} setSearchKeywords={setSearchKeyword} />
+  const location = useLocation();
+
+  const isAdminPath = location.pathname.startsWith("/admin")
+
+  return(
+
+    <div>
+         {!isAdminPath && <Navbar searchKeywords={searchKeyword} setSearchKeywords={setSearchKeyword} />}
         <Routes>
+
+{/* User Path */}
           <Route path='/' element={<HomePage searchKeyword={searchKeyword} />} ></Route>
           <Route path='/:categoryId' element={<HomePage searchKeyword={searchKeyword} />} ></Route>
           <Route path='/productdetail/:productId' element={<ProductDetail />} ></Route>
@@ -41,12 +50,6 @@ function App() {
           <Route path='/Cart/:cartID' element={<Cart />} />
           <Route path='/aboutUS' element={<AboutUs />} />
           <Route path='/contact' element={<Contact />} />
-          <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/orders" element={<Orders />} />
-          <Route path="/admin/categories" element={<Categories />} />
-          <Route path="/admin/settings" element={<Settings />} />
           <Route path="/checkOut/:cartID" element={<Checkout />} />
           <Route path="/userDetail" element={<UserDetail />} />
           <Route path="/editProfile" element={<EditProfile />} />
@@ -55,8 +58,31 @@ function App() {
           <Route path="/resetPassword/:email/:forgotPasswordCode" element={<ResetPassword />} />
           <Route path="/myOrder" element={<MyOrder />} />
           <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
+
+
+{/* Admin path */}
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/orders" element={<Orders />} />
+          <Route path="/admin/categories" element={<Categories />} />
+          <Route path="/admin/settings" element={<Settings />} />
+          <Route path='/admin' element={<LoginAdmin />} />
         </Routes>
-        <Footer />
+       {!isAdminPath && <Footer />}
+    </div>
+  );
+
+}
+
+function App() {
+
+  
+
+  return (
+    <div className="App">
+      <BrowserRouter>
+      <MyRoute/>
       </BrowserRouter>
       <ToastContainer
 						position='bottom-center'

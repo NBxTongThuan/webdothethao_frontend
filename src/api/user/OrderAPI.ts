@@ -1,30 +1,13 @@
+import { OrderResponse } from "../interface/Responses";
 
 const API_URL = 'http://localhost:8080/api/orders';
 
-export interface OrderResponse {
-    orderId: string;
-    status: string;
-    createdDate: string;
-    toName: string;
-    toPhone: string;
-    toEmail: string;
-    toProvince: string;
-    toDistrict: string;
-    toWard: string;
-    toAddress: string;
-    orderNote: string;
-    orderNoteCanceled: string;
-    totalPrice: number;
-    shipFee: number;
-    dateReceive: string;
-    dateExpected: string;
-}
 
-export interface responseData{
+
+interface responseData{
     totalPage: number;
     listOrder: OrderResponse[];
 }
-
 export const getOrders = async (userName: string, page: number, size: number,orderStatus: string): Promise<responseData> => {
     try {
         const response = await fetch(`${API_URL}/myOrders?userName=${userName}&page=${page}&size=${size}&orderStatus=${orderStatus}`);
@@ -94,7 +77,8 @@ export const getOrderById = async (orderId: string): Promise<OrderResponse> => {
             totalPrice: data.totalPrice,
             shipFee: data.shipFee,
             dateReceive: data.dateReceive,
-            dateExpected: data.dateExpected
+            dateExpected: data.dateExpected,
+            dateCancel:data.dateCancel
         });
     } catch (error) {
         console.error('Error fetching order:', error);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ReviewsModel } from "../../../model/ReviewsModel";
-import { getListReview } from "../../../api/ReviewsAPI";
+import { getListReview } from "../../../api/user/ReviewsAPI";
 import renderRate from "../../../util/Stars";
 
 interface ReviewsPropsInterface {

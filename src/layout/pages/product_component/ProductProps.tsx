@@ -3,9 +3,9 @@ import ProductModel from "../../../model/ProductModel";
 import ImageModel from "../../../model/ImageModel";
 
 import { Link } from "react-router-dom";
-import { get1Image } from "../../../api/ImagesAPI";
+import { get1Image } from "../../../api/user/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
-import { getListReview } from "../../../api/ReviewsAPI";
+import { getListReview } from "../../../api/user/ReviewsAPI";
 import renderRate from "../../../util/Stars";
 
 

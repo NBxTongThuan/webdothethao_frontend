@@ -1,18 +1,7 @@
+import { OrderItemResponse } from "../interface/Responses";
 
 const API_URL = 'http://localhost:8080/api/orderItems';
 
-export interface OrderItemResponse {
-    orderItemId: string;
-    price: number;
-    quantity: number;
-    orderId: string;
-    color: string;
-    size: string;
-    productName: string;
-    productId: string;
-    productAttributeId: string;
-    reviewed: boolean;
-}
 
 export const getOrderItemsByOrderId = async (orderId: string): Promise<OrderItemResponse[]> => {
     const response = await fetch(`${API_URL}/listOrderItem?orderId=${orderId}`);

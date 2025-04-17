@@ -2,7 +2,7 @@ import { use, useEffect, useState } from "react";
 import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck, Key } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
-import { getListCate } from "../../../api/CategoriesAPI";
+import { getListCate } from "../../../api/user/CategoriesAPI";
 import { getUserName, logOut, getCartId } from "../../../util/JwtService";
 
 interface NavbarInterface {
@@ -58,7 +58,9 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
   return (
     <nav className="bg-gray-800">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between">
-        <a className="text-white text-lg font-bold" href="/">Yousport</a>
+        <a className="text-white text-lg font-bold" href="/">
+          <img src="/images/logo192.png" style={{ width: "100px",height:"50px" }} />
+        </a>
         <button className="text-white md:hidden" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="fas fa-bars"></span>
         </button>

@@ -1,14 +1,6 @@
-import { ReviewsModel } from "../model/ReviewsModel";
+import { ReviewsModel } from "../../model/ReviewsModel";
+import { Review } from "../interface/Responses";
 import requestAPI from "./RequestApi";
-
-
-export interface Review {
-    reviewId: string;
-    rating: number;
-    comment: string;
-    createdDate: string;
-    edited: boolean;
-}
 
 export async function getListReview(productId: string): Promise<ReviewsModel[]> { 
     const link:string = `http://localhost:8080/api/reviews/getListReviews?productId=${productId}`;

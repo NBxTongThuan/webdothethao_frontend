@@ -1,4 +1,4 @@
-import { CategoriesModel } from "../model/CategoriesModel";
+import { CategoriesModel } from "../../model/CategoriesModel";
 import requestAPI from "./RequestApi";
 
 export async function getListCate(): Promise<CategoriesModel[]> {

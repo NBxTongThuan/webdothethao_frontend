@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getOrderById, OrderResponse } from "../../../api/OrderAPI";
-import { getOrderItemsByOrderId, OrderItemResponse } from "../../../api/OrderItemAPI";
-import { get1Image } from "../../../api/ImagesAPI";
+import { getOrderById } from "../../../api/user/OrderAPI";
+import { getOrderItemsByOrderId } from "../../../api/user/OrderItemAPI";
+import { get1Image } from "../../../api/user/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import OrderCancel from "./OrderCancel";
 import { Button } from "antd";
 import OrderReview from "./OrderReview";
 import { getUserName } from "../../../util/JwtService";
 import SeeReview from "./SeeReview";
+import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
+import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
 
 const OrderDetail: React.FC = () => {
     const { orderId } = useParams();
@@ -20,6 +22,7 @@ const OrderDetail: React.FC = () => {
     const [showOrderCancel, setShowOrderCancel] = useState(false);
     const [showOrderReview, setShowOrderReview] = useState(false);
     const [showSeeReview, setShowSeeReview] = useState(false);
+    const [payment, setPayment] = useState<PaymentResponse>();
     const token = localStorage.getItem('token');
     const userName = getUserName(token + "");
 
@@ -41,6 +44,16 @@ const OrderDetail: React.FC = () => {
                 .catch(setError);
         }
     }, [orderId]);
+
+    useEffect(() => {
+
+        if (orderId) {
+            getPaymentByOrderId(orderId)
+                .then(setPayment)
+                .catch(setError)
+        }
+
+    }, [orderId])
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -102,6 +115,20 @@ const OrderDetail: React.FC = () => {
                 return status;
         }
     };
+    const getPaymentStatus = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return 'Chưa thanh toán';
+            case 'COMPLETED':
+                return 'Đã thanh toán';
+            case 'FAILED':
+                return 'Thanh toán thất bại';
+            case 'CANCELLED':
+                return 'Đã hủy';
+            default:
+                return status;
+        }
+    };
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -153,6 +180,13 @@ const OrderDetail: React.FC = () => {
                                 </>
                             )}
 
+                            {order.dateCancel && (
+                                <>
+                                    <div className="text-gray-600 text-left">Ngày hủy:</div>
+                                    <div className="font-medium text-left text-gray-800">{new Date(order.dateCancel).toLocaleDateString('vi-VN')}</div>
+                                </>
+                            )}
+
                             <div className="text-gray-600 text-left">Tổng tiền hàng:</div>
                             <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice)} VNĐ</div>
 
@@ -161,6 +195,13 @@ const OrderDetail: React.FC = () => {
 
                             <div className="text-gray-600 text-left">Tổng tiền:</div>
                             <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice + order.shipFee)} VNĐ</div>
+
+                            <div className="text-gray-600 text-left">Phương thức thanh toán:</div>
+                            <div className="font-medium text-red-600 text-left">{payment?.paymentMethod === 'CASH_ON_DELIVERY' ? "Thanh toán khi nhận hàng" : "Thanh toán VN-Pay"}</div>
+
+                            <div className="text-gray-600 text-left">Trạng thái thanh toán:</div>
+                            <div className="font-medium text-red-600 text-left">{getPaymentStatus(payment?.paymentStatus + "")}</div>
+
 
                         </div>
                     </div>
@@ -182,6 +223,9 @@ const OrderDetail: React.FC = () => {
 
                             <div className="text-gray-600 text-left">Địa chỉ:</div>
                             <div className="font-medium text-left text-gray-800">{order.toAddress}, {order.toWard}, {order.toDistrict}, {order.toProvince}</div>
+
+
+
                         </div>
                     </div>
                 </div>

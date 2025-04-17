@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 import StarRating from '../../../util/StarsRating';
 import { NotepadText } from 'lucide-react';
-import { getAReview, Review } from '../../../api/ReviewsAPI';
+import { getAReview} from '../../../api/user/ReviewsAPI';
+import { Review } from '../../../api/interface/Responses';
 interface SeeReviewProps {
     orderItemId: string;
     userName: string;

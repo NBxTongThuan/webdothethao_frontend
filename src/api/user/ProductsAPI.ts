@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ProductModel from "../model/ProductModel";
+import ProductModel from "../../model/ProductModel";
 import requestAPI from "./RequestApi";
 
 

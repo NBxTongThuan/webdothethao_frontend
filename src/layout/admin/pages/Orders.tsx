@@ -1,75 +1,254 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/AdminLayout';
+import { Table, Card, Select, Space, Input, Button } from 'antd';
+import { EyeOutlined, SearchOutlined, FilterOutlined, DownloadOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { OrderResponse } from '../../../api/interface/Responses';
+import { getAllOrders } from '../../../api/admin/AdminOrderAPI';
+import { toast } from 'react-toastify';
+import OrderDetailAdmin from '../components/OrderDetailAdmin';
+import NumberFormat from '../../../util/NumberFormat';
+
+const { Column } = Table;
+const { Option } = Select;
+
 
 const Orders: React.FC = () => {
-    const [orders] = useState([
-        { id: 'ORD001', customer: 'Nguyễn Văn A', total: 1650000, status: 'Đã giao', date: '2024-03-20' },
-        { id: 'ORD002', customer: 'Trần Thị B', total: 800000, status: 'Đang xử lý', date: '2024-03-19' },
-        { id: 'ORD003', customer: 'Lê Văn C', total: 1200000, status: 'Chờ xác nhận', date: '2024-03-18' },
-    ]);
+
+
+    const [orders, setOrders] = useState<OrderResponse[]>([]);
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [showOrderDetail, setShowOrderDetail] = useState(false);
+    const [totalPage, setTotalPage] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [size, setSize] = useState<number>(4);
+    const [selectedItem, setSelectedItem] = useState('');
+    const [totalElement, setTotalElement] = useState<number>(0);
+
+    const [filteredOrders, setFilteredOrders] = useState<OrderResponse[]>([]);
+
+
+    useEffect(() => {
+        getAllOrders(currentPage - 1, size, statusFilter)
+            .then(response => {
+                setOrders(response.listOrder);
+                setTotalPage(response.totalPage);
+                setTotalElement(response.totalSize);
+            })
+            .catch(
+                error => {
+                    toast.error("Không lấy được danh sách!");
+                }
+            )
+    }, [currentPage, size, statusFilter]);
+
+
+    useEffect(() => {
+        setFilteredOrders(orders.filter((order) => {
+            if (statusFilter === 'all') return true;
+            return order.status === statusFilter;
+        }))
+    }, [statusFilter, orders])
+
+    const handleFilter = (value: string) => {
+        setStatusFilter(value);
+        setFilteredOrders(orders.filter((order) => {
+            if (value === 'all') return true;
+            return order.status === value;
+        }));
+    }
+
+    const navigate = useNavigate();
+
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return 'Chờ xác nhận';
+            case 'CONFIRMED':
+                return 'Đã xác nhận';
+            case 'SHIPPING':
+                return 'Đang giao hàng';
+            case 'DELIVERED':
+                return 'Đã giao hàng';
+            case 'CANCELLED':
+                return 'Đã hủy';
+            default:
+                return status;
+        }
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return 'bg-yellow-100 text-yellow-800';
+            case 'CONFIRMED':
+                return 'bg-blue-100 text-blue-800';
+            case 'SHIPPING':
+                return 'bg-purple-100 text-purple-800';
+            case 'DELIVERED':
+                return 'bg-green-100 text-green-800';
+            case 'CANCELLED':
+                return 'bg-red-100 text-red-800';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
 
     return (
         <AdminLayout>
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Quản lý đơn hàng</h2>
-                <div className="flex space-x-3">
-                    <button className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg flex items-center transition-colors duration-200 border border-gray-300">
-                        <i className="bi bi-filter mr-2"></i>
-                        Lọc
-                    </button>
-                    <button className="bg-white hover:bg-gray-50 text-green-600 px-4 py-2 rounded-lg flex items-center transition-colors duration-200 border border-gray-300">
-                        <i className="bi bi-download mr-2"></i>
-                        Xuất báo cáo
-                    </button>
-                </div>
-            </div>
+            <div className="container mx-auto p-4">
+                <Card title="Quản lý đơn hàng" className="shadow-lg">
+                    <Space direction="vertical" style={{ width: '100%' }}>
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="flex space-x-4">
+                                <Input
+                                    placeholder="Tìm kiếm đơn hàng..."
+                                    prefix={<SearchOutlined />}
+                                    style={{ width: 300 }}
+                                />
+                                <Select
+                                    style={{ width: 200 }}
+                                    placeholder="Lọc theo trạng thái"
+                                    onChange={(value) => {
+                                        setStatusFilter(value);
+                                        handleFilter(value);
+                                    }
+                                    }
+                                    defaultValue="all"
+                                >
+                                    <Option value="all">Tất cả</Option>
+                                    <Option value="PENDING">Chờ xác nhận</Option>
+                                    <Option value="CONFIRMED">Đã xác nhận</Option>
+                                    <Option value="SHIPPING">Đang giao hàng</Option>
+                                    <Option value="DELIVERED">Đã giao hàng</Option>
+                                    <Option value="CANCELLED">Đã hủy</Option>
+                                </Select>
+                                <Button icon={<FilterOutlined />}>
+                                    Bộ lọc
+                                </Button>
+                            </div>
+                            <Button type="primary" icon={<DownloadOutlined />}>
+                                Xuất báo cáo
+                            </Button>
+                        </div>
 
-            <div className="bg-white rounded-lg shadow">
-                <div className="p-6">
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã đơn</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng tiền</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày đặt</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {orders.map(order => (
-                                    <tr key={order.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.customer}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.total.toLocaleString('vi-VN')}đ</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{order.date}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                                order.status === 'Đã giao' 
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : order.status === 'Đang xử lý'
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-blue-100 text-blue-800'
-                                            }`}>
-                                                {order.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            <button className="text-blue-500 hover:text-blue-700 mr-3">
-                                                <i className="bi bi-eye"></i>
-                                            </button>
-                                            <button className="text-green-500 hover:text-green-700">
-                                                <i className="bi bi-check-lg"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                        <Table
+                            dataSource={filteredOrders}
+                            rowKey="id"
+                            className="shadow-sm"
+                            
+                            pagination={{
+                                current: currentPage,
+                                total: totalElement,
+                                pageSize: size,
+                                onChange: (page) => setCurrentPage(page),
+                                onShowSizeChange: (current, size) => setSize(size),
+                                showSizeChanger: true,
+                                pageSizeOptions: ['4', '8', '12', '16', '20'],
+                                showTotal: (total) => `Tổng ${total} đơn hàng`
+                            }}
+                            scroll={{ y: 600 }}
+                        >
+                            <Column
+                                title="Mã đơn hàng"
+                                align='center'
+                                dataIndex="orderId"
+                                key="orderId"
+                                ellipsis={true}
+                            />
+                            <Column
+                                title="Ngày đặt"
+                                align='center'
+                                dataIndex="createdDate"
+                                key="createdDate"
+                                width={120}
+                                // ellipsis={true}
+                            />
+                            {/* <Column
+                                title="Ngày giao dự kiến"
+                                dataIndex="dateExpected"
+                                key="dateExpected"
+                                ellipsis={true}
+                            /> */}
+                            <Column
+                                title="Người nhận"
+                                align='center'
+                                dataIndex="toName"
+                                key="toName"
+                                width={180}
+                                ellipsis={true}
+                            />
+                            <Column
+                                title="SĐT"
+                                align='center'
+                                dataIndex="toPhone"
+                                key="toPhone"
+                                ellipsis={true}
+                                render={(toPhone) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${toPhone}`}>
+                                        {toPhone.toLocaleString("vi-VN")}
+                                    </span>
+                                )}
+                            />
+                            {/* <Column
+                                title="Địa chỉ"
+                                dataIndex="toAddress"
+                                key="toAddress"
+                                ellipsis={true}
+                            /> */}
+                            {/* <Column
+                                title="Ghi chú"
+                                dataIndex="orderNote"
+                                key="orderNote"
+                                ellipsis={true}
+                            /> */}
+                            <Column
+                                title="Trạng thái"
+                                align='center'
+                                dataIndex="status"
+                                key="status"
+                                width={190}
+                                render={(status) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
+                                        {getStatusText(status)}
+                                    </span>
+                                )}
+                            />
+                            <Column
+                                title="Tổng tiền"
+                                align='center'
+                                dataIndex="totalPrice"
+                                key="totalPrice"
+                                width={190}
+                                ellipsis={true}
+                                render={(totalPrice) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${totalPrice}`}>
+                                        {NumberFormat(totalPrice)} VNĐ
+                                    </span>
+                                )}
+                            />
+                            <Column
+                                title="Thao tác"
+                                align='center'
+                                key="action"
+                                render={(_, record) => (
+                                    <Button type="primary" onClick={
+                                        () => {
+                                            setSelectedItem(record.orderId);
+                                            setShowOrderDetail(true);
+                                        }}
+                                    >Xem chi tiết</Button>
+                                )}
+                            />
+                        </Table>
+                        {
+                            showOrderDetail &&
+                            (<OrderDetailAdmin
+                                orderId={selectedItem}
+                                onClose={() => setShowOrderDetail(false)} />)
+                        }
+                    </Space>
+                </Card>
             </div>
         </AdminLayout>
     );

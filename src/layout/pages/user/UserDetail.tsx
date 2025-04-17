@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUserDetail } from "../../../api/UserDetailAPI";
+import { getUserDetail } from "../../../api/user/UserDetailAPI";
 import { getUserName } from "../../../util/JwtService";
 import UserDetailModel from "../../../model/UserDetailModel";
 import { toast } from "react-toastify";

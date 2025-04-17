@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { CartItemModel } from "../../../model/CartItemModel";
 import { useEffect, useState } from "react";
-import { getListCartItemByCartID } from "../../../api/CartAPI";
+import { getListCartItemByCartID } from "../../../api/user/CartAPI";
 import CartItemProp from "./CartItemProp";
 import NumberFormat from "../../../util/NumberFormat";
 import { Link } from "react-router-dom";

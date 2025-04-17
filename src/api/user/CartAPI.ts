@@ -1,4 +1,4 @@
-import { CartItemModel } from "../model/CartItemModel";
+import { CartItemModel } from "../../model/CartItemModel";
 import requestAPI from "./RequestApi";
 
 export async function getListCartItemByCartID(cartID: string): Promise<CartItemModel[]> {

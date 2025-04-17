@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { getUserDetail } from "../../../api/UserDetailAPI";
+import { getUserDetail } from "../../../api/user/UserDetailAPI";
 import { getUserName } from "../../../util/JwtService";
 import UserDetailModel from "../../../model/UserDetailModel";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { District, getProvinces, Province, Ward, getDistricts, getWards } from "../../../api/AddressAPI";
+import {  getProvinces, getDistricts, getWards } from "../../../api/user/AddressAPI";
 import { confirmAlert } from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { District, Province, Ward } from "../../../api/interface/Responses";
 
 
 interface FormData {

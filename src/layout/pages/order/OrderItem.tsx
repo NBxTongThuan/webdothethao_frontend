@@ -1,6 +1,6 @@
 import { CartItemModel } from "../../../model/CartItemModel";
 import NumberFormat from "../../../util/NumberFormat";
-import { get1Image } from "../../../api/ImagesAPI";
+import { get1Image } from "../../../api/user/ImagesAPI";
 import { useEffect, useState } from "react";
 
 interface OrderItemProps {

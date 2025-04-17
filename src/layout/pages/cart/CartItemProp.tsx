@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CartItemModel } from '../../../model/CartItemModel';
-import { get1Image } from '../../../api/ImagesAPI';
+import { get1Image } from '../../../api/user/ImagesAPI';
 import NumberFormat from '../../../util/NumberFormat';
 import { Link } from 'react-router-dom';
 

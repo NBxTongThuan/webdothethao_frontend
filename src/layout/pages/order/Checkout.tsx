@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CartItemModel } from '../../../model/CartItemModel';
-import { getListCartItemByCartID } from '../../../api/CartAPI';
+import { getListCartItemByCartID } from '../../../api/user/CartAPI';
 import OrderItemModel from '../../../model/OrderItemModel';
 import OrdersModel from '../../../model/OrdersModel';
 import OrderItem from './OrderItem';
-import { getProvinces, getDistricts, getWards, Province, District, Ward } from '../../../api/AddressAPI';
+import { getProvinces, getDistricts, getWards } from '../../../api/user/AddressAPI';
 import { getUserName } from '../../../util/JwtService';
 import { toast } from 'react-toastify';
+import { District, Province, Ward } from '../../../api/interface/Responses';
 
 interface FormData {
     fullName: string;

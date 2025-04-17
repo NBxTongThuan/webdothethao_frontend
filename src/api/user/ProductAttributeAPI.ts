@@ -1,4 +1,4 @@
-import ProductAttributeModel from "../model/ProductAttributeModel";
+import ProductAttributeModel from "../../model/ProductAttributeModel";
 import requestAPI from "./RequestApi";
 
 export async function getListProductAttributes(productId: string): Promise<ProductAttributeModel[]> {

@@ -2,14 +2,14 @@ class ImageModel {
     image_id: string;
     data?: string;
     name?: string;
-    color?: string;
+    // color?: string;
     url?: string;
 
     constructor(
         image_id: string,
         data?: string,
         name?: string,
-        color?: string,
+        // color?: string,
         url?: string
 
     ) {

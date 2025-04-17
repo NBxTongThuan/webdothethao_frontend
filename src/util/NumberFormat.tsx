@@ -1,4 +1,3 @@
-import { isUndefined } from "util";
 
 function NumberFormat(x: number | undefined) {
     if(x === undefined)

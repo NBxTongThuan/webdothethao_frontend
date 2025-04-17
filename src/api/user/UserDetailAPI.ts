@@ -1,5 +1,5 @@
 import requestAPI from "./RequestApi";
-import UserDetailModel from "../model/UserDetailModel";
+import UserDetailModel from "../../model/UserDetailModel";
 
 export async function getUserDetail(userName: string): Promise<UserDetailModel> {
     const link: string = `http://localhost:8080/api/userDetail/getUserDetailByUserName?userName=${userName}`;

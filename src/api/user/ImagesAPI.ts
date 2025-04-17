@@ -1,4 +1,4 @@
-import ImageModel from "../model/ImageModel";
+import ImageModel from "../../model/ImageModel";
 import requestAPI from "./RequestApi";
 
 export async function getListImage(productId: string): Promise<ImageModel[]> {
@@ -17,7 +17,7 @@ export async function getListImage(productId: string): Promise<ImageModel[]> {
                 image_id: responseDATA[key].imageId,
                 data: responseDATA[key].data,
                 name: responseDATA[key].name,
-                color: responseDATA[key].color,
+                // color: responseDATA[key].color,
                 url: responseDATA[key].url,
             });
     }
@@ -42,7 +42,7 @@ export async function get1Image(productId: string): Promise<ImageModel | null> {
         image_id: responseDATA.imageId,
         data: responseDATA.data,
         name: responseDATA.name,
-        color: responseDATA.color,
+        // color: responseDATA.color,
         url: responseDATA.url,
     });
 }

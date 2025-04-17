@@ -1,5 +1,5 @@
 
-import BrandModel from "../model/BrandModel";
+import BrandModel from "../../model/BrandModel";
 import requestAPI from "./RequestApi";
 
 export async function getBrand(productId: string): Promise<BrandModel> {

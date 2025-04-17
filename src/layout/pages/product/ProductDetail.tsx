@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getListProductAttributes } from "../../../api/ProductAttributeAPI";
+import { getListProductAttributes } from "../../../api/user/ProductAttributeAPI";
 import ProductAttributeModel from "../../../model/ProductAttributeModel";
 import ProductModel from "../../../model/ProductModel";
-import { get1Product } from "../../../api/ProductsAPI";
+import { get1Product } from "../../../api/user/ProductsAPI";
 import ImageModel from "../../../model/ImageModel";
-import { getListImage } from "../../../api/ImagesAPI";
+import { getListImage } from "../../../api/user/ImagesAPI";
 import BrandModel from "../../../model/BrandModel";
-import { getBrand } from "../../../api/BrandAPI";
+import { getBrand } from "../../../api/user/BrandAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import Reviews from "../product_component/Reviews";
 import { getUserName } from "../../../util/JwtService";
 import { toast } from "react-toastify";
-import { getListReview } from "../../../api/ReviewsAPI";
+import { getListReview } from "../../../api/user/ReviewsAPI";
 import { ReviewsModel } from "../../../model/ReviewsModel";
 import renderRate from "../../../util/Stars";
 

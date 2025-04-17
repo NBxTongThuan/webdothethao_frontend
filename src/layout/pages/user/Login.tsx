@@ -128,7 +128,7 @@ const Login: React.FC = () => {
                                 Ghi nhớ đăng nhập
                             </label>
                         </div>
-                        <a href="/forgot-password" className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors duration-200">
+                        <a href="/forgotPassword" className="text-sm font-medium text-red-500 hover:text-red-600 transition-colors duration-200">
                             Quên mật khẩu?
                         </a>
                     </div>
@@ -138,10 +138,9 @@ const Login: React.FC = () => {
                         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
                     >
                         Đăng nhập
-                        {/* <ToastContainer /> */}
                     </button>
 
-                    <div className="relative my-6">
+                    {/* <div className="relative my-6">
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-full border-t border-gray-200"></div>
                         </div>
@@ -165,7 +164,7 @@ const Login: React.FC = () => {
                             <i className="fab fa-facebook text-blue-600 mr-2"></i>
                             Facebook
                         </button>
-                    </div>
+                    </div> */}
                 </form>
 
                 <p className="mt-8 text-center text-sm text-gray-600">
