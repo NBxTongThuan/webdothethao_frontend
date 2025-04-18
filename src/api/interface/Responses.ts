@@ -63,6 +63,15 @@ export interface Review {
     edited: boolean;
 }
 
+
+export interface CategoryResponse{
+    categoriesId:number;
+    categoriesName:string;
+    imageData:string;
+    enable:boolean;
+}
+
+
 // ProvinceResponse
 export interface Province {
     ProvinceCode: string;

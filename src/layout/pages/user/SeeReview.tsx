@@ -162,14 +162,13 @@ const SeeReview:React.FC<SeeReviewProps> = (props) => {
                                 <i className="fas fa-times"></i>
                                 <span>Hủy</span>
                             </button>
-                            <button
-                                disabled={review?.edited == true}
+                            { review?.edited == false && <button
                                 type="submit"
                                 className="px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium shadow-sm flex items-center space-x-2"
                             >
                                 <i className="fas fa-paper-plane"></i>
                                 <span>Cập nhật đánh giá</span>
-                            </button>
+                            </button>}
                         </div>
                     </form>
                 </motion.div>

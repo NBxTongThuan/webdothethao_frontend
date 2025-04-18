@@ -8,6 +8,8 @@ import { getAllOrders } from '../../../api/admin/AdminOrderAPI';
 import { toast } from 'react-toastify';
 import OrderDetailAdmin from '../components/OrderDetailAdmin';
 import NumberFormat from '../../../util/NumberFormat';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const { Column } = Table;
 const { Option } = Select;
@@ -27,6 +29,24 @@ const Orders: React.FC = () => {
 
     const [filteredOrders, setFilteredOrders] = useState<OrderResponse[]>([]);
 
+    const exportToExcel = () => {
+        const exportData = filteredOrders.map(order => ({
+          "Mã đơn hàng": order.orderId,
+          "Ngày đặt": order.createdDate,
+          "Người nhận": order.toName,
+          "SĐT": order.toPhone,
+          "Trạng thái": getStatusText(order.status),
+          "Tổng tiền": NumberFormat(order.totalPrice) + " VNĐ"
+        }));
+      
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Đơn hàng");
+      
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const file = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(file, `don_hang_${new Date().toISOString().slice(0, 10)}.xlsx`);
+      };
 
     useEffect(() => {
         getAllOrders(currentPage - 1, size, statusFilter)
@@ -127,7 +147,9 @@ const Orders: React.FC = () => {
                                     Bộ lọc
                                 </Button>
                             </div>
-                            <Button type="primary" icon={<DownloadOutlined />}>
+                            <Button type="primary" icon={<DownloadOutlined />}
+                            onClick={() => exportToExcel()}
+                            >
                                 Xuất báo cáo
                             </Button>
                         </div>
