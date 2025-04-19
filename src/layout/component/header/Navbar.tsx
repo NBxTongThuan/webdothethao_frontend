@@ -18,6 +18,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
 
+  
   // Theo dõi sự thay đổi của localStorage
   useEffect(() => {
     const handleStorageChange = () => {

@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 
 const Cart: React.FC = () => {
     const { cartID } = useParams();
+    console.log(cartID);
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const token = localStorage.getItem('token');
     const navigate = useNavigate();

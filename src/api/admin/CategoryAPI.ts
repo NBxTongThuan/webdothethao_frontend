@@ -10,6 +10,7 @@ interface responseData {
 
 export const getAllCategories = async (page: number, size: number): Promise<responseData> => {
 
+
     try {
         const response = await fetch(`${API_URL}/getAllCategory?page=${page}&size=${size}`);
 
@@ -45,4 +46,15 @@ export const getAllCategories = async (page: number, size: number): Promise<resp
         throw error;
     }
 
+}
+
+export const checkCategoryNameExist = async (categoryName: string): Promise<boolean> => {
+    try {   
+        const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
 }

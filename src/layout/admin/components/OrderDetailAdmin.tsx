@@ -114,7 +114,6 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
             "orderStatus": orderStatus,
             "orderCancelNote": orderCancelNote
         };
-
         try {
             const response = await fetch(url, {
                 method: 'PUT',
