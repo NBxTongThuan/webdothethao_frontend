@@ -172,9 +172,63 @@ const Checkout: React.FC = () => {
         }
     }
 
+    const hadleOrderVNPay = async () => {
+        if (formData.paymentMethod == 'vn-pay') {
+
+            const url = `http://localhost:8080/api/payment/vnpay/create`;
+            const data = {
+                userName: userName,
+                totalPrice: finalTotal,
+                shipFee: shippingFee,
+                orderNote: formData.note,
+                toAddress: formData.address,
+                toProvince: handleProvinceName(formData.toProvince),
+                toDistrict: handleDistrictName(formData.toDistrict),
+                toWard: handleWardName(formData.toWard),
+                toPhone: formData.phone,
+                toName: formData.fullName,
+                toEmail: formData.email,
+                orderItems: orderItems.map(item => ({
+                    price: item.price,
+                    quantity: item.quantity,
+                    productAttributeId: item.productAttributeId
+                }))
+            }
+
+            console.log(data);
+
+            try {
+                const response = await fetch(url,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const paymentUrl = result.paymentUrl;
+                    // 👇 Redirect qua VNPay
+                    window.location.href = paymentUrl;
+                } else {
+                    toast.error('Đặt hàng thất bại');
+                }
+            } catch (error) {
+                toast.error('Đặt hàng thất bại');
+            }
+        }
+    }
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        hadleOrderCOD();
+        if(formData.paymentMethod == 'cod')
+        {
+            hadleOrderCOD();
+        }else{
+            hadleOrderVNPay();
+        }
     };
 
     const handleProvinceName = (provinceCode: string) => {
@@ -358,12 +412,12 @@ const Checkout: React.FC = () => {
                                         <input
                                             type="radio"
                                             name="paymentMethod"
-                                            value="banking"
-                                            checked={formData.paymentMethod === 'banking'}
+                                            value="vn-pay"
+                                            checked={formData.paymentMethod === 'vn-pay'}
                                             onChange={handleChange}
                                             className="h-4 w-4 text-blue-600 focus:ring-blue-500"
                                         />
-                                        <span>Chuyển khoản ngân hàng</span>
+                                        <span>Thanh toán bằng VN-Pay</span>
                                     </label>
                                 </div>
                             </div>

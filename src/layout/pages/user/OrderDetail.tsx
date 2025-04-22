@@ -11,6 +11,7 @@ import { getUserName } from "../../../util/JwtService";
 import SeeReview from "./SeeReview";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
+import { toast } from "react-toastify";
 
 const OrderDetail: React.FC = () => {
     const { orderId } = useParams();
@@ -130,6 +131,46 @@ const OrderDetail: React.FC = () => {
         }
     };
 
+    const handleRePayment = async () => {
+
+        if (isPaymented()) {
+            const url = `http://localhost:8080/api/payment/vnpay/reCreate?paymentId=${payment?.paymentId}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const paymentUrl = result.paymentUrl;
+                    // 👇 Redirect qua VNPay
+                    window.location.href = paymentUrl;
+                } else {
+                    toast.error('Đặt hàng thất bại');
+                }
+            } catch (error) {
+                toast.error('Đặt hàng thất bại');
+            }
+
+        }
+
+
+
+    }
+
+    const isPaymented = (): boolean => {
+
+        return order.status == "PENDING" && payment?.paymentStatus == "PENDING" && payment.paymentMethod == "VN_PAY";
+
+    }
+
+    console.log(isPaymented());
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'PENDING':
@@ -202,6 +243,15 @@ const OrderDetail: React.FC = () => {
                             <div className="text-gray-600 text-left">Trạng thái thanh toán:</div>
                             <div className="font-medium text-red-600 text-left">{getPaymentStatus(payment?.paymentStatus + "")}</div>
 
+                            <div className="text-gray-600 text-left"></div>
+                            {isPaymented() == true && <div className="font-medium text-green-600 text-left">
+                                <Button className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition duration-300 font-semibold shadow-md"
+                                    onClick={() => handleRePayment()}
+                                >
+                                    Thanh toán ngay
+                                </Button>
+
+                            </div>}
 
                         </div>
                     </div>

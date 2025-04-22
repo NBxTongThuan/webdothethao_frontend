@@ -63,7 +63,7 @@ export interface Review {
     edited: boolean;
 }
 
-
+//CategoryResponse
 export interface CategoryResponse{
     categoriesId:number;
     categoriesName:string;
@@ -71,6 +71,13 @@ export interface CategoryResponse{
     enable:boolean;
 }
 
+//TypeResponse
+export interface TypesResponse{
+    typeId:number;
+    typeName:string;
+    enable:boolean;
+    categoryName:string;
+}
 
 // ProvinceResponse
 export interface Province {

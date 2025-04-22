@@ -48,8 +48,44 @@ export const getAllCategories = async (page: number, size: number): Promise<resp
 
 }
 
+export const getAllCategory = async () => {
+
+
+    try {
+        const response = await fetch(`${API_URL}/findAll`);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+
+        const listCategories = data;
+
+        if (!listCategories || listCategories.length === 0) {
+            return {
+                listCategories: [],
+            };
+        }
+
+        const categories: CategoryResponse[] = listCategories.map((category: CategoryResponse) => ({
+            categoriesId: category.categoriesId,
+            categoriesName: category.categoriesName,
+            imageData: category.imageData,
+            enable: category.enable
+        }));
+        return {
+            listCategories: categories
+        };
+
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+
+}
+
 export const checkCategoryNameExist = async (categoryName: string): Promise<boolean> => {
-    try {   
+    try {
         const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`);
         const data = await response.json();
         return data;

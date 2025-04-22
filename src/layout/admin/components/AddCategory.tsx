@@ -228,7 +228,7 @@ const AddCategory: React.FC<ModalProps> = (props) => {
                                                         />
                                                     </label>
                                                 </div>
-                                                <p className="text-xs text-gray-500">PNG, JPG, GIF tối đa 10MB</p>
+                                                <p className="text-xs text-gray-500">PNG, JPG, GIF tối đa 1MB</p>
                                             </div>
                                         </div>
                                         {categoryImage && (

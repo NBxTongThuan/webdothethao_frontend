@@ -36,7 +36,7 @@ const EditCategory: React.FC<ModalProps> = (props) => {
 
     const checkCategoryNameExist = async (categoryName: string) => {
 
-        if (categoryName != oldCategoryName) {
+        if (categoryName.trim() != oldCategoryName) {
             try {
                 const response = await fetch(`http://localhost:8080/api/admin/categories/checkCategoryExists?categoryName=${categoryName}`);
                 const data = await response.json();

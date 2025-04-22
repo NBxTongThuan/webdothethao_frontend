@@ -25,6 +25,8 @@ import MyOrder from './layout/pages/user/MyOrder';
 import OrderDetail from './layout/pages/user/OrderDetail';
 import LoginAdmin from './layout/admin/pages/LoginAdmin';
 import OrderDetailAdmin from './layout/admin/components/OrderDetailAdmin';
+import Types from './layout/admin/pages/Types';
+import PaymentReturnPage from './layout/pages/order/PaymentReturnPage';
 
 
 const MyRoute = () =>{
@@ -58,6 +60,7 @@ const MyRoute = () =>{
           <Route path="/resetPassword/:email/:forgotPasswordCode" element={<ResetPassword />} />
           <Route path="/myOrder" element={<MyOrder />} />
           <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
+          <Route path="/payment-return/:status" element={<PaymentReturnPage />} />
 
 
 {/* Admin path */}
@@ -66,8 +69,10 @@ const MyRoute = () =>{
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/categories" element={<Categories />} />
+          <Route path="/admin/types" element={<Types />} />
           <Route path="/admin/settings" element={<Settings />} />
           <Route path='/admin' element={<LoginAdmin />} />
+
         </Routes>
        {!isAdminPath && <Footer />}
     </div>

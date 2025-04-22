@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { Pagination } from "../../../util/Pagination";
 import { OrderResponse } from '../../../api/interface/Responses';
 import NumberFormat from '../../../util/NumberFormat';
+import dayjs from 'dayjs';
 
 const { Column } = Table;
 const { Option } = Select;
@@ -112,18 +113,23 @@ const MyOrder: React.FC = () => {
                     </Select>
 
                     <Table dataSource={filteredOrders} rowKey="orderId" pagination={false}>
-                        <Column 
-                        ellipsis={true}
-                        title="Mã đơn hàng" dataIndex="orderId" key="orderId" />
-                        <Column title="Ngày đặt" dataIndex="createdDate" key="createdDate" />
+                        <Column
+                            ellipsis={true}
+                            title="Mã đơn hàng" dataIndex="orderId" key="orderId" />
+                        <Column
+                            title="Ngày đặt"
+                            dataIndex="createdDate"
+                            key="createdDate"
+                            render={(date: string) => dayjs(date).format('DD/MM/YYYY HH:mm')}
+                        />
                         {/* <Column title="Ngày giao dự kiến" dataIndex="dateExpected" key="dateExpected" /> */}
                         <Column title="Người nhận" dataIndex="toName" key="toName" />
                         <Column title="SĐT" dataIndex="toPhone" key="toPhone" />
                         <Column title="Địa chỉ" dataIndex="toAddress" key="toAddress" />
                         {/* <Column title="Ghi chú" dataIndex="orderNote" key="orderNote" /> */}
-                        <Column 
-                        align='center'
-                        title="Trạng thái" dataIndex="status" key="status"
+                        <Column
+                            align='center'
+                            title="Trạng thái" dataIndex="status" key="status"
 
                             render={(status) => (
                                 <span className={`px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
