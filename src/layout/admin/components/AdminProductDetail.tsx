@@ -1,17 +1,19 @@
-import { Button, ConfigProvider, Table, Tag } from "antd";
-import { AnimatePresence, motion } from "framer-motion";
-import { ProductAttributeResponse, ProductResponse } from "../../../api/interface/Responses";
-import { useEffect, useState } from "react";
-import { getAllProductAttributeByProductId } from "../../../api/admin/AdminProductAttributeAPI";
+import React, { useEffect, useState } from 'react';
+import { Button, Table, Tag, ConfigProvider, Descriptions } from 'antd';
+import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ProductResponse, ProductAttributeResponse } from '../../../api/interface/Responses';
+import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProductAttributeAPI';
 import { toast } from "react-toastify";
-import Column from "antd/es/table/Column";
-import { CheckOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+
+const { Column } = Table;
+const { Item } = Descriptions;
 
 interface ModalProps {
     product: ProductResponse | undefined;
     onClose: () => void;
+    
 }
-
 
 const AdminProductDetail: React.FC<ModalProps> = (props) => {
 
@@ -43,200 +45,207 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
         , [props.product]);
 
     return (
-
         <ConfigProvider getPopupContainer={() => document.body}>
             <AnimatePresence>
                 <motion.div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4"
+                    className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={(e: React.MouseEvent<HTMLDivElement>) => e.target === e.currentTarget && props.onClose()}
                 >
                     <motion.div
-                        className="bg-white rounded-xl p-8 w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto "
+                        className="bg-white rounded-2xl p-8 w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto shadow-2xl"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.9, opacity: 0 }}
                     >
-                        <div className="container mx-auto px-4 py-8">
-                            <div>
-                                <div>Mã sản phẩm: </div>
-                                <div>{props.product?.productId}</div>
-
-                                <div>Tên sản phẩm: </div>
-                                <div>{props.product?.productName}</div>
-
-                                <div>Hãng: </div>
-                                <div>{props.product?.brandName}</div>
-
-                                <div>Số lượng bán: </div>
-                                <div>{props.product?.quantitySold}</div>
-
-                                <div>Mô tả: </div>
-                                <div>{props.product?.description}</div>
-
-                                <div>Trạng thái trưng bày: </div>
-                                <div>{props.product?.inStock ? "Đang được trưng bày" : "Ngưng trưng bày"}</div>
-
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between border-b pb-4">
+                                <h2 className="text-2xl font-bold text-gray-800">Chi tiết sản phẩm</h2>
+                                <Button 
+                                    type="text" 
+                                    icon={<CloseOutlined />} 
+                                    onClick={props.onClose}
+                                    className="hover:bg-gray-100 rounded-full"
+                                />
                             </div>
-                            <div> Danh sách thuộc tính của sản phẩm</div>
-                            <Table
-                                dataSource={listProductAttribute}
-                                rowKey="productAttributeId"
-                                className='shadow-sm'
 
-                                pagination={{
-                                    current: currentPage,
-                                    total: totalElement,
-                                    pageSize: size,
-                                    onChange: (page) => setCurrentPage(page),
-                                    onShowSizeChange: (current, size) => setSize(size),
-                                    showSizeChanger: true,
-                                    pageSizeOptions: ['4', '8', '12', '16', '20'],
-                                    showTotal: (total) => `Tổng ${total} thuộc tính`
-                                }}
-                                scroll={{ y: 600 }}
-                            >
-
-                                <Column
-                                    title="Mã thuộc tính"
-                                    align='center'
-                                    dataIndex="productAttributeId"
-                                    key="productAttributeId"
-                                    ellipsis={true}
-                                    width={120}
-                                    render={(productAttributeId) => (
-                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${productAttributeId}`}>
-                                            {productAttributeId.toLocaleString("vi-VN")}
-                                        </span>
-                                    )}
-                                />
-
-                                <Column
-                                    title="Màu"
-                                    align='center'
-                                    dataIndex="color"
-                                    key="color"
-                                    ellipsis={true}
-                                    width={70}
-                                    render={(color) => (
-                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${color}`}>
-                                            {color.toLocaleString("vi-VN")}
-                                        </span>
-                                    )}
-                                />
-
-                                <Column
-                                    title="Kích cỡ"
-                                    align='center'
-                                    dataIndex="size"
-                                    key="size"
-                                    ellipsis={true}
-                                    width={70}
-                                    render={(size) => (
-                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${size}`}>
-                                            {size.toLocaleString("vi-VN")}
-                                        </span>
-                                    )}
-                                />
-
-                                <Column
-                                    title="Số lượng còn"
-                                    align='center'
-                                    dataIndex="quantity"
-                                    key="quantity"
-                                    ellipsis={true}
-                                    width={90}
-                                    render={(quantity) => (
-                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${quantity}`}>
-                                            {quantity.toLocaleString("vi-VN")}
-                                        </span>
-                                    )}
-                                />
-
-                                <Column
-                                    title="Đã bán"
-                                    align='center'
-                                    dataIndex="quantitySold"
-                                    key="quantitySold"
-                                    ellipsis={true}
-                                    width={60}
-                                    render={(quantitySold) => (
-                                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${quantitySold}`}>
-                                            {quantitySold.toLocaleString("vi-VN")}
-                                        </span>
-                                    )}
-                                />
-
-                                <Column
-                                    title="Trạng thái"
-                                    align='center'
-                                    dataIndex="enable"
-                                    key="enable"
-                                    ellipsis={true}
-                                    width={100}
-                                    render={(enable: boolean) => (
-                                        <Tag color={enable ? 'success' : 'error'}>
-                                            {enable ? 'Đang trưng bày' : 'Ngưng trưng bày'}
+                            <div className="bg-gray-50 rounded-xl p-6 shadow-sm">
+                                <Descriptions 
+                                    bordered 
+                                    column={{ xxl: 2, xl: 2, lg: 1, md: 1, sm: 1, xs: 1 }}
+                                    className="bg-white rounded-lg overflow-hidden"
+                                >
+                                    <Item label="Mã sản phẩm" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <span className="font-mono text-gray-700">{props.product?.productId}</span>
+                                    </Item>
+                                    <Item label="Tên sản phẩm" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <span className="text-gray-800">{props.product?.productName}</span>
+                                    </Item>
+                                    <Item label="Hãng" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <span className="text-gray-700">{props.product?.brandName}</span>
+                                    </Item>
+                                    <Item label="Số lượng bán" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <span className="text-blue-600 font-medium">{props.product?.quantitySold?.toLocaleString('vi-VN')}</span>
+                                    </Item>
+                                    <Item label="Trạng thái" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <Tag color={props.product?.inStock ? 'success' : 'error'} className="px-3 py-1 rounded-full">
+                                            {props.product?.inStock ? "Đang được trưng bày" : "Ngưng trưng bày"}
                                         </Tag>
-                                    )}
-                                />
-                                <Column
-                                    title="Thao tác"
-                                    align='center'
-                                    key="action"
-                                    width={150}
-                                    render={(_: unknown, record: ProductAttributeResponse) => (
-                                        <div className="flex justify-center gap-2">
-                                            <Button
-                                                type="text"
-                                                icon={<EditOutlined />}
-                                                className="bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-700 px-3 py-1 rounded-md"
-                                            // onClick={() => handleShowEditModal(record)}
+                                    </Item>
+                                    <Item label="Mô tả" span={2} labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                        <p className="text-gray-600 whitespace-pre-wrap">{props.product?.description}</p>
+                                    </Item>
+                                </Descriptions>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-xl font-semibold text-gray-800">Danh sách thuộc tính</h3>
+                                    <span className="text-sm text-gray-500">Tổng số: {totalElement} thuộc tính</span>
+                                </div>
+
+                                <Table
+                                    dataSource={listProductAttribute}
+                                    rowKey="productAttributeId"
+                                    className="bg-white rounded-xl shadow-sm"
+                                    size="middle"
+                                    pagination={{
+                                        current: currentPage,
+                                        total: totalElement,
+                                        pageSize: size,
+                                        onChange: (page) => setCurrentPage(page),
+                                        onShowSizeChange: (current, size) => setSize(size),
+                                        showSizeChanger: true,
+                                        pageSizeOptions: ['5', '10', '15', '20'],
+                                        showTotal: (total) => `Tổng ${total} thuộc tính`,
+                                        className: 'mt-4'
+                                    }}
+                                    scroll={{ y: 400, x: 'max-content' }}
+                                >
+                                    <Column
+                                        title="Mã thuộc tính"
+                                        align='center'
+                                        dataIndex="productAttributeId"
+                                        key="productAttributeId"
+                                        width={120}
+                                        render={(id) => (
+                                            <span className="font-mono text-gray-700">{id}</span>
+                                        )}
+                                    />
+
+                                    <Column
+                                        title="Màu"
+                                        align='center'
+                                        dataIndex="color"
+                                        key="color"
+                                        width={100}
+                                        render={(color) => (
+                                            <Tag className="px-3 py-1 rounded-full">{color}</Tag>
+                                        )}
+                                    />
+
+                                    <Column
+                                        title="Kích cỡ"
+                                        align='center'
+                                        dataIndex="size"
+                                        key="size"
+                                        width={100}
+                                        render={(size) => (
+                                            <Tag className="px-3 py-1 rounded-full">{size}</Tag>
+                                        )}
+                                    />
+
+                                    <Column
+                                        title="Số lượng còn"
+                                        align='center'
+                                        dataIndex="quantity"
+                                        key="quantity"
+                                        width={120}
+                                        render={(quantity) => (
+                                            <span className="font-medium text-blue-600">
+                                                {quantity.toLocaleString("vi-VN")}
+                                            </span>
+                                        )}
+                                    />
+
+                                    <Column
+                                        title="Đã bán"
+                                        align='center'
+                                        dataIndex="quantitySold"
+                                        key="quantitySold"
+                                        width={100}
+                                        render={(quantitySold) => (
+                                            <span className="text-gray-600">
+                                                {quantitySold.toLocaleString("vi-VN")}
+                                            </span>
+                                        )}
+                                    />
+
+                                    <Column
+                                        title="Trạng thái"
+                                        align='center'
+                                        dataIndex="enable"
+                                        key="enable"
+                                        width={120}
+                                        render={(enable: boolean) => (
+                                            <Tag 
+                                                color={enable ? 'success' : 'error'}
+                                                className="px-3 py-1 rounded-full"
                                             >
-                                                Sửa
-                                            </Button>
-                                            {record.enable && <Button
-                                                type="text"
-                                                icon={<DeleteOutlined />}
-                                                className="bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 px-3 py-1 rounded-md"
-                                            // onClick={() => handleShowDeleteModal(record)}
-                                            >
-                                                Vô hiệu hóa
-                                            </Button>}
+                                                {enable ? 'Đang bán' : 'Ngừng bán'}
+                                            </Tag>
+                                        )}
+                                    />
 
-                                            {!record.enable && <Button
-                                                type="text"
-                                                icon={<CheckOutlined />}
-                                                className="bg-green-50 text-green-500 hover:bg-green-100 hover:text-green-700 px-4 py-1 rounded-md ml-2"
-                                            // onClick={() => handleShowEnableModal(record)}
-                                            >
-                                                Kích hoạt
-                                            </Button>}
-                                        </div>
-                                    )}
-                                />
-
-                            </Table>
-
-                            <Button type="default" className="ml-3 border-gray-300 hover:border-gray-400"
-
-                                onClick={
-                                    () => { props.onClose(); }
-                                }
-                            >
-                                Trở về
-                            </Button>
+                                    <Column
+                                        title="Thao tác"
+                                        align='center'
+                                        key="action"
+                                        fixed="right"
+                                        width={180}
+                                        render={(_: unknown, record: ProductAttributeResponse) => (
+                                            <div className="flex justify-center items-center gap-2">
+                                                <Button
+                                                    type="link"
+                                                    icon={<EditOutlined />}
+                                                    size='small'
+                                                    className="text-blue-600 hover:text-blue-700"
+                                                >
+                                                    Sửa
+                                                </Button>
+                                                {record.enable ? (
+                                                    <Button
+                                                        type="link"
+                                                        danger
+                                                        icon={<DeleteOutlined />}
+                                                        size='small'
+                                                        className="hover:text-red-700"
+                                                    >
+                                                        Ẩn
+                                                    </Button>
+                                                ) : (
+                                                    <Button
+                                                        type="link"
+                                                        icon={<CheckOutlined />}
+                                                        size='small'
+                                                        className="text-green-600 hover:text-green-700"
+                                                    >
+                                                        Hiện
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        )}
+                                    />
+                                </Table>
+                            </div>
                         </div>
-
                     </motion.div>
                 </motion.div>
             </AnimatePresence>
-
-
         </ConfigProvider>
     );
+};
 
-}
 export default AdminProductDetail;
