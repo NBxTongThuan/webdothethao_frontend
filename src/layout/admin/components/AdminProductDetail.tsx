@@ -77,24 +77,24 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     column={{ xxl: 2, xl: 2, lg: 1, md: 1, sm: 1, xs: 1 }}
                                     className="bg-white rounded-lg overflow-hidden"
                                 >
-                                    <Item label="Mã sản phẩm" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Mã sản phẩm" className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <span className="font-mono text-gray-700">{props.product?.productId}</span>
                                     </Item>
-                                    <Item label="Tên sản phẩm" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Tên sản phẩm" className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <span className="text-gray-800">{props.product?.productName}</span>
                                     </Item>
-                                    <Item label="Hãng" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Hãng" className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <span className="text-gray-700">{props.product?.brandName}</span>
                                     </Item>
-                                    <Item label="Số lượng bán" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Số lượng bán" className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <span className="text-blue-600 font-medium">{props.product?.quantitySold?.toLocaleString('vi-VN')}</span>
                                     </Item>
-                                    <Item label="Trạng thái" labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Trạng thái" className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <Tag color={props.product?.inStock ? 'success' : 'error'} className="px-3 py-1 rounded-full">
                                             {props.product?.inStock ? "Đang được trưng bày" : "Ngưng trưng bày"}
                                         </Tag>
                                     </Item>
-                                    <Item label="Mô tả" span={2} labelStyle={{ fontWeight: 'bold', color: '#374151' }}>
+                                    <Item label="Mô tả" span={2} className="[&_.ant-descriptions-item-label]:font-bold [&_.ant-descriptions-item-label]:text-gray-700">
                                         <p className="text-gray-600 whitespace-pre-wrap">{props.product?.description}</p>
                                     </Item>
                                 </Descriptions>
