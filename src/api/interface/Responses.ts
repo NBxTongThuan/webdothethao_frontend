@@ -16,7 +16,7 @@ export interface OrderResponse {
     shipFee: number;
     dateReceive: string;
     dateExpected: string;
-    dateCancel:string
+    dateCancel: string
 }
 
 // OrderItemResponse
@@ -34,23 +34,25 @@ export interface OrderItemResponse {
 }
 
 //PaymentResponse
-export interface PaymentResponse{
-    paymentId:string;
-    createdDate:string;
-    paymentMethod:string;
-    paymentStatus:string;
-    orderId:string;
+export interface PaymentResponse {
+    paymentId: string;
+    createdDate: string;
+    paymentMethod: string;
+    paymentStatus: string;
+    orderId: string;
 }
 
 
 //ProductResponse
-export interface ProductResponse{
+export interface ProductResponse {
 
-    productId:string;
-    productName:string;
-    description:string;
-    quantitySold:number;
-    price:number;
+    productId: string;
+    productName: string;
+    description: string;
+    quantitySold: number;
+    price: number;
+    brandName: string;
+    inStock: boolean;
 
 }
 
@@ -64,19 +66,38 @@ export interface Review {
 }
 
 //CategoryResponse
-export interface CategoryResponse{
-    categoriesId:number;
-    categoriesName:string;
-    imageData:string;
-    enable:boolean;
+export interface CategoryResponse {
+    categoriesId: number;
+    categoriesName: string;
+    imageData: string;
+    enable: boolean;
+}
+
+//ProductResponse
+export interface ProductResponse {
+    productId: string;
+    productName: string;
+    description: string;
+    quantitySold: number;
+    price: number;
+}
+
+//AdminProductAttributeResponse
+export interface ProductAttributeResponse {
+    productAttributeId: string;
+    color: string;
+    size: string;
+    quantity: number;
+    quantitySold:number;
+    enable: boolean;
 }
 
 //TypeResponse
-export interface TypesResponse{
-    typeId:number;
-    typeName:string;
-    enable:boolean;
-    categoryName:string;
+export interface TypesResponse {
+    typeId: number;
+    typeName: string;
+    enable: boolean;
+    categoryName: string;
 }
 
 // ProvinceResponse
