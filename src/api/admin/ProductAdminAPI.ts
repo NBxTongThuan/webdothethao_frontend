@@ -34,6 +34,8 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
             description: product.description,
             quantitySold: product.quantitySold,
             price: product.price,
+            typeName: product.typeName,
+            categoryName: product.categoryName,
             brandName: product.brandName,
             inStock: product.inStock
         }));

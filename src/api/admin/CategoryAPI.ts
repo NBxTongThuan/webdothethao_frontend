@@ -33,7 +33,8 @@ export const getAllCategories = async (page: number, size: number): Promise<resp
             categoriesId: category.categoriesId,
             categoriesName: category.categoriesName,
             imageData: category.imageData,
-            enable: category.enable
+            enable: category.enable,
+            size: category.size
         }));
         return {
             totalPage: data.page.totalPages,
@@ -71,7 +72,8 @@ export const getAllCategory = async () => {
             categoriesId: category.categoriesId,
             categoriesName: category.categoriesName,
             imageData: category.imageData,
-            enable: category.enable
+            enable: category.enable,
+            size: category.size
         }));
         return {
             listCategories: categories

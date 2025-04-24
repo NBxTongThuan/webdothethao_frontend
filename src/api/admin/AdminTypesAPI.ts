@@ -48,3 +48,22 @@ export const getAllType = async (page:number, size:number):Promise<responseData>
     }
 
 }
+
+export const getTypeByCategoryName = async (categoryName:string):Promise<TypesResponse[]> =>{
+
+    try
+    {
+        const  response = await fetch(`${API_URL}/getTypeByCategoryName?categoryName=${categoryName}`);
+        if(!response.ok)
+        {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    }
+    catch(error)
+    {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+}

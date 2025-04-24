@@ -42,18 +42,32 @@ export interface PaymentResponse {
     orderId: string;
 }
 
+//ImageResponse
+export interface ImageResponse {
+    imageId: string;
+    data: string;
+    url: string;
+    name: string;
+}
 
 //ProductResponse
 export interface ProductResponse {
-
     productId: string;
     productName: string;
     description: string;
     quantitySold: number;
     price: number;
+    typeName: string;
+    categoryName: string;
     brandName: string;
     inStock: boolean;
+}
 
+//BrandResponse
+export interface BrandResponse {
+    brandId: number;
+    brandName: string;
+    country: string;
 }
 
 // ReviewResponse
@@ -71,16 +85,9 @@ export interface CategoryResponse {
     categoriesName: string;
     imageData: string;
     enable: boolean;
+    size:string;
 }
 
-//ProductResponse
-export interface ProductResponse {
-    productId: string;
-    productName: string;
-    description: string;
-    quantitySold: number;
-    price: number;
-}
 
 //AdminProductAttributeResponse
 export interface ProductAttributeResponse {
