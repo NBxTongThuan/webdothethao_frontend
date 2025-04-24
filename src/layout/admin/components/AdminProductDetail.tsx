@@ -137,14 +137,12 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Tag className="h-4 w-4" /> Tên sản phẩm</span>}>
                                         <span className="text-gray-800 text-base font-medium">{props.product?.productName}</span>
                                     </Item>
-
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Danh mục</span>}>
                                         <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.categoryName}</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Giá bán</span>}>
                                         <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.price?.toLocaleString('vi-VN')} VNĐ</span>
                                     </Item>
-
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><List className="h-4 w-4" /> Loại</span>}>
                                         <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.typeName}</span>
                                     </Item>
