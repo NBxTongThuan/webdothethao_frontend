@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
         { path: '/admin/orders', icon: 'bi-cart', label: 'Quản lý đơn hàng' },
         { path: '/admin/categories', icon: 'bi-tags', label: 'Quản lý danh mục' },
         { path: '/admin/types', icon: 'bi-tags', label: 'Quản lý thể loại' },
-        { path: '/admin/settings', icon: 'bi-gear', label: 'Cài đặt' },
+
     ];
 
     return (

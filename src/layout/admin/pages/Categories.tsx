@@ -19,6 +19,7 @@ const Categories: React.FC = () => {
     const [showDeleteCategoryModal, setShowDeleteCategoryModal] = useState(false);
     const [showEnableCategoryModal, setShowEnableCategoryModal] = useState(false);
     const [showEditCategoryModal, setShowEditCategoryModal] = useState(false);
+    const [flag, setFlag] = useState(false);
 
     const token = localStorage.getItem('token');
 
@@ -33,7 +34,7 @@ const Categories: React.FC = () => {
             .catch(error => {
                 console.error('Error fetching categories:', error);
             });
-    }, [currentPage, size]);
+    }, [currentPage, size, flag]);
 
 
     const [record, setRecord] = useState<CategoryResponse | null>(null);
@@ -78,9 +79,7 @@ const Categories: React.FC = () => {
                     toast.error('Vô hiệu hóa danh mục thất bại');
                 }
                 setShowDeleteCategoryModal(false);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setFlag(!flag);
 
             } catch (error) {
                 toast.error('Vô hiệu hóa danh mục thất bại');
@@ -106,9 +105,7 @@ const Categories: React.FC = () => {
                     toast.error('Kích hoạt danh mục thất bại');
                 }
                 setShowEnableCategoryModal(false);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setFlag(!flag);
             } catch (error) {
                 toast.error('Kích hoạt danh mục thất bại');
             }

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, ConfigProvider, Descriptions } from 'antd';
+import { Button, Table, Tag, ConfigProvider, Descriptions, Modal, Select, Form, Input } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ImageResponse, ProductAttributeResponse, ProductResponse } from '../../../api/interface/Responses';
+import { ImageResponse, ProductAttributeResponse, ProductResponse, CategoryResponse } from '../../../api/interface/Responses';
 import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProductAttributeAPI';
 import { toast } from "react-toastify";
-import { X, ArrowLeft, Edit, Trash2, CheckCircle, Package, Tag as LucideTag, Folder, List, ShoppingCart, CircleDot, FileText, Hash, Building, Plus } from 'lucide-react';
+import { X, ArrowLeft, Edit, Trash2, CheckCircle, Package, Tag as LucideTag, Folder, List, ShoppingCart, CircleDot, FileText, Hash, Building, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import EditProduct from './EditProduct';
 import { getAllImage } from '../../../api/admin/AdminImageAPI';
-
+import EditProductAttribute from './EditProductAttribute';
+import { getCategoryByName } from '../../../api/admin/CategoryAPI';
 const { Column } = Table;
 const { Item } = Descriptions;
 
@@ -24,11 +25,151 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const [totalPage, setTotalPage] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);
-    const [selectedItem, setSelectedItem] = useState<ProductResponse>();
+    const [showDeleteProductAttributeModal, setShowDeleteProductAttributeModal] = useState<boolean>(false);
+    const [showEnableProductAttributeModal, setShowEnableProductAttributeModal] = useState<boolean>(false);
     const [totalElement, setTotalElement] = useState<number>(0);
     const [showEditProductModal, setShowEditProductModal] = useState<boolean>(false);
+    const [listSize, setListSize] = useState<string[]>([]);
+    const [color, setColor] = useState<string>("");
+    const [quantity, setQuantity] = useState<number>(0);
+    const [category, setCategory] = useState<CategoryResponse>();
+    const [attributeSize, setAttributeSize] = useState<string>("");
 
+    const [selectedProductAttribute, setSelectedProductAttribute] = useState<ProductAttributeResponse>();
+
+    const [showEditProductAttributeModal, setShowEditProductAttributeModal] = useState<boolean>(false);
+    const [flag, setFlag] = useState<boolean>(false);
     const [listImage, setListImage] = useState<ImageResponse[]>([]);
+    const token = localStorage.getItem("token");
+
+    const handleAddAttribute = async () => {
+
+        console.log(color);
+        console.log(attributeSize);
+        console.log(quantity);
+
+        if (color === "" || attributeSize === "" || quantity === 0) {
+            toast.error("Vui lòng nhập đầy đủ thông tin");
+            return;
+        }
+
+        if (checkProductAttributeExist(color, attributeSize)) {
+            toast.error("Thuộc tính sản phẩm đã tồn tại");
+            return;
+        }
+
+        const data = {
+            productId: props.product?.productId,
+            color: color,
+            size: attributeSize,
+            quantity: quantity
+        }
+
+        const url = `http://localhost:8080/api/admin/productAttribute/addProductAttribute`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        if (result === true) {
+            toast.success("Thêm thuộc tính sản phẩm thành công");
+            setFlag(!flag);
+        } else {
+            toast.error("Thêm thuộc tính sản phẩm thất bại");
+        }
+    }
+
+    useEffect(() => {
+        getCategoryByName(props.product?.categoryName + "").then((response: CategoryResponse) => {
+            setCategory(response);
+            handleGetListSize(response.size);
+        });
+    }, [props.product]);
+
+    const handleGetListSize = async (value: string) => {
+        if (value === "LETTER_SIZE") {
+            setListSize(["S", "M", "L", "XL", "XXL", "XXXL"]);
+        } else if (value === "SMALL_NUMBER_SIZE") {
+            setListSize(["2", "3", "4", "5", "6", "7", "8", "9", "10"]);
+        } else if (value === "BIG_NUMBER_SIZE")
+            setListSize(["35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45"]);
+    }
+
+    const listColor = ["RED", "BLUE", "GREEN", "BLACK", "WHITE", "YELLOW", "ORANGE", "PURPLE", "PINK", "GRAY", "BROWN"];
+
+    const handleGetVNColor = async (value: string) => {
+        switch (value) {
+            case "RED":
+                return "Đỏ";
+            case "BLUE":
+                return "Xanh";
+            case "GREEN":
+                return "Xanh lá";
+            case "YELLOW":
+                return "Vàng";
+            case "WHITE":
+                return "Trắng";
+            case "BLACK":
+                return "Đen";
+            case "PINK":
+                return "Hồng";
+            case "PURPLE":
+                return "Tím";
+            case "ORANGE":
+                return "Cam";
+            case "BROWN":
+                return "Nâu";
+            case "GRAY":
+                return "Xám";
+        }
+    }
+
+    const checkProductAttributeExist = (color: string, size: string) => {
+        return listProductAttribute.some(productAttribute => productAttribute.color === color && productAttribute.size === size);
+    }
+
+    const handleEnableProductAttribute = async () => {
+        const url = `http://localhost:8080/api/admin/productAttribute/enableProductAttribute?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        const result = await response.json();
+        if (result === true) {
+            toast.success("Kích hoạt thuộc tính sản phẩm thành công");
+            setShowEnableProductAttributeModal(false);
+            setFlag(!flag);
+        } else {
+            toast.error("Kích hoạt thuộc tính sản phẩm thất bại");
+            setShowEnableProductAttributeModal(false);
+        }
+    }
+
+    const handleDeleteProductAttribute = async () => {
+        const url = `http://localhost:8080/api/admin/productAttribute/disableProductAttribute?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
+
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        const result = await response.json();
+        if (result === true) {
+            toast.success("Xóa thuộc tính sản phẩm thành công");
+            setShowDeleteProductAttributeModal(false);
+            setFlag(!flag);
+        } else {
+            toast.error("Xóa thuộc tính sản phẩm thất bại");
+            setShowDeleteProductAttributeModal(false);
+        }
+    }
 
     useEffect(() => {
         getAllImage(props.product?.productId + "")
@@ -57,18 +198,18 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                 )
 
         }
-        , [props.product]);
+        , [props.product, flag]);
 
 
     return (
         <ConfigProvider getPopupContainer={() => document.body}>
 
 
-            {/* <Modal
-                open={showDeleteCategoryModal}
-                onCancel={() => setShowDeleteCategoryModal(false)}
+            <Modal
+                open={showDeleteProductAttributeModal}
+                onCancel={() => setShowDeleteProductAttributeModal(false)}
                 onOk={() => {
-                    handleDelete();
+                    handleDeleteProductAttribute();
                 }}
                 okText="Xác nhận"
                 cancelText="Quay lại"
@@ -92,7 +233,27 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                     <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Xác nhận vô hiệu hóa</h3>
                     <p className="text-gray-600 text-center mb-6">Bạn có chắc chắn muốn vô hiệu hóa danh mục này không?</p>
                 </div>
-            </Modal> */}
+            </Modal>
+
+            <Modal
+                open={showEnableProductAttributeModal}
+                onCancel={() => setShowEnableProductAttributeModal(false)}
+                onOk={() => {
+                    handleEnableProductAttribute();
+                }}
+                className="[&_.ant-modal-content]:p-0 [&_.ant-modal-footer]:px-6 [&_.ant-modal-footer]:py-4 [&_.ant-modal-footer]:border-t [&_.ant-modal-footer]:border-gray-200 [&_.ant-modal-footer]:flex [&_.ant-modal-footer]:justify-end [&_.ant-modal-footer]:gap-2"
+
+            >
+                <div className="p-6">
+                    <div className="flex items-center justify-center mb-4">
+                        <div className="bg-red-100 p-3 rounded-full">
+                            <AlertTriangle className="h-8 w-8 text-red-600" />
+                        </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">Xác nhận vô hiệu hóa</h3>
+                    <p className="text-gray-600 text-center mb-6">Bạn có chắc chắn muốn vô hiệu hóa danh mục này không?</p>
+                </div>
+            </Modal>
 
             <AnimatePresence>
                 <motion.div
@@ -209,14 +370,57 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                         Tổng số: {totalElement} thuộc tính
                                     </span>
                                 </div>
-                                <div className="flex justify-end">
-                                    <Button
-                                        type="primary"
-                                        className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        Thêm thuộc tính
-                                    </Button>
+                                <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex-1">
+                                            <div className="text-sm font-medium text-gray-700 mb-2">Chọn màu</div>
+                                            <Select
+                                                placeholder="Chọn màu"
+                                                className="w-full rounded-lg"
+                                                onChange={(value) => setColor(value)}
+                                            >
+                                                {listColor.map((color) => (
+                                                    <Select.Option key={color} value={color} style={{ backgroundColor: color }}>
+                                                        {handleGetVNColor(color)}
+                                                    </Select.Option>
+                                                ))}
+                                            </Select>
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <div className="text-sm font-medium text-gray-700 mb-2">Chọn kích cỡ</div>
+                                            <Form.Item name="size" rules={[{ message: 'Vui lòng chọn kích cỡ' }]} className="mb-0">
+                                                <Select
+                                                    placeholder="Chọn kích cỡ"
+                                                    className="w-full rounded-lg"
+                                                    onChange={(value) => setAttributeSize(value)}
+                                                >
+                                                    {listSize.map((size_item) => (
+                                                        <Select.Option key={size_item} value={size_item}>{size_item}</Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <div className="text-sm font-medium text-gray-700 mb-2">Số lượng</div>
+                                            <Input
+                                                type="number"
+                                                placeholder="Nhập số lượng"
+                                                className="rounded-lg"
+                                                onChange={(e) => setQuantity(Number(e.target.value))}
+                                            />
+                                        </div>
+
+                                        <Button
+                                            type="primary"
+                                            className="flex items-center gap-2 px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors duration-200 mt-6"
+                                            onClick={() => handleAddAttribute()}
+                                        >
+                                            <Plus className="h-4 w-4" />
+                                            Thêm thuộc tính
+                                        </Button>
+                                    </div>
                                 </div>
                                 <Table
                                     dataSource={listProductAttribute}
@@ -330,6 +534,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                     icon={<Edit className="h-4 w-4" />}
                                                     size='small'
                                                     className="text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors duration-200"
+                                                    onClick={() => {
+                                                        setSelectedProductAttribute(record);
+                                                        setShowEditProductAttributeModal(true);
+                                                    }}
                                                 >
                                                     Sửa
                                                 </Button>
@@ -340,6 +548,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                         icon={<Trash2 className="h-4 w-4" />}
                                                         size='small'
                                                         className="hover:text-red-700 flex items-center gap-1 transition-colors duration-200"
+                                                        onClick={() => {
+                                                            setSelectedProductAttribute(record);
+                                                            setShowDeleteProductAttributeModal(true);
+                                                        }}
                                                     >
                                                         Ẩn
                                                     </Button>
@@ -349,6 +561,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                         icon={<CheckCircle className="h-4 w-4" />}
                                                         size='small'
                                                         className="text-green-600 hover:text-green-700 flex items-center gap-1 transition-colors duration-200"
+                                                        onClick={() => {
+                                                            setSelectedProductAttribute(record);
+                                                            setShowEnableProductAttributeModal(true);
+                                                        }}
                                                     >
                                                         Hiện
                                                     </Button>
@@ -368,6 +584,15 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     <span>Trở lại</span>
                                 </Button>
                             </div>
+                            {showEditProductAttributeModal && (
+                                <EditProductAttribute
+                                    productAttribute={selectedProductAttribute}
+                                    onClose={() => {
+                                        setShowEditProductAttributeModal(false);
+                                    }}
+                                    setFlag={() => setFlag(!flag)}
+                                />
+                            )}
                         </div>
                     </motion.div>
                 </motion.div>

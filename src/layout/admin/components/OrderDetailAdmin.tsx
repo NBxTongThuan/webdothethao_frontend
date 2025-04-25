@@ -15,6 +15,7 @@ import 'antd/dist/reset.css';
 interface ModalProps {
     orderId: string;
     onClose: () => void;
+    setFlag: () => void;
 }
 
 const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
@@ -131,15 +132,16 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                 setShowShipedConfirm(false);
                 setShowDontReceiptedConfirm(false);
                 setShowDeliveredConfirm(false);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+                props.onClose();
+                props.setFlag();
             } else {
                 const errorData = await response.json();
                 toast.error(errorData.message || 'Cập nhật đơn hàng thất bại');
+                props.onClose();
             }
         } catch (error) {
             toast.error('Cập nhật đơn hàng thất bại');
+            props.onClose();
         }
     };
 

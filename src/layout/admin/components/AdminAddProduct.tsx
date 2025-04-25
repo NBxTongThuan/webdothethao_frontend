@@ -15,6 +15,7 @@ const { Item } = Descriptions;
 
 interface ModalProps {
     onClose: () => void;
+    setFlag: () => void;
 }
 
 interface ProductAttributeRequest {
@@ -58,8 +59,6 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
             typeName: form.getFieldValue("typeName"),
             brandName: form.getFieldValue("brandName"),
         }
-        console.log(data);
-
         try {
             const response = await fetch(url, {
                 method: "POST",
@@ -262,7 +261,9 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            console.log(data);
+            toast.success("Thêm sản phẩm thành công");
+            props.setFlag();
+            props.onClose();
         } catch (error) {
             console.error('Error fetching orders:', error);
             throw error;

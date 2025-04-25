@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from './layout/component/header/Navbar';
@@ -12,19 +11,17 @@ import ActiveAccount from './layout/pages/user/ActiveAccount';
 import Cart from './layout/pages/cart/Cart';
 import AboutUs from './layout/pages/static/AboutUs';
 import Contact from './layout/pages/static/Contact';
-import { Categories, Dashboard, Orders, Products, Settings, Users } from './layout/admin';
+import { Categories, Dashboard, Orders, Products, Users } from './layout/admin';
 import Checkout from './layout/pages/order/Checkout';
 import { ToastContainer } from 'react-toastify';
 import UserDetail from './layout/pages/user/UserDetail';
 import EditProfile from './layout/pages/user/EditProfile';
-import UserDetailModel from './model/UserDetailModel';
 import ChangePassword from './layout/pages/user/ChangePassword';
 import ForgotPassword from './layout/pages/user/ForgotPassword';
 import ResetPassword from './layout/pages/user/ResetPassword';
 import MyOrder from './layout/pages/user/MyOrder';
 import OrderDetail from './layout/pages/user/OrderDetail';
 import LoginAdmin from './layout/admin/pages/LoginAdmin';
-import OrderDetailAdmin from './layout/admin/components/OrderDetailAdmin';
 import Types from './layout/admin/pages/Types';
 import PaymentReturnPage from './layout/pages/order/PaymentReturnPage';
 
@@ -70,7 +67,6 @@ const MyRoute = () =>{
           <Route path="/admin/orders" element={<Orders />} />
           <Route path="/admin/categories" element={<Categories />} />
           <Route path="/admin/types" element={<Types />} />
-          <Route path="/admin/settings" element={<Settings />} />
           <Route path='/admin' element={<LoginAdmin />} />
 
         </Routes>

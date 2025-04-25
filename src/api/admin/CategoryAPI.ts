@@ -86,6 +86,17 @@ export const getAllCategory = async () => {
 
 }
 
+export const getCategoryByName = async (categoryName: string): Promise<CategoryResponse> => {
+    try {   
+        const response = await fetch(`${API_URL}/getByCategoryName?categoryName=${categoryName}`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+}
+
 export const checkCategoryNameExist = async (categoryName: string): Promise<boolean> => {
     try {
         const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`);

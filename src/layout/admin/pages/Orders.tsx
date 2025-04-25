@@ -26,27 +26,28 @@ const Orders: React.FC = () => {
     const [size, setSize] = useState<number>(4);
     const [selectedItem, setSelectedItem] = useState('');
     const [totalElement, setTotalElement] = useState<number>(0);
+    const [flag, setFlag] = useState(false);
 
     const [filteredOrders, setFilteredOrders] = useState<OrderResponse[]>([]);
 
     const exportToExcel = () => {
         const exportData = filteredOrders.map(order => ({
-          "Mã đơn hàng": order.orderId,
-          "Ngày đặt": order.createdDate,
-          "Người nhận": order.toName,
-          "SĐT": order.toPhone,
-          "Trạng thái": getStatusText(order.status),
-          "Tổng tiền": NumberFormat(order.totalPrice) + " VNĐ"
+            "Mã đơn hàng": order.orderId,
+            "Ngày đặt": order.createdDate,
+            "Người nhận": order.toName,
+            "SĐT": order.toPhone,
+            "Trạng thái": getStatusText(order.status),
+            "Tổng tiền": NumberFormat(order.totalPrice) + " VNĐ"
         }));
-      
+
         const worksheet = XLSX.utils.json_to_sheet(exportData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "Đơn hàng");
-      
+
         const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
         const file = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(file, `don_hang_${new Date().toISOString().slice(0, 10)}.xlsx`);
-      };
+    };
 
     useEffect(() => {
         getAllOrders(currentPage - 1, size, statusFilter)
@@ -60,7 +61,7 @@ const Orders: React.FC = () => {
                     toast.error("Không lấy được danh sách!");
                 }
             )
-    }, [currentPage, size, statusFilter]);
+    }, [currentPage, size, statusFilter, flag]);
 
 
     useEffect(() => {
@@ -148,7 +149,7 @@ const Orders: React.FC = () => {
                                 </Button>
                             </div>
                             <Button type="primary" icon={<DownloadOutlined />}
-                            onClick={() => exportToExcel()}
+                                onClick={() => exportToExcel()}
                             >
                                 Xuất báo cáo
                             </Button>
@@ -158,7 +159,7 @@ const Orders: React.FC = () => {
                             dataSource={filteredOrders}
                             rowKey="id"
                             className="shadow-sm"
-                            
+
                             pagination={{
                                 current: currentPage,
                                 total: totalElement,
@@ -184,7 +185,7 @@ const Orders: React.FC = () => {
                                 dataIndex="createdDate"
                                 key="createdDate"
                                 width={120}
-                                // ellipsis={true}
+                            // ellipsis={true}
                             />
                             {/* <Column
                                 title="Ngày giao dự kiến"
@@ -267,7 +268,11 @@ const Orders: React.FC = () => {
                             showOrderDetail &&
                             (<OrderDetailAdmin
                                 orderId={selectedItem}
-                                onClose={() => setShowOrderDetail(false)} />)
+                                onClose={() => {
+                                    setShowOrderDetail(false);
+                                }}
+                                setFlag={() => setFlag(!flag)}
+                            />)
                         }
                     </Space>
                 </Card>
