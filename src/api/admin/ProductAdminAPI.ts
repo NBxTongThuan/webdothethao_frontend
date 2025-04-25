@@ -51,3 +51,14 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
     }
 
 }
+
+export const getCountIsInStockProduct = async (): Promise<number> => {
+    try {
+        const response = await fetch(`${url}/getCountIsInStockProduct`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching count is in stock product:', error);
+        throw error;
+    }
+}

@@ -1,5 +1,5 @@
 import { promises } from "dns";
-import { OrderResponse } from "../interface/Responses";
+import { OrderResponse, RevenueResponse } from "../interface/Responses";
 
 
 const API_URL = 'http://localhost:8080/api/admin/orders';
@@ -64,3 +64,34 @@ export const getOrderStats = async (): Promise<number> => {
     const data = await response.json();
     return data;
 };
+
+export const getRevenueOfMonth = async (): Promise<number> => {
+    try {
+        const response = await fetch(`${API_URL}/getRevenueOfMonth`);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching revenue of month:', error);
+        throw error;
+    }
+};
+
+export const getRevenueByDate = async (startDate: string, endDate: string): Promise<RevenueResponse[]> => {
+    try {
+        const response = await fetch(`${API_URL}/getRevenueByDate?start=${startDate}&end=${endDate}`);
+        const data = await response.json();
+        const listRevenue = data;
+        if(!listRevenue || listRevenue.length === 0){
+            return [];
+        }
+        const revenue: RevenueResponse[] = listRevenue.map((revenue: RevenueResponse) => ({
+            total: revenue.total,
+            date: revenue.date
+        }));
+        console.log(revenue);
+        return revenue;
+    } catch (error) {
+        console.error('Error fetching revenue by date:', error);
+        throw error;
+    }
+}

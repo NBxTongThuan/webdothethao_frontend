@@ -16,8 +16,6 @@ export const Pagination: React.FC<PaginationInterface> = (props) => {
         }
     } else if (props.currentPage > 1 && props.currentPage < props.totalPage) {
 
-
-
         //trang -1
         if (props.currentPage >= 2) {
             listPage.push(props.currentPage - 1);

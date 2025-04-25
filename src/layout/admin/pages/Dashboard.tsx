@@ -2,36 +2,68 @@ import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
 } from 'chart.js';
 import { getUserStats } from '../../../api/admin/UserAdminAPI';
-import { UserStatsResponse } from '../../../api/interface/Responses';
-import { getOrderStats } from '../../../api/admin/AdminOrderAPI';
-
+import { UserStatsResponse, RevenueResponse } from '../../../api/interface/Responses';
+import { getOrderStats, getRevenueOfMonth, getRevenueByDate } from '../../../api/admin/AdminOrderAPI';
+import NumberFormat from '../../../util/NumberFormat';
+import { getCountIsInStockProduct } from '../../../api/admin/ProductAdminAPI';
+import { DatePicker } from 'antd';
+import { format } from 'date-fns';
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
 );
 
 const Dashboard: React.FC = () => {
+
+    const [data, setData] = useState<RevenueResponse[]>([]);
+
+    const formatDate = (dateStr: string) => {
+        return format(new Date(dateStr), 'dd/MM/yyyy');
+    };
+
+    const labels = data.map((item: RevenueResponse) => formatDate(item.date)); // ví dụ: '21/04'
+    const values = data.map((item: RevenueResponse) => (item.total / 1_000_000).toFixed(2)); // triệu VNĐ
+
+
+    const [startDate, setStartDate] = useState<string>('');
+    const [endDate, setEndDate] = useState<string>('');
+
+    useEffect(() => {
+
+        if (startDate && endDate) {
+            getRevenueByDate(startDate, endDate).then(
+                (data) => {
+                    console.log(data);
+                    setData(data);
+                }
+            );
+        }
+
+    }, [startDate, endDate]);
+
+    console.log(data);
+
     const revenueData = {
-        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
+        labels: labels,
         datasets: [
             {
                 label: 'Doanh thu (triệu VNĐ)',
-                data: [12, 19, 15, 25, 22, 30],
+                data: values,
                 borderColor: 'rgb(59, 130, 246)',
                 backgroundColor: 'rgba(59, 130, 246, 0.5)',
                 tension: 0.4,
@@ -39,6 +71,8 @@ const Dashboard: React.FC = () => {
             },
         ],
     };
+
+
 
     const [userStats, setUserStats] = useState<UserStatsResponse | null>(null);
 
@@ -50,6 +84,18 @@ const Dashboard: React.FC = () => {
 
     useEffect(() => {
         getOrderStats().then(setOrderStats);
+    }, []);
+
+    const [revenueOfMonth, setRevenueOfMonth] = useState<number>(0);
+
+    useEffect(() => {
+        getRevenueOfMonth().then(setRevenueOfMonth);
+    }, []);
+
+    const [countIsInStockProduct, setCountIsInStockProduct] = useState<number>(0);
+
+    useEffect(() => {
+        getCountIsInStockProduct().then(setCountIsInStockProduct);
     }, []);
 
     return (
@@ -68,7 +114,7 @@ const Dashboard: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center">
@@ -79,13 +125,14 @@ const Dashboard: React.FC = () => {
                                 <p className="text-sm text-gray-500">Tổng số người dùng</p>
                                 <h3 className="text-2xl font-bold text-gray-800">{userStats?.currentMonthTotal}</h3>
                                 <p className="text-sm text-green-500 flex items-center">
-                                    { userStats && userStats?.percentChange > 0 ? <i className="fas fa-arrow-up mr-1"></i> : <i className="fas fa-arrow-down mr-1"></i>}
+
+                                    <i className="fas fa-arrow-up mr-1"> </i>
                                     {userStats?.percentChange}% so với tháng trước
                                 </p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center">
                             <div className="p-4 rounded-xl bg-green-100">
@@ -101,7 +148,7 @@ const Dashboard: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center">
                             <div className="p-4 rounded-xl bg-yellow-100">
@@ -109,7 +156,7 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm text-gray-500">Doanh thu</p>
-                                <h3 className="text-2xl font-bold text-gray-800">12.345.000đ</h3>
+                                <h3 className="text-2xl font-bold text-gray-800">{NumberFormat(revenueOfMonth)} VNĐ</h3>
                                 <p className="text-sm text-gray-500 flex items-center">
                                     <i className="far fa-calendar mr-1"></i>
                                     Tháng này
@@ -117,7 +164,7 @@ const Dashboard: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center">
                             <div className="p-4 rounded-xl bg-purple-100">
@@ -125,7 +172,7 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm text-gray-500">Sản phẩm</p>
-                                <h3 className="text-2xl font-bold text-gray-800">89</h3>
+                                <h3 className="text-2xl font-bold text-gray-800">{countIsInStockProduct}</h3>
                                 <p className="text-sm text-gray-500 flex items-center">
                                     <i className="fas fa-check-circle mr-1"></i>
                                     Đang bán
@@ -139,13 +186,22 @@ const Dashboard: React.FC = () => {
                     <div className="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center justify-between mb-6">
                             <h5 className="text-xl font-semibold text-gray-800">Biểu đồ doanh thu</h5>
-                            <div className="flex space-x-2">
-                                <button className="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded-lg">6 tháng</button>
-                                <button className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded-lg">1 năm</button>
-                            </div>
+                            <DatePicker.RangePicker
+                                format="DD/MM/YYYY"
+                                onChange={(dates) => {
+                                    if (dates) {
+                                        const [start, end] = dates;
+                                        if (start && end) {
+                                            setStartDate(start.format('YYYY-MM-DD'));
+                                            setEndDate(end.format('YYYY-MM-DD'));
+                                        }
+                                    }
+                                }}
+                            />
                         </div>
                         <div className="h-80">
-                            <Line 
+
+                           { data.length > 0 ? <Line
                                 data={revenueData}
                                 options={{
                                     responsive: true,
@@ -169,10 +225,14 @@ const Dashboard: React.FC = () => {
                                         },
                                     },
                                 }}
-                            />
+                            /> : <div className="flex items-center justify-center h-full">
+                                <p className="text-gray-500">Không có dữ liệu</p>
+                            </div>}
                         </div>
                     </div>
-                    
+
+
+
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center justify-between mb-6">
                             <h5 className="text-xl font-semibold text-gray-800">Hoạt động gần đây</h5>

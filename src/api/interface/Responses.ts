@@ -1,3 +1,9 @@
+//RevenueResponse
+export interface RevenueResponse {
+    date: string;
+    total: number;
+}
+
 //UserStatsResponse
 export interface UserStatsResponse {
     currentMonthTotal: number;
