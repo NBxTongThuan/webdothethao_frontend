@@ -58,3 +58,9 @@ export const getAllOrders = async (page:number,size:number,orderStatus: string):
         throw error;
     }
 };
+
+export const getOrderStats = async (): Promise<number> => {
+    const response = await fetch(`${API_URL}/totalOrderToday`);
+    const data = await response.json();
+    return data;
+};

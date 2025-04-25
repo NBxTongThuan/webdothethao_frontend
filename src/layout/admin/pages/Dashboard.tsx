@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { Line } from 'react-chartjs-2';
 import {
@@ -11,6 +11,9 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import { getUserStats } from '../../../api/admin/UserAdminAPI';
+import { UserStatsResponse } from '../../../api/interface/Responses';
+import { getOrderStats } from '../../../api/admin/AdminOrderAPI';
 
 ChartJS.register(
   CategoryScale,
@@ -37,6 +40,18 @@ const Dashboard: React.FC = () => {
         ],
     };
 
+    const [userStats, setUserStats] = useState<UserStatsResponse | null>(null);
+
+    useEffect(() => {
+        getUserStats().then(setUserStats);
+    }, []);
+
+    const [orderStats, setOrderStats] = useState<number>(0);
+
+    useEffect(() => {
+        getOrderStats().then(setOrderStats);
+    }, []);
+
     return (
         <AdminLayout>
             <div className="p-6">
@@ -62,10 +77,10 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm text-gray-500">Tổng số người dùng</p>
-                                <h3 className="text-2xl font-bold text-gray-800">1,234</h3>
+                                <h3 className="text-2xl font-bold text-gray-800">{userStats?.currentMonthTotal}</h3>
                                 <p className="text-sm text-green-500 flex items-center">
-                                    <i className="fas fa-arrow-up mr-1"></i>
-                                    +12% so với tháng trước
+                                    { userStats && userStats?.percentChange > 0 ? <i className="fas fa-arrow-up mr-1"></i> : <i className="fas fa-arrow-down mr-1"></i>}
+                                    {userStats?.percentChange}% so với tháng trước
                                 </p>
                             </div>
                         </div>
@@ -78,7 +93,7 @@ const Dashboard: React.FC = () => {
                             </div>
                             <div className="ml-4">
                                 <p className="text-sm text-gray-500">Đơn hàng mới</p>
-                                <h3 className="text-2xl font-bold text-gray-800">56</h3>
+                                <h3 className="text-2xl font-bold text-gray-800">{orderStats}</h3>
                                 <p className="text-sm text-gray-500 flex items-center">
                                     <i className="far fa-clock mr-1"></i>
                                     Hôm nay

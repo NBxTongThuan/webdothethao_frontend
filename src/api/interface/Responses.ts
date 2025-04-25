@@ -1,3 +1,10 @@
+//UserStatsResponse
+export interface UserStatsResponse {
+    currentMonthTotal: number;
+    lastMonthTotal: number;
+    percentChange: number;
+}
+
 // OrderResponse
 export interface OrderResponse {
     orderId: string;
