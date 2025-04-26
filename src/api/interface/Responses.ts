@@ -1,3 +1,14 @@
+//UserResponse
+export interface UserResponse {
+    userId: string;
+    username: string;
+    email: string;
+    role: string;
+    active: boolean;
+    createdDate: string;
+    enable: boolean;
+}
+
 //RevenueResponse
 export interface RevenueResponse {
     date: string;
@@ -98,7 +109,7 @@ export interface CategoryResponse {
     categoriesName: string;
     imageData: string;
     enable: boolean;
-    size:string;
+    size: string;
 }
 
 
@@ -108,7 +119,7 @@ export interface ProductAttributeResponse {
     color: string;
     size: string;
     quantity: number;
-    quantitySold:number;
+    quantitySold: number;
     enable: boolean;
 }
 

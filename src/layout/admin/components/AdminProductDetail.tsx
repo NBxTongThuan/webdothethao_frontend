@@ -325,8 +325,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                             </div>
 
                             {/* Ảnh sản phẩm */}
+                            <div className="space-y-4">
+                                <h1 className="text-2xl font-bold text-gray-800">Ảnh sản phẩm</h1>
                             <div className="grid grid-cols-3 gap-6">
-                                {listImage.map((image: ImageResponse, index: number) => (
+                                { listImage.length > 0 ? listImage.map((image: ImageResponse, index: number) => (
                                     <div key={index} className="relative group">
                                         <img
                                             src={image.data}
@@ -335,7 +337,8 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                         />
                                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-lg"></div>
                                     </div>
-                                ))}
+                                )) : <h1>Sản phẩm hiện chưa có ảnh nào!</h1>}
+                            </div>
                             </div>
 
                             <div className="space-y-4">

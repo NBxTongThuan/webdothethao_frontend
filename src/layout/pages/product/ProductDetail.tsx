@@ -378,13 +378,6 @@ const ProductDetail: React.FC = () => {
               <i className="fas fa-shopping-cart"></i>
               <span>{remainingQuantity > 0 ? "THÊM VÀO GIỎ" : "HẾT HÀNG"}</span>
             </button>
-            <button
-              className="flex-1 py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold transition-all duration-200 shadow-lg shadow-blue-500/30 flex items-center justify-center space-x-2"
-              disabled={remainingQuantity === 0}
-            >
-              <i className="fas fa-bolt"></i>
-              <span>{remainingQuantity > 0 ? "MUA NGAY" : "HẾT HÀNG"}</span>
-            </button>
           </div>
         </div>
       </div>

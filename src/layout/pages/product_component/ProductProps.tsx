@@ -7,6 +7,7 @@ import { get1Image } from "../../../api/user/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import { getListReview } from "../../../api/user/ReviewsAPI";
 import renderRate from "../../../util/Stars";
+import { Button } from "antd";
 
 
 interface ProductPropsInterface {
@@ -109,6 +110,10 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                         <div className="flex items-center space-x-1 mt-1">
                             {renderRate(productRating)}
                         </div>
+
+                        <div className="flex items-center space-x-1 mt-1">
+                           đã bán {props.product.quantity_sold}
+                        </div>
                     </div>
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
                         {props.product.description}
@@ -117,13 +122,13 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                         <span className="text-lg font-bold text-red-500">
                             {NumberFormat(props.product.price)} VNĐ
                         </span>
-                        <button 
-                            className="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-1 transform hover:scale-105"
-                            aria-label="Add to cart"
-                        >
-                            <i className="fas fa-shopping-cart"></i>
-                            <span className="text-sm">Thêm</span>
-                        </button>
+                        <Link to={token ? `/productdetail/${productId}` : `/Login`} className="block relative overflow-hidden">
+                        <Button type="primary" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                            Xem chi tiết
+                        </Button>
+                        </Link>
+                        
+
                     </div>
                 </div>
             </div>

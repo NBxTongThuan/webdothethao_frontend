@@ -258,7 +258,7 @@ const Categories: React.FC = () => {
                                 align='center'
                                 key="action"
                                 width={150}
-                                render={(_: unknown, record: CategoryResponse) => (
+                                render={(_, record: CategoryResponse) => (
                                     <div className="flex justify-center gap-2">
                                         <Button
                                             type="text"
