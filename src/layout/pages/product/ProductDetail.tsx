@@ -178,12 +178,17 @@ const ProductDetail: React.FC = () => {
           productAttributeId: productAttributeId
         })
       });
+      
+      const { statusCode, message } = await response.json();
 
-      if (!response.ok) {
-        throw new Error("Lỗi khi thêm sản phẩm vào giỏ hàng!");
+      if (statusCode === 'SUCCESS') {
+        toast.success(message);
+      } else if(statusCode === 'NUMBER_REACHED_MAXIMUM') {
+        toast.success(message);
+      }else{
+        toast.error(message);
       }
 
-      toast.success("Thêm sản phẩm vào giỏ hàng thành công!");
     } catch (error) {
       console.error("Lỗi:", error);
       throw new Error("Gặp lỗi khi thêm vào giỏ hàng!");

@@ -2,7 +2,7 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUserIsActive } from '../../../util/JwtService';
-import { toast} from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
@@ -38,13 +38,9 @@ const Login: React.FC = () => {
                     localStorage.removeItem('token');
                 }
                 else {
-                   
-                    
-                            toast.success('Đăng nhập thành công');
-                            window.dispatchEvent(new Event("storage"));
-                            // setTimeout(() => {
-                                navigate('/');
-                            // }, 1500); đợi 1,5 giây
+                    toast.success('Đăng nhập thành công');
+                    window.dispatchEvent(new Event("storage"));
+                    navigate('/');
                 }
             } else {
                 toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
@@ -67,7 +63,7 @@ const Login: React.FC = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
                 {/* Logo và tiêu đề */}
-                
+
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-gray-900">Đăng nhập</h2>
                     <p className="mt-2 text-sm text-gray-600">
@@ -174,7 +170,7 @@ const Login: React.FC = () => {
                     </Link>
                 </p>
             </div>
-            
+
         </div>
     );
 };

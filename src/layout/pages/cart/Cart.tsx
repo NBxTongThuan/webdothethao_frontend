@@ -13,6 +13,7 @@ const Cart: React.FC = () => {
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
+    const [flag, setFlag] = useState(false);
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -21,7 +22,7 @@ const Cart: React.FC = () => {
             .catch((error) => {
                 console.error('Error fetching cart items:', error);
             });
-    }, [cartID]);
+    }, [cartID,flag]);
 
 
     const deleteCartItem = async (cartItemId: string) => {
@@ -54,15 +55,10 @@ const Cart: React.FC = () => {
                     </div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">Giỏ hàng trống</h2>
                     <p className="text-gray-600 mb-6">Bạn chưa có sản phẩm nào trong giỏ hàng</p>
-                    <button
-                        className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
-                        onClick={() => navigate('/')}
-                    >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
+                    <Link to="/shop" className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
+                        <i className="fas fa-arrow-left mr-2"></i>
                         Quay lại mua sắm
-                    </button>
+                    </Link>
                 </div>
             </div>
         );
@@ -79,12 +75,10 @@ const Cart: React.FC = () => {
                             <p className="mt-1 text-sm text-gray-500">Mã giỏ hàng: #{cartID}</p>
                         )}
                     </div>
-                    <button
-                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
-                    >
+                    <Link to="/shop" className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
                         <i className="fas fa-shopping-bag mr-2"></i>
                         Tiếp tục mua sắm
-                    </button>
+                    </Link>
                 </div>
 
                 {!cartID ? (
@@ -103,7 +97,7 @@ const Cart: React.FC = () => {
                     <>
                         <div className="space-y-4">
                             {listCartItem.map((item, index) => (
-                                <CartItemProp key={item.cartItemId} cartItem={item} deleteCartItem={deleteCartItem} />
+                                <CartItemProp key={item.cartItemId} cartItem={item} deleteCartItem={deleteCartItem} setFlag={() => setFlag(!flag)} />
                             ))}
                         </div>
 

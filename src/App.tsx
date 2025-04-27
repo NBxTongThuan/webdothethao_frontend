@@ -24,6 +24,10 @@ import OrderDetail from './layout/pages/user/OrderDetail';
 import LoginAdmin from './layout/admin/pages/LoginAdmin';
 import Types from './layout/admin/pages/Types';
 import PaymentReturnPage from './layout/pages/order/PaymentReturnPage';
+import ScrollToTop from './util/ScrollToTop';
+import Shop from './layout/pages/Shop';
+
+
 
 
 const MyRoute = () =>{
@@ -40,8 +44,7 @@ const MyRoute = () =>{
         <Routes>
 
 {/* User Path */}
-          <Route path='/' element={<HomePage searchKeyword={searchKeyword} />} ></Route>
-          <Route path='/:categoryId' element={<HomePage searchKeyword={searchKeyword} />} ></Route>
+          <Route path='/' element={<HomePage  />} ></Route>
           <Route path='/productdetail/:productId' element={<ProductDetail />} ></Route>
           <Route path='/Login' element={<Login />} ></Route>
           <Route path='/Register' element={<Register />} ></Route>
@@ -58,6 +61,8 @@ const MyRoute = () =>{
           <Route path="/myOrder" element={<MyOrder />} />
           <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
           <Route path="/payment-return/:status" element={<PaymentReturnPage />} />
+          <Route path="/shop" element={<Shop searchKeyword={searchKeyword} />} />
+          <Route path="/shop/:categoryId" element={<Shop searchKeyword={searchKeyword} />} />
 
 
 {/* Admin path */}
@@ -83,6 +88,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+      <ScrollToTop />
       <MyRoute/>
       </BrowserRouter>
       <ToastContainer

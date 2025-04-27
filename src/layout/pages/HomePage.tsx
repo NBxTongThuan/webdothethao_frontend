@@ -3,24 +3,10 @@ import Carousel from "../component/header/Carousel";
 import ListProduct from "./product_component/ListProducts";
 import ProductDetail from "./product/ProductDetail";
 import { useParams } from "react-router-dom";
+import { Top4Selling } from "../component/Top4Selling";
 
-interface HomePageInterface {
-    searchKeyword: string;
-}
 
-const HomePage: React.FC<HomePageInterface> = (props) => {
-    const {categoryId} = useParams();
-
-    let categoryIdNumber = 0;
-    try {
-        categoryIdNumber = parseInt(categoryId+'');
-    } catch (error) {
-        categoryIdNumber = 0;
-        console.log(error);
-    } 
-    if(Number.isNaN(categoryIdNumber)){
-        categoryIdNumber = 0;
-    }
+const HomePage: React.FC = () => {
     return (
         <div className="space-y-12">
             {/* Hero Section với Carousel */}
@@ -51,19 +37,12 @@ const HomePage: React.FC<HomePageInterface> = (props) => {
             </section>
 
             {/* Featured Products */}
-            <section className="container mx-auto px-4">
+            <section className="container mx-auto px-4 py-12">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">Sản phẩm nổi bật</h2>
-                    <div className="flex space-x-2">
-                        <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                            <i className="fas fa-chevron-left"></i>
-                        </button>
-                        <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-                            <i className="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">Top 4 sản phẩm bán chạy</h2>
+
                 </div>
-                <ListProduct searchKeyword={props.searchKeyword} categoryId={categoryIdNumber} />
+                <Top4Selling />
             </section>
 
             {/* Special Offers */}

@@ -3,15 +3,19 @@ import { CartItemModel } from '../../../model/CartItemModel';
 import { get1Image } from '../../../api/user/ImagesAPI';
 import NumberFormat from '../../../util/NumberFormat';
 import { Link } from 'react-router-dom';
+import { Minus, Plus, Trash2, Loader2 } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 interface CartItemPropInterface {
     cartItem: CartItemModel;
     deleteCartItem: (cartItemId: string) => void;
+    setFlag: () => void;   
 }
 
 const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
     const [imageData, setImageData] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         setIsLoading(true);
@@ -29,6 +33,55 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
             });
     }, [prop.cartItem.productId]);
 
+    const handleQuantityChange = (quantity: number) => {
+        if (quantity > prop.cartItem.remainQuantity) {
+            alert("Số lượng không hợp lệ");
+            return;
+        }
+        // prop.updateCartItemQuantity(prop.cartItem.cartItemId, quantity);
+    };
+
+    const handleMinusClick = async () => {
+
+        if(prop.cartItem.quantity <= 1){
+            toast.error("Số lượng không thể nhỏ hơn 1");
+            return;
+        }
+
+        if (prop.cartItem.quantity > 1) {
+            const url = `http://localhost:8080/api/cartItem/updateQuantity`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    cartItemId: prop.cartItem.cartItemId,
+                    quantity: prop.cartItem.quantity - 1
+                }),
+            }); 
+            const { statusCode, message } = await response.json();
+            if (statusCode === 'SUCCESS') {
+                toast.success(message);
+                prop.setFlag();
+            } else {
+                toast.error(message);
+            }
+        }
+    };
+
+    const handlePlusClick = () => {
+        if (prop.cartItem.quantity < prop.cartItem.remainQuantity) {
+            handleQuantityChange(prop.cartItem.quantity + 1);
+        }
+    };
+    
+    
+    
+    
+
+
     return (
         <div className="w-full max-w-4xl mx-auto">
             <div className="bg-white shadow-lg rounded-2xl p-6 mb-4 transform transition-all duration-300 hover:shadow-xl">
@@ -37,14 +90,16 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                     <div className="w-full md:w-1/4 aspect-square rounded-xl overflow-hidden bg-gray-50">
                         {isLoading ? (
                             <div className="w-full h-full flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500"></div>
+                                <Loader2 className="h-12 w-12 text-red-500 animate-spin" />
                             </div>
                         ) : (
-                            <Link to={`/productdetail/${prop.cartItem.productId}`}><img
-                            src={imageData || "/images/no-image.png"}
-                            alt={prop.cartItem.productName}
-                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        /></Link>
+                            <Link to={`/productdetail/${prop.cartItem.productId}`}>
+                                <img
+                                    src={imageData || "/images/no-image.png"}
+                                    alt={prop.cartItem.productName}
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                                />
+                            </Link>
                         )}
                     </div>
 
@@ -57,6 +112,20 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                             <p className="text-gray-600 line-clamp-2">
                                 {prop.cartItem.productDescription}
                             </p>
+
+                            <div className="flex items-center space-x-4 mt-2">
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-sm text-gray-500">Màu sắc:</span>
+                                    <div 
+                                        className="w-4 h-4 rounded-full border border-gray-300" 
+                                        style={{ backgroundColor: prop.cartItem.color }}
+                                    />
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <span className="text-gray-600">Kích cỡ:</span>
+                                    <span className="text-gray-600">{prop.cartItem.size}</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -71,34 +140,34 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                                         <button 
                                             className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200 disabled:opacity-50"
                                             disabled={prop.cartItem.quantity <= 1}
+                                            onClick={handleMinusClick}
                                         >
-                                            <i className="fas fa-minus text-sm"></i>
+                                            <Minus className="h-4 w-4" />
                                         </button>
                                         <span className="font-semibold w-8 text-center">{prop.cartItem.quantity}</span>
-                                        <button className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                                            <i className="fas fa-plus text-sm"></i>
+                                        <button 
+                                            className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                                            onClick={handlePlusClick}
+                                        >
+                                            <Plus className="h-4 w-4" />
                                         </button>
+
+                                       <div className="text-gray-600 text-sm ml-2">
+                                            Số lượng tối đa: {prop.cartItem.remainQuantity}
+                                       </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="space-y-2 text-right md:text-left">
-                                <p className="text-gray-500 text-sm">
-                                    Mã SP: #{prop.cartItem.productAttributeId}
-                                </p>
-                                <p className="text-gray-500 text-sm">
-                                    Mã đơn: #{prop.cartItem.cartItemId}
-                                </p>
                             </div>
                         </div>
 
                         {/* Total and Action buttons */}
                         <div className="flex flex-col-reverse md:flex-row md:justify-between md:items-center space-y-4 md:space-y-0 pt-4 border-t border-gray-100">
                             <button 
-                            onClick={() => prop.deleteCartItem(prop.cartItem.cartItemId)}
+                                onClick={() => prop.deleteCartItem(prop.cartItem.cartItemId)}
                                 className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2"
                                 aria-label="Xóa sản phẩm"
                             >
-                                <i className="fas fa-trash-alt"></i>
+                                <Trash2 className="h-4 w-4" />
                                 <span>Xóa</span>
                             </button>
                             <div className="text-right md:text-left">

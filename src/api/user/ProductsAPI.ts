@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ProductModel from "../../model/ProductModel";
 import requestAPI from "./RequestApi";
+import { ProductResponse } from "../interface/Responses";
 
 
 interface ProductsAPIInterface {
@@ -52,23 +53,40 @@ export async function get1Product(productId: string): Promise<ProductModel>  {
 
 
 export async function getAllProducts(page:number): Promise<ProductsAPIInterface> {
-    const link: string = `http://localhost:8080/api/products?page=${page}&size=4`
+    const link: string = `http://localhost:8080/api/products?page=${page}&size=8`
     console.log(link);
     return getProduct(link);
 }
 
 export async function getProductsByCategoryIdAndProductName(categoryId: number, productName: string, currentPage:number): Promise<ProductsAPIInterface> {
    
-    let link: string = `http://localhost:8080/api/products/listByName?productName=${productName}&page=${currentPage}&size=4`;
+    let link: string = `http://localhost:8080/api/products/listByName?productName=${productName}&page=${currentPage}&size=8`;
 
     if(productName ==='' && categoryId === 0){
         link = `http://localhost:8080/api/products?page=0&size=8`;
     }else if(productName ==='' && categoryId > 0){
-        link = `http://localhost:8080/api/products/listByCateId?categoryId=${categoryId}&page=${currentPage}&size=4`;
+        link = `http://localhost:8080/api/products/listByCateId?categoryId=${categoryId}&page=${currentPage}&size=8`;
     }
     return getProduct(link);
 
 }
 
+export async function getTop4Product(): Promise<ProductModel[]> {
+    const link: string = `http://localhost:8080/api/products/top4?page=0&size=4`;
+
+    const response = await requestAPI(link);
+
+    const responseDATA = response._embedded?.productsResponseList ?? [];
+
+    const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
+        product_id: item.productId,
+        description: item.productName,
+        product_name: item.description,
+        price: item.price,
+        quantity_sold: item.quantitySold
+    }));
+
+    return listProducts;
+}
 
 
