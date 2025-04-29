@@ -8,6 +8,7 @@ import {  getProvinces, getDistricts, getWards } from "../../../api/user/Address
 import { confirmAlert } from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { District, Province, Ward } from "../../../api/interface/Responses";
+import { useAuth } from "../../../util/AuthContext";
 
 
 interface FormData {
@@ -26,14 +27,15 @@ interface FormData {
 
 const EditProfile: React.FC = () => {
     const navigate = useNavigate();
-    const token = localStorage.getItem('token');
-    const userName = getUserName(token+"");
+    const {user} = useAuth();
     const [userDetail, setUserDetail] = useState<UserDetailModel>();
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
     const [wards, setWards] = useState<Ward[]>([]);
     const [selectedProvince, setSelectedProvince] = useState<string>('');
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
+
+    const userName = user?.userName + "";
 
     const [formData, setFormData] = useState<FormData>({
         userDetailId: '',
@@ -50,7 +52,7 @@ const EditProfile: React.FC = () => {
     });
 
     useEffect(() => {
-        getUserDetail(userName+"")
+        getUserDetail(userName)
         .then(userData => {
             setUserDetail(userData);
             // Update formData when userDetail is loaded
@@ -146,9 +148,9 @@ const EditProfile: React.FC = () => {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(data)
+                    credentials: 'include',
+                    body: JSON.stringify(data),
                 });
                 if(response.ok){
                     toast.success("Cập nhật thông tin thành công!");

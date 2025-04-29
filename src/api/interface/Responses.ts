@@ -1,3 +1,9 @@
+//UserInfoResponse
+export interface UserInfoResponse {
+    userName: string;
+    cartId: string;
+    role: string;
+}
 //UserResponse
 export interface UserResponse {
     userId: string;

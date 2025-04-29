@@ -27,7 +27,6 @@ const EditCategory: React.FC<ModalProps> = (props) => {
     const [categoryNameError, setCategoryNameError] = useState<string>("");
     const [categoryImage, setCategoryImage] = useState<File | null>(null);
     const [oldCategoryName, setOldCategoryName] = useState<string>(props.category.categoriesName);
-    const token = localStorage.getItem("token");
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
     useEffect(() => {
         setCategoryName(props.category.categoriesName);
@@ -124,9 +123,9 @@ const EditCategory: React.FC<ModalProps> = (props) => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(category)
+                body: JSON.stringify(category),
+                credentials: "include",
             })
             if (response.ok) {
                 toast.success("Cập nhật danh mục thành công");

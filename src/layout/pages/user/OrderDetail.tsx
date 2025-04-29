@@ -12,7 +12,7 @@ import SeeReview from "./SeeReview";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
 import { toast } from "react-toastify";
-
+import { useAuth } from "../../../util/AuthContext";
 const OrderDetail: React.FC = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<OrderResponse>();
@@ -24,8 +24,8 @@ const OrderDetail: React.FC = () => {
     const [showOrderReview, setShowOrderReview] = useState(false);
     const [showSeeReview, setShowSeeReview] = useState(false);
     const [payment, setPayment] = useState<PaymentResponse>();
-    const token = localStorage.getItem('token');
-    const userName = getUserName(token + "");
+
+    const {user} = useAuth();
 
     const [selectedItem, setSelectedItem] = useState<OrderItemResponse>();
 
@@ -141,8 +141,8 @@ const OrderDetail: React.FC = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    credentials: 'include'
                 });
 
                 if (response.ok) {
@@ -402,7 +402,7 @@ const OrderDetail: React.FC = () => {
                                 orderItemId={selectedItem?.orderItemId + ""}
                                 productId={selectedItem?.productId + ""}
                                 productAttributeId={selectedItem?.productAttributeId + ""}
-                                userName={userName + ""}
+                                userName={user?.userName + ""}
                                 onClose={() => setShowOrderReview(false)}
                             />
                         )
@@ -411,7 +411,7 @@ const OrderDetail: React.FC = () => {
                         showSeeReview && (
                             <SeeReview
                                 orderItemId={selectedItem?.orderItemId + ""}
-                                userName={userName + ""}
+                                userName={user?.userName + ""}
                                 onClose={() => setShowSeeReview(false)}
                             />
                         )

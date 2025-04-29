@@ -9,7 +9,7 @@ import { Pagination } from "../../../util/Pagination";
 import { OrderResponse } from '../../../api/interface/Responses';
 import NumberFormat from '../../../util/NumberFormat';
 import dayjs from 'dayjs';
-
+import { useAuth } from '../../../util/AuthContext';
 const { Column } = Table;
 const { Option } = Select;
 
@@ -23,14 +23,13 @@ const MyOrder: React.FC = () => {
     const [filteredOrders, setFilteredOrders] = useState<OrderResponse[]>([]);
     const navigate = useNavigate();
 
-    const token = localStorage.getItem('token');
-    const userName = getUserName(token + "");
+    const {user} = useAuth();
 
     const setPage = (page: number) => setCurrentPage(page);
 
 
     useEffect(() => {
-        getOrders(userName + "", currentPage - 1, size, statusFilter)
+        getOrders(user?.userName + "", currentPage - 1, size, statusFilter)
             .then(response => {
                 setOrders(response.listOrder);
                 setTotalPage(response.totalPage);
@@ -38,7 +37,7 @@ const MyOrder: React.FC = () => {
             .catch(error => {
                 toast.error("Không lấy được thông tin người dùng!");
             });
-    }, [userName, currentPage, size, statusFilter]);
+    }, [user, currentPage, size, statusFilter]);
 
     useEffect(() => {
         setFilteredOrders(orders.filter((order) => {

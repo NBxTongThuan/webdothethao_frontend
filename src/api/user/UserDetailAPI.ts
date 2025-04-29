@@ -4,7 +4,7 @@ import UserDetailModel from "../../model/UserDetailModel";
 export async function getUserDetail(userName: string): Promise<UserDetailModel> {
     const link: string = `http://localhost:8080/api/userDetail/getUserDetailByUserName?userName=${userName}`;
 
-    const response = await requestAPI(link);
+    const response = await requestAPI(link,true);
 
     const responseDATA = response;
 

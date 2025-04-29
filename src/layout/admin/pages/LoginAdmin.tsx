@@ -3,16 +3,46 @@ import { Form, Input, Button, Card, message, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UserInfoResponse } from '../../../api/interface/Responses';
+import { useAuth } from '../../../util/AuthContext';
 
 const { Title } = Typography;
 
 const LoginAdmin: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { setUser } = useAuth();
+
+    const handleLoginSuccess = async () => {
+        try {
+            const url = 'http://localhost:8080/api/auth/me';
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const user: UserInfoResponse = {
+                    userName: data.userName,
+                    cartId: data.cartId || null,
+                    role: data.role
+                };
+                setUser(user);
+                navigate('/admin/dashboard');
+            } else {
+                toast.error('Lỗi khi lấy thông tin tài khoản');
+            }
+        } catch (error) {
+            toast.error('Lỗi khi lấy thông tin tài khoản');
+        }
+    }
 
     const onFinish = async (values: { username: string; password: string }) => {
 
-        const url = 'http://localhost:8080/api/admin/account/Login';
+        const url = 'http://localhost:8080/api/admin/auth/login';
         const data = {
             userName: values.username,
             passWord: values.password
@@ -23,24 +53,25 @@ const LoginAdmin: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: 'include'
             });
-            console.log(response);
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('token', data.jwt);
-                toast.success('Đăng nhập thành công');
-                navigate('/admin/dashboard');
+            
+            const {statusCode, message} = await response.json();
+            if (statusCode === 'SUCCESS') {
+                toast.success(message);
+                console.log(message);
+                handleLoginSuccess();
             } else {
-               if(response.status === 403)
+               if(statusCode === 'NO_ACCESS')
                {
-                toast.error('Bạn không có quyền truy cập trang này!');
+                toast.error(message);
                }else{
-                toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác!');
+                toast.error(message);
                }
             }
         } catch (error) {
-            console.log(error);
+            toast.error('Lỗi khi đăng nhập!');
         }
     };
 

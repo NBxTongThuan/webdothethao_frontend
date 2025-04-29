@@ -26,8 +26,6 @@ const AddCategory: React.FC<ModalProps> = (props) => {
     const [categoryImage, setCategoryImage] = useState<File | null>(null);
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
 
-    const token = localStorage.getItem("token");
-
     const checkCategoryNameExist = async (categoryName: string) => {
         try {
             const response = await fetch(`http://localhost:8080/api/admin/categories/checkCategoryExists?categoryName=${categoryName}`);
@@ -99,8 +97,8 @@ const AddCategory: React.FC<ModalProps> = (props) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
+                credentials: "include",
                 body: JSON.stringify(category)
             })
             if (response.ok) {

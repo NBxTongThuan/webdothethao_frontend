@@ -33,18 +33,18 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
             });
     }, [prop.cartItem.productId]);
 
-    const handleQuantityChange = (quantity: number) => {
-        if (quantity > prop.cartItem.remainQuantity) {
-            alert("Số lượng không hợp lệ");
-            return;
-        }
-        // prop.updateCartItemQuantity(prop.cartItem.cartItemId, quantity);
-    };
+    // const handleQuantityChange = (quantity: number) => {
+    //     if (quantity > prop.cartItem.remainQuantity) {
+    //         alert("Số lượng không hợp lệ");
+    //         return;
+    //     }
+    //     // prop.updateCartItemQuantity(prop.cartItem.cartItemId, quantity);
+    // };
 
     const handleMinusClick = async () => {
 
         if(prop.cartItem.quantity <= 1){
-            toast.error("Số lượng không thể nhỏ hơn 1");
+            toast.error("Số lượng không được nhỏ hơn 1 ");
             return;
         }
 
@@ -63,7 +63,7 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
             }); 
             const { statusCode, message } = await response.json();
             if (statusCode === 'SUCCESS') {
-                toast.success(message);
+                // toast.success(message);
                 prop.setFlag();
             } else {
                 toast.error(message);
@@ -71,17 +71,36 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
         }
     };
 
-    const handlePlusClick = () => {
-        if (prop.cartItem.quantity < prop.cartItem.remainQuantity) {
-            handleQuantityChange(prop.cartItem.quantity + 1);
+    const handlePlusClick = async () => {
+        if(prop.cartItem.quantity >= prop.cartItem.remainQuantity){
+            prop.cartItem.quantity = prop.cartItem.remainQuantity;
+            toast.error("Bạn đã đạt số lượng tối đa của sản phẩm này!");
+            return;
+        }
+
+        if (prop.cartItem.quantity > 1) {
+            const url = `http://localhost:8080/api/cartItem/updateQuantity`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    cartItemId: prop.cartItem.cartItemId,
+                    quantity: prop.cartItem.quantity + 1
+                }),
+            }); 
+            const { statusCode, message } = await response.json();
+            if (statusCode === 'SUCCESS') {
+                // toast.success(message);
+                prop.setFlag();
+            } else {
+                toast.error(message);
+            }
         }
     };
     
-    
-    
-    
-
-
     return (
         <div className="w-full max-w-4xl mx-auto">
             <div className="bg-white shadow-lg rounded-2xl p-6 mb-4 transform transition-all duration-300 hover:shadow-xl">

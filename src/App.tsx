@@ -26,6 +26,7 @@ import Types from './layout/admin/pages/Types';
 import PaymentReturnPage from './layout/pages/order/PaymentReturnPage';
 import ScrollToTop from './util/ScrollToTop';
 import Shop from './layout/pages/Shop';
+import { AuthProvider } from './util/AuthContext';
 
 
 
@@ -82,20 +83,19 @@ const MyRoute = () =>{
 }
 
 function App() {
-
-  
-
   return (
     <div className="App">
       <BrowserRouter>
-      <ScrollToTop />
-      <MyRoute/>
+        <AuthProvider>
+          <ScrollToTop />
+          <MyRoute/>
+          <ToastContainer
+            position='bottom-center'
+            autoClose={3000}
+            pauseOnFocusLoss={false}
+          />
+        </AuthProvider>
       </BrowserRouter>
-      <ToastContainer
-						position='bottom-center'
-						autoClose={3000}
-						pauseOnFocusLoss={false}
-					/>
     </div>
   );
 }

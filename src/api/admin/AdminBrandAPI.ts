@@ -4,7 +4,12 @@ const url = "http://localhost:8080/api/admin/brands";
 
 export const getAllBrand = async ():Promise<BrandResponse[]> => {
     try{
-        const response = await fetch(`${url}/getAllBrand`);
+        const response = await fetch(`${url}/getAllBrand`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         return data;
     }

@@ -16,7 +16,12 @@ interface responseData {
 
 
 export const getUserList = async (page: number, size: number): Promise<responseData> => {
-    const response = await fetch(`${url}/allUser?page=${page}&size=${size}`);
+    const response = await fetch(`${url}/allUser?page=${page}&size=${size}`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
 
     if (!response.ok) {
         throw new Error("Failed to fetch users");

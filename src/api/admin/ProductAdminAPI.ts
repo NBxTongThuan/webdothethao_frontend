@@ -11,7 +11,12 @@ interface responseData {
 export const getAllProduct = async (page: number, size: number): Promise<responseData> => {
 
     try {
-        const response = await fetch(`${url}/getAllProduct?page=${page}&size=${size}`);
+        const response = await fetch(`${url}/getAllProduct?page=${page}&size=${size}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -54,7 +59,12 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
 
 export const getCountIsInStockProduct = async (): Promise<number> => {
     try {
-        const response = await fetch(`${url}/getCountIsInStockProduct`);
+        const response = await fetch(`${url}/getCountIsInStockProduct`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         return data;
     } catch (error) {

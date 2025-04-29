@@ -4,6 +4,7 @@ import ListProduct from "./product_component/ListProducts";
 import ProductDetail from "./product/ProductDetail";
 import { useParams } from "react-router-dom";
 import { Top4Selling } from "../component/Top4Selling";
+import { NewestProduct } from "../component/NewestProduct";
 
 
 const HomePage: React.FC = () => {
@@ -37,13 +38,19 @@ const HomePage: React.FC = () => {
             </section>
 
             {/* Featured Products */}
-            <section className="container mx-auto px-4 py-12">
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">Top 4 sản phẩm bán chạy</h2>
+                <section className="container mx-auto px-4 py-12">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900">Top sản phẩm bán chạy</h2>
+                    </div>
+                    <Top4Selling />
+                </section>
 
-                </div>
-                <Top4Selling />
-            </section>
+                <section className="container mx-auto px-4 py-12">
+                    <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900">Sản phẩm mới về</h2>
+                    </div>
+                    <NewestProduct />
+                </section>
 
             {/* Special Offers */}
             <section className="bg-gray-50 py-12">

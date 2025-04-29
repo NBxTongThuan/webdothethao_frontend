@@ -4,7 +4,7 @@ import requestAPI from "./RequestApi";
 export async function getListCartItemByCartID(cartID: string): Promise<CartItemModel[]> {
     const link: string = `http://localhost:8080/api/cart/getListCartItem?cartId=${cartID}`;
 
-    const response = await requestAPI(link);
+    const response = await requestAPI(link,true);
 
     const responseData = response;
 

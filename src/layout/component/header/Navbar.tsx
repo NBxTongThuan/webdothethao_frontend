@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/user/CategoriesAPI";
 import { getUserName, logOut, getCartId } from "../../../util/JwtService";
+import { useAuth } from "../../../util/AuthContext";
 
 interface NavbarInterface {
   searchKeywords: string;
@@ -13,26 +14,21 @@ interface NavbarInterface {
 const Navbar: React.FC<NavbarInterface> = (props) => {
   const [temporaryKeywords, setTemporaryKeywords] = useState('');
   const [listCate, setListCate] = useState<CategoriesModel[]>([]);
-  const [cartID, setCartID] = useState<string | null>(getCartId() + "");
+  const [cartID, setCartID] = useState<string | null>();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const navigate = useNavigate();
 
-  
-  // Theo dõi sự thay đổi của localStorage
+  const {user,logout} = useAuth();
+
+
+
   useEffect(() => {
-    const handleStorageChange = () => {
-      setToken(localStorage.getItem('token'));
-    };
-
-    window.addEventListener("storage", handleStorageChange); // Lắng nghe sự kiện thay đổi
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-
-
+    if(user){
+      setCartID(user?.cartId + "");
+    }else{
+      setCartID(null);
+    }
+  }, [user]);
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTemporaryKeywords(event.target.value);
@@ -43,7 +39,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
   }
 
   const handleLogout = () => {
-    logOut(navigate);
+    logout();
   }
 
   useEffect(() => {
@@ -58,7 +54,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
   return (
     <nav className="bg-gray-800">
-      <div className="container mx-auto px-4 py-2 flex items-center justify-between">
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between h-16">
         <a className="text-white text-lg font-bold" href="/">
           <img src="/images/logo192.png" style={{ width: "100px",height:"50px" }} />
         </a>
@@ -66,8 +62,8 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
           <span className="fas fa-bars"></span>
         </button>
 
-        <div className="hidden md:flex items-center space-x-6" id="navbarSupportedContent">
-          <ul className="flex items-center space-x-6">
+        <div className="px-4 py-4 hidden md:flex items-center justify-center space-x-6 mt-4" id="navbarSupportedContent">
+          <ul className="flex items-center justify-center space-x-6">
             <li>
               <Link className="text-white hover:text-gray-300" to="/">Trang chủ</Link>
             </li>
@@ -95,7 +91,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
         </div>
 
         {/* Tìm kiếm */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-center space-x-2">
           <input
             className="px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             type="search"
@@ -113,7 +109,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
         </div>
 
         {/* Biểu tượng giỏ hàng */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-center space-x-4">
           <Link className="text-white hover:text-gray-300" to={cartID ? `/Cart/${cartID}` : '/Login'}>
             <Cart className="w-6 h-6" />
           </Link>
@@ -123,13 +119,13 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
           <div className="relative group" style={{ marginRight: '10px' }}>
             <button className="flex items-center justify-center space-x-2 text-white hover:text-gray-300">
               <Person className="w-5 h-5" />
-              <span>{token ? 'Xin chào ' + getUserName(token) : 'Tài khoản'}</span>
+              <span>{user ? 'Xin chào ' + user.userName : 'Tài khoản'}</span>
               <ChevronDown className="w-4 h-4" />
             </button>
 
             {/* Dropdown Menu */}
             <div className="absolute right-0 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block z-50">
-              {!token && <Link
+              {!user && <Link
                 to="/Login"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
               >
@@ -137,7 +133,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Đăng nhập
               </Link>}
 
-              {!token && <Link
+              {!user && <Link
                 to="/Register"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
               >
@@ -145,7 +141,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Đăng ký
               </Link>}
 
-              {token && <Link
+              {user && <Link
                 to="/userDetail"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
               >
@@ -153,7 +149,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Thông tin cá nhân
               </Link>}
 
-              {token && <Link
+              {user && <Link
                 to="/myOrder"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
               >
@@ -163,7 +159,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
 
 
               {
-                token && <Link
+                user && <Link
                   to="/changePassword"
                   className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
                 >
@@ -172,7 +168,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 </Link>
               }
 
-              {token && <Link
+              {user && <Link
                 to="/Login"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
                 onClick={handleLogout}
@@ -181,7 +177,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Đăng Xuất
               </Link>}
 
-              {!token && <Link
+              {!user && <Link
                 to="/forgotPassword"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100"
               >

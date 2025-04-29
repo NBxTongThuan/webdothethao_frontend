@@ -46,7 +46,6 @@ const AddType: React.FC<ModalProps> = (props) => {
 
     }, []);
 
-    const token = localStorage.getItem("token");
 
     const checkTypeNameExist = async (typeName: string, categoryName: string) => {
         try {
@@ -107,8 +106,8 @@ const AddType: React.FC<ModalProps> = (props) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
+                credentials: "include",
                 body: JSON.stringify(type)
             })
             if (response.ok == true) {

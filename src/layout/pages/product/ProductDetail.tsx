@@ -15,7 +15,8 @@ import { toast } from "react-toastify";
 import { getListReview } from "../../../api/user/ReviewsAPI";
 import { ReviewsModel } from "../../../model/ReviewsModel";
 import renderRate from "../../../util/Stars";
-
+import { SameTypeProduct } from "../../component/SameTypeProduct";
+import { useAuth } from "../../../util/AuthContext";
 const ProductDetail: React.FC = () => {
 
   const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeModel[]>([]);
@@ -155,12 +156,12 @@ const ProductDetail: React.FC = () => {
       setQuantity(1);
     }
   }
-
+  const { user } = useAuth();
   const handleSubmitAddToCart = async () => {
 
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+     
+      if (!user) {
         toast.error("Bạn cần đăng nhập để mua hàng!");
         return;
       }
@@ -169,14 +170,14 @@ const ProductDetail: React.FC = () => {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
-          userName: getUserName(token),
+          userName: user.userName,
           price: product?.price,
           quantity: quantity,
           productAttributeId: productAttributeId
-        })
+        }),
+        credentials: 'include'
       });
       
       const { statusCode, message } = await response.json();
@@ -423,6 +424,12 @@ const ProductDetail: React.FC = () => {
       </div>
       {/* Reviews */}
       <Reviews listReview={listReview} />
+
+      {/* Sản phẩm cùng loại */}
+      <div className="mt-12">
+        <h3 className="text-2xl font-bold mb-6">Sản phẩm cùng loại</h3>
+        <SameTypeProduct productId={product_id} />
+      </div>
     </div>
 
   );

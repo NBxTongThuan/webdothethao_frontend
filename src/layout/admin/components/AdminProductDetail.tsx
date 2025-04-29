@@ -40,7 +40,6 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const [showEditProductAttributeModal, setShowEditProductAttributeModal] = useState<boolean>(false);
     const [flag, setFlag] = useState<boolean>(false);
     const [listImage, setListImage] = useState<ImageResponse[]>([]);
-    const token = localStorage.getItem("token");
 
     const handleAddAttribute = async () => {
 
@@ -69,9 +68,9 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
         const response = await fetch(url, {
             method: "POST",
             headers: {
-                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify(data)
         });
         const result = await response.json();
@@ -136,9 +135,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
         const url = `http://localhost:8080/api/admin/productAttribute/enableProductAttribute?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
         const response = await fetch(url, {
             method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
+            credentials: "include",
         });
         const result = await response.json();
         if (result === true) {
@@ -156,9 +153,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
 
         const response = await fetch(url, {
             method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
+            credentials: 'include'
         });
         const result = await response.json();
         if (result === true) {
@@ -327,18 +322,18 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                             {/* Ảnh sản phẩm */}
                             <div className="space-y-4">
                                 <h1 className="text-2xl font-bold text-gray-800">Ảnh sản phẩm</h1>
-                            <div className="grid grid-cols-3 gap-6">
-                                { listImage.length > 0 ? listImage.map((image: ImageResponse, index: number) => (
-                                    <div key={index} className="relative group">
-                                        <img
-                                            src={image.data}
-                                            alt={`Ảnh sản phẩm ${index + 1}`}
-                                            className="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
-                                        />
-                                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-lg"></div>
-                                    </div>
-                                )) : <h1>Sản phẩm hiện chưa có ảnh nào!</h1>}
-                            </div>
+                                <div className="grid grid-cols-3 gap-6">
+                                    {listImage.length > 0 ? listImage.map((image: ImageResponse, index: number) => (
+                                        <div key={index} className="relative group">
+                                            <img
+                                                src={image.data}
+                                                alt={`Ảnh sản phẩm ${index + 1}`}
+                                                className="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
+                                            />
+                                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-lg"></div>
+                                        </div>
+                                    )) : <h1>Sản phẩm hiện chưa có ảnh nào!</h1>}
+                                </div>
                             </div>
 
                             <div className="space-y-4">

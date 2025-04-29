@@ -12,7 +12,12 @@ export const getAllCategories = async (page: number, size: number): Promise<resp
 
 
     try {
-        const response = await fetch(`${API_URL}/getAllCategory?page=${page}&size=${size}`);
+        const response = await fetch(`${API_URL}/getAllCategory?page=${page}&size=${size}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -53,7 +58,12 @@ export const getAllCategory = async () => {
 
 
     try {
-        const response = await fetch(`${API_URL}/findAll`);
+        const response = await fetch(`${API_URL}/findAll`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -88,7 +98,12 @@ export const getAllCategory = async () => {
 
 export const getCategoryByName = async (categoryName: string): Promise<CategoryResponse> => {
     try {   
-        const response = await fetch(`${API_URL}/getByCategoryName?categoryName=${categoryName}`);
+        const response = await fetch(`${API_URL}/getByCategoryName?categoryName=${categoryName}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         return data;
     } catch (error) {
@@ -99,7 +114,12 @@ export const getCategoryByName = async (categoryName: string): Promise<CategoryR
 
 export const checkCategoryNameExist = async (categoryName: string): Promise<boolean> => {
     try {
-        const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`);
+        const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         return data;
     } catch (error) {

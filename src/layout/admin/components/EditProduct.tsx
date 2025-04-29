@@ -28,7 +28,6 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const [file1, setFile1] = useState<File | null>(null);
     const [file2, setFile2] = useState<File | null>(null);
     const [file3, setFile3] = useState<File | null>(null);
-    const [token, setToken] = useState<string>("");
 
 
     // const [newListImage, setNewListImage] = useState<ImageResponse[]>([]);
@@ -122,11 +121,11 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
             const url = `http://localhost:8080/api/admin/products/update`;
             const response = await fetch(url, {
                 method: "PUT",
-                body: JSON.stringify(product),
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }   
+                },
+                body: JSON.stringify(product),
+                credentials:'include'
             });
             if(response.ok === true){
                 toast.success("Cập nhật sản phẩm thành công");

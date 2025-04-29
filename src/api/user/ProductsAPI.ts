@@ -89,4 +89,38 @@ export async function getTop4Product(): Promise<ProductModel[]> {
     return listProducts;
 }
 
+export async function get4NewestProduct(): Promise<ProductModel[]> {
+    const link: string = `http://localhost:8080/api/products/topNewestProduct?page=0&size=4`;
 
+    const response = await requestAPI(link);
+
+    const responseDATA = response._embedded?.productsResponseList ?? [];
+
+    const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
+        product_id: item.productId,
+        description: item.productName,
+        product_name: item.description,
+        price: item.price,
+        quantity_sold: item.quantitySold
+    }));
+
+    return listProducts;
+}
+
+export async function getSameTypeProduct(productId: string): Promise<ProductModel[]> {
+    const link: string = `http://localhost:8080/api/products/sameProductType?productId=${productId}&page=0&size=4`;
+
+    const response = await requestAPI(link);
+
+    const responseDATA = response._embedded?.productsResponseList ?? [];
+
+    const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
+        product_id: item.productId,
+        description: item.productName,
+        product_name: item.description,
+        price: item.price,
+        quantity_sold: item.quantitySold
+    }));
+
+    return listProducts;    
+}

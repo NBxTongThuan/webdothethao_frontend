@@ -24,7 +24,6 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     const [error, setError] = useState<string | null>(null);
     const [orderItems, setOrderItems] = useState<OrderItemResponse[]>([]);
     const [itemImages, setItemImages] = useState<{ [key: string]: string }>({});
-    const token = localStorage.getItem('token');
     const [payment, setPayment] = useState<PaymentResponse>();
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
     const [showConfirmedConfirm, setShowConfirmedConfirm] = useState(false);
@@ -120,9 +119,9 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: "include",
             });
 
             if (response.ok) {

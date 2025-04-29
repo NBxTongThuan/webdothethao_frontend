@@ -8,6 +8,7 @@ import NumberFormat from "../../../util/NumberFormat";
 import { getListReview } from "../../../api/user/ReviewsAPI";
 import renderRate from "../../../util/Stars";
 import { Button } from "antd";
+import { useAuth } from "../../../util/AuthContext";
 
 
 interface ProductPropsInterface {
@@ -21,6 +22,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     const [loadingData, setLoadingData] = useState(true);
     const [errorReport, setErrorReport] = useState("");
     const [productRating, setProductRating] = useState(0);
+    // const {user} = useAuth();
 
 
     useEffect(() => {
@@ -61,7 +63,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
 
     }, []);
 
-    const token = localStorage.getItem('token');
+    
 
     if (loadingData) {
         return (
@@ -86,7 +88,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     return (
         <div className="h-full">
             <div className="h-full group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1">
-                <Link to={token ? `/productdetail/${productId}` : `/Login`} className="block relative overflow-hidden">
+                <Link to={`/productdetail/${productId}`} className="block relative overflow-hidden">
                     {productImage ? (
                         <div className="relative">
                             <img
@@ -122,7 +124,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                         <span className="text-lg font-bold text-red-500">
                             {NumberFormat(props.product.price)} VNĐ
                         </span>
-                        <Link to={token ? `/productdetail/${productId}` : `/Login`} className="block relative overflow-hidden">
+                        <Link to={`/productdetail/${productId}`} className="block relative overflow-hidden">
                         <Button type="primary" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
                             Xem chi tiết
                         </Button>

@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getUserIsActive } from '../../../util/JwtService';
 import { toast } from 'react-toastify';
-
+import { useAuth } from '../../../util/AuthContext';
+import { UserInfoResponse } from '../../../api/interface/Responses';
 const Login: React.FC = () => {
     const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -14,9 +15,72 @@ const Login: React.FC = () => {
         handleLogin();
     };
 
+    // const handleLogin = async () => {
+    //     const url = 'http://localhost:8080/api/account/Login';
+    //     const data = {
+    //         userName: username,
+    //         passWord: password
+    //     }
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(data)
+    //         });
+    //         console.log(response);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             localStorage.setItem('token', data.jwt);
+    //             if (!getUserIsActive()) {
+    //                 toast.error('Tài khoản của bạn chưa được kích hoạt');
+    //                 localStorage.removeItem('token');
+    //             }
+    //             else {
+    //                 toast.success('Đăng nhập thành công');
+    //                 window.dispatchEvent(new Event("storage"));
+    //                 navigate('/');
+    //             }
+    //         } else {
+    //             toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
+    const { setUser } = useAuth();
+
+    const handleLoginSuccess = async () => {
+        try {
+            const url = 'http://localhost:8080/api/auth/me';
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                const user: UserInfoResponse = {
+                    userName: data.userName,
+                    cartId: data.cartId || null,
+                    role: data.role
+                };
+                setUser(user);
+                navigate('/');
+            } else {
+                toast.error('Lỗi khi lấy thông tin tài khoản');
+            }
+        } catch (error) {
+            toast.error('Lỗi khi lấy thông tin tài khoản');
+        }
+    }
 
     const handleLogin = async () => {
-        const url = 'http://localhost:8080/api/account/Login';
+        const url = 'http://localhost:8080/api/auth/login';
         const data = {
             userName: username,
             passWord: password
@@ -27,38 +91,22 @@ const Login: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify(data)
             });
-            console.log(response);
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('token', data.jwt);
-                if (!getUserIsActive()) {
-                    toast.error('Tài khoản của bạn chưa được kích hoạt');
-                    localStorage.removeItem('token');
-                }
-                else {
-                    toast.success('Đăng nhập thành công');
-                    window.dispatchEvent(new Event("storage"));
-                    navigate('/');
-                }
+            const { statusCode, message } = await response.json();
+            if (statusCode === 'SUCCESS') {
+                toast.success(message);
+                handleLoginSuccess();
             } else {
-                toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
+                toast.error(message);
             }
+
         } catch (error) {
             console.log(error);
         }
     }
 
-
-
-    const containerStyle = {
-        backgroundColor: 'white',
-        padding: '10px',
-        borderRadius: '5px',
-        maxWidth: '400px',
-        margin: '0 auto'
-    };
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">

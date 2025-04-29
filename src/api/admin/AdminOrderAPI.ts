@@ -12,7 +12,12 @@ interface responseData{
 
 export const getAllOrders = async (page:number,size:number,orderStatus: string):Promise<responseData> => {
     try {
-        const response = await fetch(`${API_URL}/getAllOrder?page=${page}&size=${size}&orderStatus=${orderStatus}`);
+        const response = await fetch(`${API_URL}/getAllOrder?page=${page}&size=${size}&orderStatus=${orderStatus}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -60,14 +65,24 @@ export const getAllOrders = async (page:number,size:number,orderStatus: string):
 };
 
 export const getOrderStats = async (): Promise<number> => {
-    const response = await fetch(`${API_URL}/totalOrderToday`);
+    const response = await fetch(`${API_URL}/totalOrderToday`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
     const data = await response.json();
     return data;
 };
 
 export const getRevenueOfMonth = async (): Promise<number> => {
     try {
-        const response = await fetch(`${API_URL}/getRevenueOfMonth`);
+        const response = await fetch(`${API_URL}/getRevenueOfMonth`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         return data;
     } catch (error) {
@@ -78,7 +93,12 @@ export const getRevenueOfMonth = async (): Promise<number> => {
 
 export const getRevenueByDate = async (startDate: string, endDate: string): Promise<RevenueResponse[]> => {
     try {
-        const response = await fetch(`${API_URL}/getRevenueByDate?start=${startDate}&end=${endDate}`);
+        const response = await fetch(`${API_URL}/getRevenueByDate?start=${startDate}&end=${endDate}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
         const data = await response.json();
         const listRevenue = data;
         if(!listRevenue || listRevenue.length === 0){

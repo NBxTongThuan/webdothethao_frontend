@@ -31,7 +31,6 @@ const EditType: React.FC<ModalProps> = (props) => {
     const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
     const [listCategory, setListCategory] = useState<CategoryResponse[]>([]);
     const [typeName, setTypeName] = useState(props.types.typeName);
-    const token = localStorage.getItem("token");
 
     const oldTypeName = props.types.typeName;
 
@@ -113,9 +112,9 @@ const EditType: React.FC<ModalProps> = (props) => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify(type)
+                body: JSON.stringify(type),
+                credentials: "include",
             })
             if (response.ok == true) {
                 toast.success("Cập nhật thể loại thành công");

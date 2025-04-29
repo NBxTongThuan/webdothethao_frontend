@@ -14,7 +14,6 @@ interface EditProductAttributeProps {
 export default function EditProductAttribute({ productAttribute, onClose, setFlag }: EditProductAttributeProps) {
     const [form] = Form.useForm();
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
-    const token = localStorage.getItem("token");
     const onFinish = async () => {
         if (form.getFieldsValue().quantity <= 0) {
             message.error("Số lượng phải lớn hơn 0");
@@ -28,12 +27,12 @@ export default function EditProductAttribute({ productAttribute, onClose, setFla
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     productAttributeId: productAttribute?.productAttributeId,
                     quantity: form.getFieldsValue().quantity,
                 }),
+                credentials: "include",
             });
             const result = await response.json();
             if (result === true) {

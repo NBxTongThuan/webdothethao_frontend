@@ -10,7 +10,12 @@ interface responseData {
 export const getAllProductAttributeByProductId = async (productId:string,page: number, size: number): Promise<responseData> => {
 
     try {
-        const response = await fetch(`${URL}/getAllProductAttributeByProductId?productId=${productId}&page=${page}&size=${size}`);
+        const response = await fetch(`${URL}/getAllProductAttributeByProductId?productId=${productId}&page=${page}&size=${size}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
 
         if (!response.ok) {
             throw new Error('Network response was not ok');

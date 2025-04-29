@@ -9,7 +9,7 @@ import { getProvinces, getDistricts, getWards } from '../../../api/user/AddressA
 import { getUserName } from '../../../util/JwtService';
 import { toast } from 'react-toastify';
 import { District, Province, Ward } from '../../../api/interface/Responses';
-
+import { useAuth } from '../../../util/AuthContext';
 interface FormData {
     fullName: string;
     email: string;
@@ -29,9 +29,8 @@ const Checkout: React.FC = () => {
 
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
-    const token = localStorage.getItem('token');
     const navigate = useNavigate();
-    const userName = getUserName(token + "");
+    const {user} = useAuth();
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -131,7 +130,7 @@ const Checkout: React.FC = () => {
 
             const url = `http://localhost:8080/api/orders/codOrder`;
             const data = {
-                userName: userName,
+                userName: user?.userName,
                 totalPrice: finalTotal,
                 shipFee: shippingFee,
                 orderNote: formData.note,
@@ -156,9 +155,9 @@ const Checkout: React.FC = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    credentials: 'include'
                 });
 
                 if(response.ok){
@@ -177,7 +176,7 @@ const Checkout: React.FC = () => {
 
             const url = `http://localhost:8080/api/payment/vnpay/create`;
             const data = {
-                userName: userName,
+                userName: user?.userName,
                 totalPrice: finalTotal,
                 shipFee: shippingFee,
                 orderNote: formData.note,
@@ -200,9 +199,9 @@ const Checkout: React.FC = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    credentials: 'include'
                 });
 
                 if (response.ok) {

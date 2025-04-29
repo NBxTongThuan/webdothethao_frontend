@@ -9,9 +9,7 @@ import { toast } from "react-toastify";
 
 const Cart: React.FC = () => {
     const { cartID } = useParams();
-    console.log(cartID);
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
-    const token = localStorage.getItem('token');
     const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
     useEffect(() => {
@@ -31,8 +29,8 @@ const Cart: React.FC = () => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                "Authorization": `Bearer ${token}`
-            }
+            },
+            credentials: 'include'
         });
         console.log(response);
         if (response.ok) {

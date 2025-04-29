@@ -31,7 +31,6 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
     const [file1, setFile1] = useState<File | null>(null);
     const [file2, setFile2] = useState<File | null>(null);
     const [file3, setFile3] = useState<File | null>(null);
-    const [token, setToken] = useState<string>("");
     const [listCategory, setListCategory] = useState<CategoryResponse[]>([]);
     const [listSize, setListSize] = useState<string[]>([]);
     const [errorProductName, setErrorProductName] = useState<string>("");
@@ -65,8 +64,8 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                 body: JSON.stringify(data),
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                },
+                credentials: "include"
             });
 
             const result = await response.json();
@@ -254,8 +253,8 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                 body: JSON.stringify(product),
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
+                },
+                credentials: "include",
             });
             if (!response.ok) {
                 throw new Error("Network response was not ok");
