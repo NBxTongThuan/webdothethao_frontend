@@ -1,3 +1,15 @@
+
+//NotificationResponse
+export interface NotificationResponse {
+    notificationId: string;
+    title: string;
+    content: string;
+    createdDate: string;
+    orderId: string;
+    userId: string;
+    read: boolean;
+}
+
 //UserInfoResponse
 export interface UserInfoResponse {
     userName: string;

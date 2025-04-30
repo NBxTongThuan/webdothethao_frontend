@@ -31,7 +31,7 @@ export async function getListReview(productId: string): Promise<ReviewsModel[]> 
     export async function getAReview(orderItemId: string): Promise<Review | null> {
     const link:string = `http://localhost:8080/api/reviews/seeAReview?orderItemId=${orderItemId}`;
 
-    const response = await requestAPI(link);
+    const response = await requestAPI(link,true);
 
     if(!response){
         return null;

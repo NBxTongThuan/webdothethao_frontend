@@ -108,10 +108,50 @@ export const getRevenueByDate = async (startDate: string, endDate: string): Prom
             total: revenue.total,
             date: revenue.date
         }));
-        console.log(revenue);
         return revenue;
     } catch (error) {
         console.error('Error fetching revenue by date:', error);
         throw error;
     }
+}
+
+export const getNewOrder = async (page:number,size:number): Promise<responseData> => {
+    const response = await fetch(`${API_URL}/getNewOrders?page=${page}&size=${size}`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
+    const data = await response.json();
+    const listOrder = data._embedded?.orderResponseList;
+    if(!listOrder || listOrder.length === 0){
+        return {
+            totalPage: 0,
+            listOrder: [],
+            totalSize: 0
+        };
+    }
+    const orders: OrderResponse[] = listOrder.map((order: OrderResponse) => ({
+        orderId: order.orderId,
+        status: order.status,
+        createdDate: order.createdDate,
+        toName: order.toName,
+        toPhone: order.toPhone,
+        toEmail: order.toEmail,
+        toProvince: order.toProvince,
+        toDistrict: order.toDistrict,
+        toWard: order.toWard,
+        toAddress: order.toAddress,
+        orderNote: order.orderNote,
+        orderNoteCanceled: order.orderNoteCanceled,
+        totalPrice: order.totalPrice,
+        shipFee: order.shipFee,
+        dateReceive: order.dateReceive,
+        dateExpected: order.dateExpected
+    }));
+    return {
+        totalPage: data.page.totalPages,
+        listOrder: orders,
+        totalSize: data.page.totalElements
+    };
 }

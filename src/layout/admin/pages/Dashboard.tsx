@@ -12,12 +12,17 @@ import {
     Legend
 } from 'chart.js';
 import { getUserStats } from '../../../api/admin/UserAdminAPI';
-import { UserStatsResponse, RevenueResponse } from '../../../api/interface/Responses';
-import { getOrderStats, getRevenueOfMonth, getRevenueByDate } from '../../../api/admin/AdminOrderAPI';
+import { UserStatsResponse, RevenueResponse, NotificationResponse, OrderResponse } from '../../../api/interface/Responses';
+import { getOrderStats, getRevenueOfMonth, getRevenueByDate, getNewOrder } from '../../../api/admin/AdminOrderAPI';
 import NumberFormat from '../../../util/NumberFormat';
 import { getCountIsInStockProduct } from '../../../api/admin/ProductAdminAPI';
-import { DatePicker } from 'antd';
-import { format } from 'date-fns';
+import { Button, DatePicker, Pagination, Popover, Table } from 'antd';
+import { format, subDays } from 'date-fns';
+import { getUnReadNotifications } from '../../../api/admin/AdminNotificationAPI';
+import { NotificationProp } from '../components/NotificationProp';
+import Column from 'antd/es/table/Column';
+import OrderDetailAdmin from '../components/OrderDetailAdmin';
+import { Link } from 'react-router-dom';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -38,25 +43,82 @@ const Dashboard: React.FC = () => {
 
     const labels = data.map((item: RevenueResponse) => formatDate(item.date)); // ví dụ: '21/04'
     const values = data.map((item: RevenueResponse) => (item.total / 1_000_000).toFixed(2)); // triệu VNĐ
+    const [listNotification, setListNotification] = useState<NotificationResponse[]>([]);
+    const [totalNotificationPage, setTotalNotificationPage] = useState<number>(0);
+    const [totalNotificationSize, setTotalNotificationSize] = useState<number>(0);
+    const [currentNotificationPage, setCurrentNotificationPage] = useState<number>(1);
+    const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
+    const [endDate, setEndDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
 
+    const [listOrder, setListOrder] = useState<OrderResponse[]>([]);
+    const [totalElement, setTotalElement] = useState<number>(0);
+    const [size, setSize] = useState<number>(4);
 
-    const [startDate, setStartDate] = useState<string>('');
-    const [endDate, setEndDate] = useState<string>('');
+    const [showOrderDetail, setShowOrderDetail] = useState<boolean>(false);
+    const [selectedItem, setSelectedItem] = useState<string>("");
+    const [flag, setFlag] = useState<boolean>(false);
+    const [currentOrderPage, setCurrentOrderPage] = useState<number>(1);
+    const [totalOrderPage, setTotalOrderPage] = useState<number>(0);
+    const [totalOrderSize, setTotalOrderSize] = useState<number>(0);
+    const [orderSize, setOrderSize] = useState<number>(4);
+    const [notificationFlag, setNotificationFlag] = useState<boolean>(false);
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return 'bg-yellow-500';
+            case 'CONFIRMED':
+                return 'bg-green-500';
+            case 'SHIPPING':
+                return 'bg-blue-500';
+            case 'DELIVERED':
+                return 'bg-purple-500';
+            case 'CANCELLED':
+                return 'bg-red-500';
+        }
+    }
+
+    const getStatusText = (status: string) => {
+        switch (status) {
+            case 'PENDING':
+                return 'Chờ xác nhận';
+            case 'CONFIRMED':
+                return 'Đã xác nhận';
+            case 'SHIPPING':
+                return 'Đang giao hàng';
+            case 'DELIVERED':
+                return 'Đã giao hàng';
+            case 'CANCELLED':
+                return 'Đã hủy';
+        }
+    }
+
+    useEffect(() => {
+        getNewOrder(currentOrderPage - 1, orderSize).then((response) => {
+            setListOrder(response.listOrder);
+            setTotalOrderPage(response.totalPage);
+            setTotalOrderSize(response.totalSize);
+        });
+    }, [flag]);
+
+    useEffect(() => {
+        getUnReadNotifications(currentNotificationPage - 1, 5).then(response => {
+            setListNotification(response.listNotification);
+            setTotalNotificationPage(response.totalPage);
+            setTotalNotificationSize(response.totalSize);
+        });
+    }, [currentNotificationPage, notificationFlag]);
 
     useEffect(() => {
 
         if (startDate && endDate) {
             getRevenueByDate(startDate, endDate).then(
                 (data) => {
-                    console.log(data);
                     setData(data);
                 }
             );
         }
 
-    }, [startDate, endDate]);
-
-    console.log(data);
+    }, [startDate, endDate, flag]);
 
     const revenueData = {
         labels: labels,
@@ -71,6 +133,8 @@ const Dashboard: React.FC = () => {
             },
         ],
     };
+
+    console.log(listNotification);
 
 
 
@@ -104,14 +168,42 @@ const Dashboard: React.FC = () => {
                 <div className="flex items-center justify-between mb-8">
                     <h2 className="text-3xl font-bold text-gray-800">Dashboard</h2>
                     <div className="flex items-center space-x-4">
-                        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                            <i className="fas fa-download mr-2"></i>
-                            Xuất báo cáo
-                        </button>
-                        <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                            <i className="fas fa-cog mr-2"></i>
-                            Cài đặt
-                        </button>
+                        <Popover
+                            content={
+                                <div className="w-80 max-h-96 overflow-y-auto">
+                                    {listNotification.length > 0 ? (
+                                        listNotification.map((notification) => (
+                                            <NotificationProp key={notification.notificationId} notification={notification} setNotificationFlag={() => setNotificationFlag(!notificationFlag)} />
+                                        ))
+                                    ) : (
+                                        <div className="p-4 text-center text-gray-500">
+                                            Không có thông báo mới
+                                        </div>
+                                    )}
+                                    <Pagination
+                                        className='mt-4 justify-end w-full'
+                                        current={currentNotificationPage}
+                                        total={totalNotificationSize}
+                                        pageSize={5}
+                                        onChange={(page) => setCurrentNotificationPage(page)}
+                                    />
+                                </div>
+
+                            }
+                            trigger="hover"
+                            placement="bottomRight"
+                        >
+                            <Button>
+                                <i className="fas fa-bell mr-2"></i>
+                                Thông báo
+                                {listNotification.length > 0 && (
+                                    <span className="ml-2 px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                                        {listNotification.length}
+                                    </span>
+                                )}
+
+                            </Button>
+                        </Popover>
                     </div>
                 </div>
 
@@ -182,10 +274,10 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 gap-6 mb-8">
                     <div className="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center justify-between mb-6">
-                            <h5 className="text-xl font-semibold text-gray-800">Biểu đồ doanh thu</h5>
+                            <h5 className="text-xl font-semibold text-gray-800">Biểu đồ doanh thu từ ngày {startDate} đến ngày {endDate}</h5>
                             <DatePicker.RangePicker
                                 format="DD/MM/YYYY"
                                 onChange={(dates) => {
@@ -201,7 +293,7 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div className="h-80">
 
-                           { data.length > 0 ? <Line
+                            {data.length > 0 ? <Line
                                 data={revenueData}
                                 options={{
                                     responsive: true,
@@ -230,108 +322,135 @@ const Dashboard: React.FC = () => {
                             </div>}
                         </div>
                     </div>
-
-
-
-                    <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-                        <div className="flex items-center justify-between mb-6">
-                            <h5 className="text-xl font-semibold text-gray-800">Hoạt động gần đây</h5>
-                            <button className="text-blue-500 hover:text-blue-600">
-                                <i className="fas fa-ellipsis-v"></i>
-                            </button>
-                        </div>
-                        <div className="space-y-6">
-                            <div className="flex items-start">
-                                <div className="flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                                </div>
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-800">Đơn hàng mới #12347</p>
-                                    <p className="text-xs text-gray-500 flex items-center">
-                                        <i className="far fa-clock mr-1"></i>
-                                        2 phút trước
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-start">
-                                <div className="flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                                </div>
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-800">Cập nhật sản phẩm</p>
-                                    <p className="text-xs text-gray-500 flex items-center">
-                                        <i className="far fa-clock mr-1"></i>
-                                        15 phút trước
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-start">
-                                <div className="flex-shrink-0 mt-1">
-                                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                                </div>
-                                <div className="ml-4">
-                                    <p className="text-sm font-medium text-gray-800">Đăng ký người dùng mới</p>
-                                    <p className="text-xs text-gray-500 flex items-center">
-                                        <i className="far fa-clock mr-1"></i>
-                                        1 giờ trước
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-
                 <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                     <div className="flex items-center justify-between mb-6">
                         <h5 className="text-xl font-semibold text-gray-800">Đơn hàng gần đây</h5>
-                        <button className="text-blue-500 hover:text-blue-600">
-                            Xem tất cả
-                        </button>
+                        <Link to="/admin/orders">
+                            <Button type="primary">Xem tất cả</Button>
+                        </Link>
                     </div>
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã đơn</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng tiền</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                <tr className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12345</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nguyễn Văn A</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">1.234.000đ</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Hoàn thành
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button className="text-blue-500 hover:text-blue-600">
-                                            <i className="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#12346</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Trần Thị B</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.345.000đ</td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Đang xử lý
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <button className="text-blue-500 hover:text-blue-600">
-                                            <i className="fas fa-eye"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <Table
+                            dataSource={listOrder}
+                            rowKey="orderId"
+                            className="shadow-sm"
+
+                            pagination={{
+                                current: currentOrderPage,
+                                total: totalOrderSize,
+                                pageSize: orderSize,
+                                onChange: (page) => setCurrentOrderPage(page),
+                                onShowSizeChange: (current, size) => setOrderSize(size),
+                                showSizeChanger: true,
+                                pageSizeOptions: ['4', '8', '12', '16', '20'],
+                                showTotal: (total) => `Tổng ${total} đơn hàng`
+                            }}
+                            scroll={{ y: 600 }}
+                        >
+                            <Column
+                                title="Mã đơn hàng"
+                                align='center'
+                                dataIndex="orderId"
+                                key="orderId"
+                                ellipsis={true}
+                            />
+                            <Column
+                                title="Ngày đặt"
+                                align='center'
+                                dataIndex="createdDate"
+                                key="createdDate"
+                                width={120}
+                            // ellipsis={true}
+                            />
+                            {/* <Column
+                                title="Ngày giao dự kiến"
+                                dataIndex="dateExpected"
+                                key="dateExpected"
+                                ellipsis={true}
+                            /> */}
+                            <Column
+                                title="Người nhận"
+                                align='center'
+                                dataIndex="toName"
+                                key="toName"
+                                width={180}
+                                ellipsis={true}
+                            />
+                            <Column
+                                title="SĐT"
+                                align='center'
+                                dataIndex="toPhone"
+                                key="toPhone"
+                                ellipsis={true}
+                                render={(toPhone) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${toPhone}`}>
+                                        {toPhone.toLocaleString("vi-VN")}
+                                    </span>
+                                )}
+                            />
+                            {/* <Column
+                                title="Địa chỉ"
+                                dataIndex="toAddress"
+                                key="toAddress"
+                                ellipsis={true}
+                            /> */}
+                            {/* <Column
+                                title="Ghi chú"
+                                dataIndex="orderNote"
+                                key="orderNote"
+                                ellipsis={true}
+                            /> */}
+                            <Column
+                                title="Trạng thái"
+                                align='center'
+                                dataIndex="status"
+                                key="status"
+                                width={190}
+                                render={(status) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${getStatusColor(status)}`}>
+                                        {getStatusText(status)}
+                                    </span>
+                                )}
+                            />
+                            <Column
+                                title="Tổng tiền"
+                                align='center'
+                                dataIndex="totalPrice"
+                                key="totalPrice"
+                                width={190}
+                                ellipsis={true}
+                                render={(totalPrice) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${totalPrice}`}>
+                                        {NumberFormat(totalPrice)} VNĐ
+                                    </span>
+                                )}
+                            />
+                            <Column
+                                title="Thao tác"
+                                align='center'
+                                key="action"
+                                render={(_, record) => (
+                                    <Button type="primary" onClick={
+                                        () => {
+                                            setSelectedItem(record.orderId);
+                                            setShowOrderDetail(true);
+                                        }}
+                                    >Xem chi tiết</Button>
+                                )}
+                            />
+                        </Table>
+
+                        {
+                            showOrderDetail &&
+                            (<OrderDetailAdmin
+                                orderId={selectedItem}
+                                onClose={() => {
+                                    setShowOrderDetail(false);
+                                }}
+                                setFlag={() => setFlag(!flag)}
+                            />)
+                        }
                     </div>
                 </div>
             </div>

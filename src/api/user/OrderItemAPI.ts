@@ -4,7 +4,12 @@ const API_URL = 'http://localhost:8080/api/orderItems';
 
 
 export const getOrderItemsByOrderId = async (orderId: string): Promise<OrderItemResponse[]> => {
-    const response = await fetch(`${API_URL}/listOrderItem?orderId=${orderId}`);
+    const response = await fetch(`${API_URL}/listOrderItem?orderId=${orderId}`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
     const data = await response.json();
 
     const listOrderItem = data;

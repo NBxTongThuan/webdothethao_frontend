@@ -7,7 +7,12 @@ const API_URL = 'http://localhost:8080/api/payment';
 export const getPaymentByOrderId = async (orderId: string): Promise<PaymentResponse> => {
 
     try {
-        const response = await fetch(`${API_URL}/getPayment?orderId=${orderId}`);
+        const response = await fetch(`${API_URL}/getPayment?orderId=${orderId}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
