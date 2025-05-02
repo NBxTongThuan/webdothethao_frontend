@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getUserDetail } from "../../../api/user/UserDetailAPI";
-import { getUserName } from "../../../util/JwtService";
 import UserDetailModel from "../../../model/UserDetailModel";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -28,7 +27,6 @@ interface FormData {
 const EditProfile: React.FC = () => {
     const navigate = useNavigate();
     const {user} = useAuth();
-    const [userDetail, setUserDetail] = useState<UserDetailModel>();
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
     const [wards, setWards] = useState<Ward[]>([]);
@@ -54,8 +52,6 @@ const EditProfile: React.FC = () => {
     useEffect(() => {
         getUserDetail(userName)
         .then(userData => {
-            setUserDetail(userData);
-            // Update formData when userDetail is loaded
             setFormData({
                 userDetailId: userData.userDetailId || '',
                 userName: userName || '',

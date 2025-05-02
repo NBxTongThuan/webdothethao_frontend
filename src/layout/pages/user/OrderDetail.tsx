@@ -7,7 +7,6 @@ import NumberFormat from "../../../util/NumberFormat";
 import OrderCancel from "./OrderCancel";
 import { Button } from "antd";
 import OrderReview from "./OrderReview";
-import { getUserName } from "../../../util/JwtService";
 import SeeReview from "./SeeReview";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
@@ -24,8 +23,9 @@ const OrderDetail: React.FC = () => {
     const [showOrderReview, setShowOrderReview] = useState(false);
     const [showSeeReview, setShowSeeReview] = useState(false);
     const [payment, setPayment] = useState<PaymentResponse>();
+    const [reviewFlag, setReviewFlag] = useState(false);
 
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     const [selectedItem, setSelectedItem] = useState<OrderItemResponse>();
 
@@ -44,7 +44,7 @@ const OrderDetail: React.FC = () => {
                 .then(setOrderItems)
                 .catch(setError);
         }
-    }, [orderId]);
+    }, [orderId, reviewFlag]);
 
     useEffect(() => {
 
@@ -158,9 +158,6 @@ const OrderDetail: React.FC = () => {
             }
 
         }
-
-
-
     }
 
     const isPaymented = (): boolean => {
@@ -331,11 +328,13 @@ const OrderDetail: React.FC = () => {
                     {orderItems.map((item) => (
                         <div key={item.orderItemId} className="flex items-center border-b pb-4 hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200">
                             <div className="w-24 h-24 flex-shrink-0">
-                                <img
-                                    src={itemImages[item.productId] || "/images/no-image.png"}
-                                    alt={item.productName}
-                                    className="w-full h-full object-cover rounded-lg shadow-sm"
-                                />
+                                <Link to={`/productdetail/${item.productId}`}>
+                                    <img
+                                        src={itemImages[item.productId] || "/images/no-image.png"}
+                                        alt={item.productName}
+                                        className="w-full h-full object-cover rounded-lg shadow-sm"
+                                    />
+                                </Link>
                             </div>
                             <div className="ml-4 flex-1">
                                 <h3 className="text-lg font-medium text-left text-gray-800 hover:text-red-600 transition-colors duration-200">{item.productName}</h3>
@@ -404,6 +403,7 @@ const OrderDetail: React.FC = () => {
                                 productAttributeId={selectedItem?.productAttributeId + ""}
                                 userName={user?.userName + ""}
                                 onClose={() => setShowOrderReview(false)}
+                                setReviewFlag={() => setReviewFlag(!reviewFlag)}
                             />
                         )
                     }

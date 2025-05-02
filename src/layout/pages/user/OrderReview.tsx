@@ -11,6 +11,7 @@ interface OrderReviewProps {
     productAttributeId: string;
     userName: string;
     onClose: () => void;
+    setReviewFlag: () => void;
 }
 
 
@@ -65,9 +66,7 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
             if (response.ok) {
                 props.onClose();
                 toast.success("Cảm ơn bạn đã đánh giá sản phẩm");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
+                props.setReviewFlag();
             }
             else {
                 props.onClose();

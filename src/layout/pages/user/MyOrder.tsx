@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getOrders } from '../../../api/user/OrderAPI';
-import { Card, Table, Tag, Button, Select, Space } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { Card, Table, Button, Select, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { getUserName } from '../../../util/JwtService';
 import { toast } from 'react-toastify';
 import { Pagination } from "../../../util/Pagination";
 import { OrderResponse } from '../../../api/interface/Responses';

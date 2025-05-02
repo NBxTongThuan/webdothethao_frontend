@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { getUserName, logOut } from "../../../util/JwtService";
+
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../util/AuthContext";
 interface formData {
     username: string;
     oldPassword: string;
@@ -12,13 +13,13 @@ interface formData {
 const passwordRegex = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
 const ChangePassword = () => {
-    const token = localStorage.getItem('token');
+    const {user,logout} = useAuth();
 
     const navigate = useNavigate();
     const [errorRePassword, setErrorRePassword] = useState('');
 
     const [formData, setFormData] = useState<formData>({
-        username: token == null ? "" : getUserName(token + "") + "",
+        username: user?.userName + "",
         oldPassword: '',
         newPassword: '',
         confirmPassword: '',
@@ -55,7 +56,7 @@ const ChangePassword = () => {
             toast.success("Đổi mật khẩu thành công");
             
             setTimeout(() => {
-                logOut(navigate);
+                logout();
             }, 3000);
         } else {
             toast.error("Đổi mật khẩu thất bại");

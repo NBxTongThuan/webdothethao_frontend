@@ -1,4 +1,5 @@
 import { CategoriesModel } from "../../model/CategoriesModel";
+import { CategoryResponse } from "../interface/Responses";
 import requestAPI from "./RequestApi";
 
 export async function getListCate(): Promise<CategoriesModel[]> {
@@ -19,5 +20,32 @@ export async function getListCate(): Promise<CategoriesModel[]> {
             });
     }
 
+    return listCate;
+}
+
+export async function getTopCategory(page: number, size: number): Promise<CategoryResponse[]> {
+
+    const link: string = `http://localhost:8080/api/categories/top4Category?page=${page}&size=${size}`;
+    const response = await requestAPI(link);
+    const responseDATA = response;
+
+    const listData = responseDATA._embedded.categoryResponseList;
+
+    if(listData.length == 0 || listData == null)
+    {
+        return [];
+    }
+
+    const listCate: CategoryResponse[] = [];
+    for(const key in listData)
+    {
+        listCate.push({
+            categoriesId: listData[key].categoriesId,
+            categoriesName: listData[key].categoriesName,
+            imageData: listData[key].imageData,
+            enable: listData[key].enable,
+            size: listData[key].size
+        });
+    }
     return listCate;
 }

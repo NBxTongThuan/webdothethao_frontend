@@ -1,7 +1,5 @@
-import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getUserIsActive } from '../../../util/JwtService';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../util/AuthContext';
 import { UserInfoResponse } from '../../../api/interface/Responses';
@@ -15,40 +13,6 @@ const Login: React.FC = () => {
         handleLogin();
     };
 
-    // const handleLogin = async () => {
-    //     const url = 'http://localhost:8080/api/account/Login';
-    //     const data = {
-    //         userName: username,
-    //         passWord: password
-    //     }
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(data)
-    //         });
-    //         console.log(response);
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             localStorage.setItem('token', data.jwt);
-    //             if (!getUserIsActive()) {
-    //                 toast.error('Tài khoản của bạn chưa được kích hoạt');
-    //                 localStorage.removeItem('token');
-    //             }
-    //             else {
-    //                 toast.success('Đăng nhập thành công');
-    //                 window.dispatchEvent(new Event("storage"));
-    //                 navigate('/');
-    //             }
-    //         } else {
-    //             toast.error('Thông tin tài khoản hoặc mật khẩu không chính xác');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
 
     const { setUser } = useAuth();
 

@@ -5,7 +5,6 @@ import { getOrderItemsByOrderId } from "../../../api/user/OrderItemAPI";
 import { get1Image } from "../../../api/user/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import { Button, ConfigProvider, Modal } from "antd";
-import { getUserName } from "../../../util/JwtService";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { motion, AnimatePresence } from 'framer-motion';
 import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";

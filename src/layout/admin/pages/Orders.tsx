@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/AdminLayout';
 import { Table, Card, Select, Space, Input, Button } from 'antd';
-import { EyeOutlined, SearchOutlined, FilterOutlined, DownloadOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { SearchOutlined, FilterOutlined, DownloadOutlined } from '@ant-design/icons';
 import { OrderResponse } from '../../../api/interface/Responses';
 import { getAllOrders } from '../../../api/admin/AdminOrderAPI';
 import { toast } from 'react-toastify';
@@ -10,10 +9,9 @@ import OrderDetailAdmin from '../components/OrderDetailAdmin';
 import NumberFormat from '../../../util/NumberFormat';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import Column from 'antd/es/table/Column';
 
-const { Column } = Table;
 const { Option } = Select;
-
 
 const Orders: React.FC = () => {
 
@@ -21,7 +19,6 @@ const Orders: React.FC = () => {
     const [orders, setOrders] = useState<OrderResponse[]>([]);
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [showOrderDetail, setShowOrderDetail] = useState(false);
-    const [totalPage, setTotalPage] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(4);
     const [selectedItem, setSelectedItem] = useState('');
@@ -53,7 +50,6 @@ const Orders: React.FC = () => {
         getAllOrders(currentPage - 1, size, statusFilter)
             .then(response => {
                 setOrders(response.listOrder);
-                setTotalPage(response.totalPage);
                 setTotalElement(response.totalSize);
             })
             .catch(
@@ -78,8 +74,6 @@ const Orders: React.FC = () => {
             return order.status === value;
         }));
     }
-
-    const navigate = useNavigate();
 
     const getStatusText = (status: string) => {
         switch (status) {

@@ -23,6 +23,7 @@ import { NotificationProp } from '../components/NotificationProp';
 import Column from 'antd/es/table/Column';
 import OrderDetailAdmin from '../components/OrderDetailAdmin';
 import { Link } from 'react-router-dom';
+import Notifications from './Notifications';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -49,6 +50,8 @@ const Dashboard: React.FC = () => {
     const [currentNotificationPage, setCurrentNotificationPage] = useState<number>(1);
     const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
     const [endDate, setEndDate] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
+
+    const [showAllNotificationModal, setShowAllNotificationModal] = useState<boolean>(false);
 
     const [listOrder, setListOrder] = useState<OrderResponse[]>([]);
     const [totalElement, setTotalElement] = useState<number>(0);
@@ -187,6 +190,10 @@ const Dashboard: React.FC = () => {
                                         pageSize={5}
                                         onChange={(page) => setCurrentNotificationPage(page)}
                                     />
+
+                                    <div className='mt-4'>
+                                        <Button type='primary' onClick={() => setShowAllNotificationModal(true)}>Tất cả thông báo</Button>
+                                    </div>
                                 </div>
 
                             }
@@ -449,6 +456,12 @@ const Dashboard: React.FC = () => {
                                     setShowOrderDetail(false);
                                 }}
                                 setFlag={() => setFlag(!flag)}
+                            />)
+                        }
+                        {
+                            showAllNotificationModal &&
+                            (<Notifications
+                                onClose={() => setShowAllNotificationModal(false)}
                             />)
                         }
                     </div>

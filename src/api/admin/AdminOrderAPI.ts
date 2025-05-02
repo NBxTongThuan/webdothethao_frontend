@@ -83,11 +83,26 @@ export const getRevenueOfMonth = async (): Promise<number> => {
                 credentials: "include",
             }
         );
-        const data = await response.json();
-        return data;
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const text = await response.text();
+        if (!text) {
+            return 0;
+        }
+
+        try {
+            const data = JSON.parse(text);
+            return data || 0;
+        } catch (e) {
+            console.error('Error parsing JSON:', e);
+            return 0;
+        }
     } catch (error) {
         console.error('Error fetching revenue of month:', error);
-        throw error;
+        return 0;
     }
 };
 

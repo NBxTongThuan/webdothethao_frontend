@@ -3,7 +3,6 @@ import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArro
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/user/CategoriesAPI";
-import { getUserName, logOut, getCartId } from "../../../util/JwtService";
 import { useAuth } from "../../../util/AuthContext";
 
 interface NavbarInterface {

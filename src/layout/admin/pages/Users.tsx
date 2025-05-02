@@ -4,22 +4,21 @@ import { getUserList } from '../../../api/admin/UserAdminAPI';
 import { UserResponse } from '../../../api/interface/Responses';
 import { Table, Button, Tag, ConfigProvider, Modal } from 'antd';
 import Column from 'antd/es/table/Column';
-import { DeleteOutlined, DownloadOutlined, EditOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
+import {  DownloadOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
 import { X } from 'lucide-react';
 import { AlertTriangle } from 'lucide-react';
 import { CheckCircle2 } from 'lucide-react';
 import { toast } from 'react-toastify';
-
+import { UserDetailAdmin } from '../components/UserDetailAdmin';    
 const Users: React.FC = () => {
     const [users, setUsers] = useState<UserResponse[]>([]);
-    const [totalPage, setTotalPage] = useState(0);
     const [totalSize, setTotalSize] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [size, setSize] = useState(10);
     const [showLockAccountModal, setShowLockAccountModal] = useState(false);
     const [showUnlockAccountModal, setShowUnlockAccountModal] = useState(false);
     const [flag,setFlag] = useState(false);
-    const token = localStorage.getItem('token');
+    const [showUserDetail, setShowUserDetail] = useState(false);
 
     const [selectedUser, setSelectedUser] = useState<UserResponse | null>(null);
 
@@ -32,8 +31,9 @@ const Users: React.FC = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     }
+                    ,
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Khóa tài khoản thành công');
@@ -60,8 +60,8 @@ const Users: React.FC = () => {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Mở khóa tài khoản thành công');
@@ -83,7 +83,6 @@ const Users: React.FC = () => {
         const fetchUsers = async () => {
             const response = await getUserList(currentPage - 1, size);
             setUsers(response.listUser);
-            setTotalPage(response.totalPage);
             setTotalSize(response.totalSize);
         };
         fetchUsers();
@@ -231,12 +230,19 @@ const Users: React.FC = () => {
                                     align='center'
                                     render={(_, record:UserResponse) => (
                                         <div className="flex justify-center gap-2">
-                                            <Button type="primary" className='bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-700 px-3 py-1 rounded-md' icon={<EyeOutlined />}
-                                            >
-                                                Xem chi tiết
-                                            </Button>
+                                           {
+                                             record.role !== 'ADMIN' &&
+                                             <Button type="primary" className='bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-700 px-3 py-1 rounded-md' icon={<EyeOutlined />}
+                                             onClick={() => {
+                                                 setShowUserDetail(true);
+                                                 setSelectedUser(record);
+                                             }}
+                                             >
+                                                 Xem chi tiết
+                                             </Button>
+                                           }
 
-                                            {record.enable && <Button type="primary" className='bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 px-3 py-1 rounded-md' icon={<LockOutlined />}
+                                            {record.enable && record.role !== 'ADMIN' && <Button type="primary" className='bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-700 px-3 py-1 rounded-md' icon={<LockOutlined />}
                                                 onClick={() => {
                                                     setSelectedUser(record);
                                                     setShowLockAccountModal(true);
@@ -245,7 +251,7 @@ const Users: React.FC = () => {
                                                 Khóa tài khoản
                                             </Button>}
 
-                                            {!record.enable && <Button type="primary" className='bg-green-50 text-green-500 hover:bg-green-100 hover:text-green-700 px-3 py-1 rounded-md ml-2' icon={<LockOutlined />}
+                                            {!record.enable && record.role !== 'ADMIN' && <Button type="primary" className='bg-green-50 text-green-500 hover:bg-green-100 hover:text-green-700 px-3 py-1 rounded-md ml-2' icon={<LockOutlined />}
                                                 onClick={() => {
                                                         setSelectedUser(record);
                                                         setShowUnlockAccountModal(true);
@@ -259,11 +265,14 @@ const Users: React.FC = () => {
 
                             </Table>
 
-
+                                    {
+                                        showUserDetail && <UserDetailAdmin user={selectedUser} onClose={() => setShowUserDetail(false)} />
+                                    }
                         </div>
                     </div>
                 </div>
             </AdminLayout>
+            
         </ConfigProvider>
     );
 };

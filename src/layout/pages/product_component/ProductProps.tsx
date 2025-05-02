@@ -22,7 +22,6 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
     const [loadingData, setLoadingData] = useState(true);
     const [errorReport, setErrorReport] = useState("");
     const [productRating, setProductRating] = useState(0);
-    // const {user} = useAuth();
 
 
     useEffect(() => {

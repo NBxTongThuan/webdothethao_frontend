@@ -10,11 +10,9 @@ import BrandModel from "../../../model/BrandModel";
 import { getBrand } from "../../../api/user/BrandAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import Reviews from "../product_component/Reviews";
-import { getUserName } from "../../../util/JwtService";
 import { toast } from "react-toastify";
 import { getListReview } from "../../../api/user/ReviewsAPI";
 import { ReviewsModel } from "../../../model/ReviewsModel";
-import renderRate from "../../../util/Stars";
 import { SameTypeProduct } from "../../component/SameTypeProduct";
 import { useAuth } from "../../../util/AuthContext";
 const ProductDetail: React.FC = () => {
@@ -29,7 +27,7 @@ const ProductDetail: React.FC = () => {
 
   const [listImage, setListImage] = useState<ImageModel[]>([]);
 
-  const [listReview,setListReview] = useState<ReviewsModel[]>([]);
+  const [listReview, setListReview] = useState<ReviewsModel[]>([]);
 
   let productRating = 0;
   if (listReview.length > 0) {
@@ -37,7 +35,7 @@ const ProductDetail: React.FC = () => {
       (listReview.reduce((sum, review) => sum + review.rating, 0) / listReview.length).toFixed(1)
     );
   }
-  
+
 
 
   const { productId } = useParams();
@@ -66,13 +64,13 @@ const ProductDetail: React.FC = () => {
 
 
   useEffect(() => {
-      getListReview(product_id)
-          .then( responseDATA => {
-              setListReview(responseDATA);
-          })
-          .catch( error => {
-              console.log("Lỗi khi tải đánh giá sản phẩm: " + error);
-          });
+    getListReview(product_id)
+      .then(responseDATA => {
+        setListReview(responseDATA);
+      })
+      .catch(error => {
+        console.log("Lỗi khi tải đánh giá sản phẩm: " + error);
+      });
   }, [product_id]);
 
   const [colors, setColors] = useState<string[]>([]);
@@ -128,7 +126,7 @@ const ProductDetail: React.FC = () => {
       setRemainingQuantity(0);
     }
 
-  }, [selectedColor, selectedSize]); // Chỉ chạy khi các giá trị này thay đổi
+  }, [selectedColor, selectedSize]);
 
   const [mainImage, setMainImage] = useState(listImage[0]?.data || "");
 
@@ -160,7 +158,7 @@ const ProductDetail: React.FC = () => {
   const handleSubmitAddToCart = async () => {
 
     try {
-     
+
       if (!user) {
         toast.error("Bạn cần đăng nhập để mua hàng!");
         return;
@@ -179,14 +177,14 @@ const ProductDetail: React.FC = () => {
         }),
         credentials: 'include'
       });
-      
+
       const { statusCode, message } = await response.json();
 
       if (statusCode === 'SUCCESS') {
         toast.success(message);
-      } else if(statusCode === 'NUMBER_REACHED_MAXIMUM') {
+      } else if (statusCode === 'NUMBER_REACHED_MAXIMUM') {
         toast.success(message);
-      }else{
+      } else {
         toast.error(message);
       }
 
@@ -210,9 +208,8 @@ const ProductDetail: React.FC = () => {
               {listImage.map((img, index) => (
                 <div
                   key={index}
-                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${
-                    mainImage === img.data ? "ring-2 ring-red-500 ring-offset-2" : ""
-                  }`}
+                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${mainImage === img.data ? "ring-2 ring-red-500 ring-offset-2" : ""
+                    }`}
                   onClick={() => setMainImage(img.data || "")}
                 >
                   <img
@@ -256,9 +253,9 @@ const ProductDetail: React.FC = () => {
               </span>
               <span className="flex items-center">
                 <i className="fas fa-star text-yellow-400 mr-2"></i>
-                {productRating} 
+                {productRating}
                 <div className="ml-2">
-                {listReview.length} lượt đánh giá
+                  {listReview.length} lượt đánh giá
                 </div>
               </span>
             </div>
@@ -282,28 +279,25 @@ const ProductDetail: React.FC = () => {
               {colors.map((color) => (
                 <button
                   key={color}
-                  className={`group relative w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-105 ${
-                    selectedColor === color
+                  className={`group relative w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-105 ${selectedColor === color
                       ? "ring-2 ring-red-500 ring-offset-2"
                       : ""
-                  }`}
+                    }`}
                   onClick={() => setSelectedColor(color)}
                 >
                   <span
-                    className={`block w-full h-full rounded-xl border ${
-                      color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
+                    className={`block w-full h-full rounded-xl border ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
                         ? 'border-gray-300'
                         : 'border-transparent'
-                    }`}
+                      }`}
                     style={{ backgroundColor: color }}
                   />
                   {selectedColor === color && (
                     <span className="absolute inset-0 flex items-center justify-center">
-                      <i className={`fas fa-check text-lg ${
-                        color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
+                      <i className={`fas fa-check text-lg ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
                           ? 'text-gray-800'
                           : 'text-white'
-                      }`}></i>
+                        }`}></i>
                     </span>
                   )}
                 </button>
@@ -321,11 +315,10 @@ const ProductDetail: React.FC = () => {
               {sizes.map((size) => (
                 <button
                   key={size}
-                  className={`w-16 py-3 rounded-xl transition-all duration-200 font-medium ${
-                    selectedSize === size
+                  className={`w-16 py-3 rounded-xl transition-all duration-200 font-medium ${selectedSize === size
                       ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                    }`}
                   onClick={() => setSelectedSize(size)}
                 >
                   {size}
@@ -374,11 +367,10 @@ const ProductDetail: React.FC = () => {
           <div className="flex gap-4 pt-4">
             <button
               onClick={handleSubmitAddToCart}
-              className={`flex-1 py-4 rounded-xl text-white font-bold transition-all duration-200 flex items-center justify-center space-x-2 ${
-                remainingQuantity > 0
+              className={`flex-1 py-4 rounded-xl text-white font-bold transition-all duration-200 flex items-center justify-center space-x-2 ${remainingQuantity > 0
                   ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
                   : "bg-gray-400 cursor-not-allowed"
-              }`}
+                }`}
               disabled={remainingQuantity === 0}
             >
               <i className="fas fa-shopping-cart"></i>

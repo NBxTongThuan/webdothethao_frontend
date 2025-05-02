@@ -27,7 +27,7 @@ import PaymentReturnPage from './layout/pages/order/PaymentReturnPage';
 import ScrollToTop from './util/ScrollToTop';
 import Shop from './layout/pages/Shop';
 import { AuthProvider } from './util/AuthContext';
-
+import OrderSuccess from './result-page/OrderSuccess';
 
 
 
@@ -64,7 +64,7 @@ const MyRoute = () =>{
           <Route path="/payment-return/:status" element={<PaymentReturnPage />} />
           <Route path="/shop" element={<Shop searchKeyword={searchKeyword} />} />
           <Route path="/shop/:categoryId" element={<Shop searchKeyword={searchKeyword} />} />
-
+          <Route path="/orderSuccess" element={<OrderSuccess />} />
 
 {/* Admin path */}
           <Route path="/admin/dashboard" element={<Dashboard />} />

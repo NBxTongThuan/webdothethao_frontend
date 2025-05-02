@@ -5,7 +5,7 @@ import ProductDetail from "./product/ProductDetail";
 import { useParams } from "react-router-dom";
 import { Top4Selling } from "../component/Top4Selling";
 import { NewestProduct } from "../component/NewestProduct";
-
+import TopCategory from "../component/TopCategory";
 
 const HomePage: React.FC = () => {
     return (
@@ -17,24 +17,7 @@ const HomePage: React.FC = () => {
 
             {/* Featured Categories */}
             <section className="container mx-auto px-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Danh mục nổi bật</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[
-                        { name: 'Giày đá bóng', icon: 'fas fa-futbol', color: 'bg-blue-500' },
-                        { name: 'Giày chạy bộ', icon: 'fas fa-running', color: 'bg-green-500' },
-                        { name: 'Giày bóng rổ', icon: 'fas fa-basketball-ball', color: 'bg-orange-500' },
-                        { name: 'Phụ kiện', icon: 'fas fa-socks', color: 'bg-purple-500' }
-                    ].map((category, index) => (
-                        <div key={index} className="group relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300">
-                            <div className={`${category.color} h-32 flex items-center justify-center`}>
-                                <i className={`${category.icon} text-4xl text-white`}></i>
-                            </div>
-                            <div className="p-4 text-center">
-                                <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                            </div>
-                        </div>
-                    ))}
-                </div>
+                <TopCategory />
             </section>
 
             {/* Featured Products */}
