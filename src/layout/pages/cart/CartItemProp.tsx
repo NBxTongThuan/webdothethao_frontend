@@ -5,6 +5,8 @@ import NumberFormat from '../../../util/NumberFormat';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, Loader2 } from 'lucide-react';
 import { toast } from 'react-toastify';
+import ProductModel from '../../../model/ProductModel';
+import { get1Product } from '../../../api/user/ProductsAPI';
 
 interface CartItemPropInterface {
     cartItem: CartItemModel;
@@ -15,10 +17,20 @@ interface CartItemPropInterface {
 const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
     const [imageData, setImageData] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
-    const token = localStorage.getItem('token');
+    const [product, setProduct] = useState<ProductModel>();
+
 
     useEffect(() => {
-        setIsLoading(true);
+        get1Product(prop.cartItem.productId)
+            .then((product) => {
+                setProduct(product);
+            })
+            .catch((error) => {
+                console.error('Error fetching product:', error);
+            });
+    }, [prop.cartItem.productId]);
+
+    useEffect(() => {
         get1Image(prop.cartItem.productId.toString())
             .then((image) => {
                 if (image && image.data) {
@@ -33,14 +45,6 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
             });
     }, [prop.cartItem.productId]);
 
-    // const handleQuantityChange = (quantity: number) => {
-    //     if (quantity > prop.cartItem.remainQuantity) {
-    //         alert("Số lượng không hợp lệ");
-    //         return;
-    //     }
-    //     // prop.updateCartItemQuantity(prop.cartItem.cartItemId, quantity);
-    // };
-
     const handleMinusClick = async () => {
 
         if(prop.cartItem.quantity <= 1){
@@ -54,16 +58,15 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     cartItemId: prop.cartItem.cartItemId,
                     quantity: prop.cartItem.quantity - 1
                 }),
+                credentials:'include'
             }); 
             const { statusCode, message } = await response.json();
             if (statusCode === 'SUCCESS') {
-                // toast.success(message);
                 prop.setFlag();
             } else {
                 toast.error(message);
@@ -78,29 +81,30 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
             return;
         }
 
-        if (prop.cartItem.quantity > 1) {
+        if (prop.cartItem.quantity < prop.cartItem.remainQuantity) {
             const url = `http://localhost:8080/api/cartItem/updateQuantity`;
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     cartItemId: prop.cartItem.cartItemId,
                     quantity: prop.cartItem.quantity + 1
                 }),
+                credentials:'include'
             }); 
             const { statusCode, message } = await response.json();
             if (statusCode === 'SUCCESS') {
-                // toast.success(message);
                 prop.setFlag();
             } else {
                 toast.error(message);
             }
         }
     };
-    
+
+
+        
     return (
         <div className="w-full max-w-4xl mx-auto">
             <div className="bg-white shadow-lg rounded-2xl p-6 mb-4 transform transition-all duration-300 hover:shadow-xl">
@@ -149,10 +153,27 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <p className="text-gray-600 flex items-baseline justify-between md:justify-start md:space-x-2">
-                                    <span>Giá:</span>
-                                    <span className="font-bold text-red-500 text-lg">{NumberFormat(prop.cartItem.price)} VNĐ</span>
-                                </p>
+                                <div className="text-gray-600 flex items-baseline justify-between md:justify-start md:space-x-2">
+                                    {product?.moneyOff && product?.moneyOff > 0 ? (
+                                        <>
+                                            <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
+                                                {NumberFormat(product.price)} VNĐ
+                                            </span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xl font-bold text-red-500">
+                                                    {NumberFormat(product.price - product.moneyOff)} VNĐ
+                                                </span>
+                                                <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+                                                    -{Math.round((1 - (product.price - product.moneyOff) / product.price) * 100)}%
+                                                </span>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <span className="text-xl font-bold text-red-500">
+                                            {NumberFormat(product?.price || 0)} VNĐ
+                                        </span>
+                                    )}
+                                </div>
                                 <div className="flex items-center justify-between md:justify-start md:space-x-2">
                                     <span className="text-gray-600">Số lượng:</span>
                                     <div className="flex items-center space-x-2">
@@ -192,7 +213,9 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                             <div className="text-right md:text-left">
                                 <p className="text-sm text-gray-600">Tổng tiền:</p>
                                 <p className="text-xl font-bold text-red-500">
-                                    {NumberFormat(prop.cartItem.price * prop.cartItem.quantity)} VNĐ
+                                    {product && product?.moneyOff && product?.moneyOff > 0 
+                                        ? NumberFormat((product.price - product.moneyOff) * prop.cartItem.quantity)
+                                        : NumberFormat((product?.price || 0) * prop.cartItem.quantity)} VNĐ
                                 </p>
                             </div>
                         </div>

@@ -410,10 +410,13 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                             <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice)} VNĐ</div>
 
                                             <div className="text-gray-600 text-left">Phí vận chuyển:</div>
-                                            <div className="font-medium text-left text-gray-800">{NumberFormat(order.shipFee)} VNĐ</div>
+                                            <div className="font-medium text-left text-gray-800 ml-2"> {NumberFormat(order.shipFee)} VNĐ</div>
 
-                                            <div className="text-gray-600 text-left">Tổng tiền:</div>
-                                            <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice + order.shipFee)} VNĐ</div>
+                                            <div className="text-gray-600 text-left">Tổng tiền giảm:</div>
+                                            <div className="font-medium text-red-600 text-left ml-2"> {NumberFormat(order.totalMoneyOff)} VNĐ</div>
+
+                                            <div className="text-gray-600 text-left">Tổng số tiền cần thanh toán:</div>
+                                            <div className="font-medium text-red-600 text-left">{NumberFormat(order.finalPrice)} VNĐ</div>
 
                                             <div className="text-gray-600 text-left">Phương thức thanh toán:</div>
                                             <div className="font-medium text-red-600 text-left">{payment?.paymentMethod === 'CASH_ON_DELIVERY' ? "Thanh toán khi nhận hàng" : "Thanh toán VN-Pay"}</div>
@@ -466,18 +469,6 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                     </div>
                                 )}
 
-
-                                {/* {order.status == "PENDING" && (
-                                <div className="mb-6 text-right">
-                                    <button
-                                        onClick={() => setShowOrderCancel(true)}
-                                        className="inline-flex items-center px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 hover:text-red-700 transition-colors duration-200 font-medium shadow-sm"
-                                    >
-                                        <i className="fas fa-times-circle mr-2"></i>
-                                        Hủy đơn
-                                    </button>
-                                </div>
-                            )} */}
                             </div>
 
                             <div className="bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-lg p-6 border border-gray-100">
@@ -543,10 +534,10 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                                         {item.quantity}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                        {NumberFormat(item.price)} VNĐ
+                                                        {NumberFormat(item.finalPrice)} VNĐ
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">
-                                                        {NumberFormat(item.price * item.quantity)} VNĐ
+                                                        {NumberFormat(item.finalPrice * item.quantity)} VNĐ
                                                     </td>
 
                                                 </tr>
@@ -560,8 +551,8 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                 <div className="mt-5 flex justify-end">
                                     {order.status === "PENDING" &&
                                         <Button type="primary" className="bg-blue-600 hover:bg-blue-700"
-                                        onClick={() => setShowConfirmedConfirm(true)
-                                        }
+                                            onClick={() => setShowConfirmedConfirm(true)
+                                            }
                                         >
                                             Xác nhận đơn hàng
                                         </Button>
@@ -578,24 +569,24 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                     }
                                     {order.status === "CONFIRMED" &&
                                         <Button type="primary" className="bg-green-600 hover:bg-green-700"
-                                        onClick={() => setShowShipedConfirm(true)
-                                        }
+                                            onClick={() => setShowShipedConfirm(true)
+                                            }
                                         >
                                             Giao hàng
                                         </Button>}
 
                                     {order.status === "SHIPPING" &&
                                         <Button type="primary" className="bg-purple-600 hover:bg-purple-700"
-                                        onClick={() => setShowDeliveredConfirm(true)
-                                        }
+                                            onClick={() => setShowDeliveredConfirm(true)
+                                            }
                                         >
                                             Xác nhận đã giao hàng
                                         </Button>}
 
                                     {order.status === "SHIPPING" &&
                                         <Button type="primary" className="bg-red-600 hover:bg-red-700 ml-3"
-                                        onClick={() => setShowDontReceiptedConfirm(true)
-                                        }
+                                            onClick={() => setShowDontReceiptedConfirm(true)
+                                            }
                                         >
                                             Khách không nhận hàng
                                         </Button>}

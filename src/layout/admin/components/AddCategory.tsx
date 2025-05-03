@@ -17,6 +17,7 @@ import { ConfigProvider, Modal } from "antd";
 
 interface ModalProps {
     onClose: () => void;
+    setFlag: () => void;
 }
 
 const AddCategory: React.FC<ModalProps> = (props) => {
@@ -85,35 +86,33 @@ const AddCategory: React.FC<ModalProps> = (props) => {
 
     const handleSubmit = async () => {
 
-       if(categoryName && categoryImage){
-        const base64Image = await getBase64(categoryImage);
-        const category = {
-            categoryName: categoryName,
-            categoryImage: base64Image
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8080/api/admin/categories/addCategory`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(category)
-            })
-            if (response.ok) {
-                toast.success("Thêm danh mục thành công");
-                props.onClose();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } else {
-                toast.error("Thêm danh mục thất bại");
+        if (categoryName && categoryImage) {
+            const base64Image = await getBase64(categoryImage);
+            const category = {
+                categoryName: categoryName,
+                categoryImage: base64Image
             }
-        } catch (error) {
-            toast.error("Lỗi khi thêm danh mục");
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/admin/categories/addCategory`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(category)
+                })
+                if (response.ok) {
+                    toast.success("Thêm danh mục thành công");
+                    props.onClose();
+                    props.setFlag();
+                } else {
+                    toast.error("Thêm danh mục thất bại");
+                }
+            } catch (error) {
+                toast.error("Lỗi khi thêm danh mục");
+            }
         }
-       }
     }
 
     return (

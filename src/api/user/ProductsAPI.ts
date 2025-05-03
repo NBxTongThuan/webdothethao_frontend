@@ -26,6 +26,7 @@ async function getProduct(endpoint: string): Promise<ProductsAPIInterface>  {
         product_id: item.productId,
         description: item.productName,
         product_name: item.description,
+        moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
     }));
@@ -45,6 +46,7 @@ export async function get1Product(productId: string): Promise<ProductModel>  {
         product_id: responseDATA.productId,
         description: responseDATA.productName,
         product_name: responseDATA.description,
+        moneyOff: responseDATA.moneyOff,
         price: responseDATA.price,
         quantity_sold: responseDATA.quantitySold
     })
@@ -82,6 +84,7 @@ export async function getTop4Product(): Promise<ProductModel[]> {
         product_id: item.productId,
         description: item.productName,
         product_name: item.description,
+        moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
     }));
@@ -100,6 +103,7 @@ export async function get4NewestProduct(): Promise<ProductModel[]> {
         product_id: item.productId,
         description: item.productName,
         product_name: item.description,
+        moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
     }));
@@ -118,6 +122,7 @@ export async function getSameTypeProduct(productId: string): Promise<ProductMode
         product_id: item.productId,
         description: item.productName,
         product_name: item.description,
+        moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
     }));

@@ -196,6 +196,39 @@ const ProductDetail: React.FC = () => {
 
   }
 
+  const handleGetVNColor = (value: string) => {
+    switch (value) {
+        case "RED":
+            return "Đỏ";
+        case "BLUE":
+            return "Xanh dương";
+        case "GREEN":
+            return "Xanh lá";
+        case "YELLOW":
+            return "Vàng";
+        case "WHITE":
+            return "Trắng";
+        case "BLACK":
+            return "Đen";
+        case "PINK":
+            return "Hồng";
+        case "PURPLE":
+            return "Tím";
+        case "ORANGE":
+            return "Cam";
+        case "BROWN":
+            return "Nâu";
+        case "GRAY":
+            return "Xám";
+        default:
+            return value;
+    }
+}
+
+const handleGetColorString = () => {
+  if (!colors || colors.length === 0) return "Chưa có thông tin";
+  return colors.map(color => handleGetVNColor(color)).join(", ");
+}
 
   return (
     <div className="mt-4 container mx-auto p-6 bg-white shadow-xl rounded-2xl">
@@ -261,11 +294,31 @@ const ProductDetail: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-baseline space-x-4">
-            <h4 className="text-3xl font-bold text-red-600">{NumberFormat(product?.price)} VNĐ</h4>
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-1">
+                {product?.moneyOff && product?.moneyOff > 0 ? (
+                    <div>
+                        <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
+                            {NumberFormat(product.price)} VNĐ
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-xl font-bold text-red-500">
+                                {NumberFormat(product.price - product.moneyOff)} VNĐ
+                            </span>
+                            <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+                                -{Math.round((1 - (product.price - product.moneyOff) / product.price) * 100)}%
+                            </span>
+                        </div>
+                    </div>
+                ) : (
+                    <span className="text-xl font-bold text-red-500">
+                        {NumberFormat(product?.price || 0)} VNĐ
+                    </span>
+                )}
+            </div>
             <span className="text-sm text-gray-500 flex items-center">
-              <i className="fas fa-shopping-bag mr-1"></i>
-              Đã bán: {product?.quantity_sold}
+                <i className="fas fa-shopping-bag mr-1"></i>
+                Đã bán: {product?.quantity_sold}
             </span>
           </div>
 
@@ -392,8 +445,32 @@ const ProductDetail: React.FC = () => {
                   <td className="p-4">{product?.product_name}</td>
                 </tr>
                 <tr className="border-b border-gray-200">
-                  <th className="p-4 text-left text-gray-600">Giá</th>
-                  <td className="p-4 font-medium text-red-600">{NumberFormat(product?.price)} VNĐ</td>
+                  <th className="p-4 text-left text-gray-600 w-1/3">Giá</th>
+                  <td className="p-4">
+                    {product?.moneyOff && product?.moneyOff > 0 ? (
+                      <>
+                        <span className="text-red-600 font-medium text-base">
+                            {NumberFormat(product.price - product.moneyOff)} VNĐ
+                          </span>
+                          <span className="bg-yellow-100 text-red-600 py-0.5 px-1.5 rounded-full text-xs font-semibold">
+                            -{Math.round(
+                              (1 - (product.price - product.moneyOff) / product.price) * 100
+                            )}
+                            %
+                          </span>
+                          <span className="text-gray-400 text-sx line-through decoration-2 decoration-gray-400">
+                            {NumberFormat(product.price)} VNĐ
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-red-600 font-medium text-base">
+                          {NumberFormat(product?.price || 0)} VNĐ
+                        </span>
+                      )}
+
+                  
+                    
+                  </td>
                 </tr>
                 <tr className="border-b border-gray-200">
                   <th className="p-4 text-left text-gray-600">Xuất xứ</th>
@@ -401,7 +478,7 @@ const ProductDetail: React.FC = () => {
                 </tr>
                 <tr>
                   <th className="p-4 text-left text-gray-600">Màu sắc</th>
-                  <td className="p-4">{colors.join(", ")}</td>
+                  <td className="p-4">{handleGetColorString()}</td>
                 </tr>
               </tbody>
             </table>

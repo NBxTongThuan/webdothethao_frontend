@@ -62,7 +62,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
 
     }, []);
 
-    
+    console.log(props.product.moneyOff);
 
     if (loadingData) {
         return (
@@ -119,17 +119,29 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                     <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
                         {props.product.description}
                     </p>
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-red-500">
-                            {NumberFormat(props.product.price)} VNĐ
-                        </span>
-                        <Link to={`/productdetail/${productId}`} className="block relative overflow-hidden">
-                        <Button type="primary" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
-                            Xem chi tiết
-                        </Button>
+                    <div className="flex justify-between items-start">
+                        <div className="flex flex-col gap-1">
+                            {props.product.moneyOff > 0 && (
+                                <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
+                                    {NumberFormat(props.product.price)} VNĐ
+                                </span>
+                            )}
+                            <div className="flex items-center gap-2">
+                                <span className="text-xl font-bold text-red-500">
+                                    {NumberFormat(props.product.price - props.product.moneyOff)} VNĐ
+                                </span>
+                                {props.product.moneyOff > 0 && (
+                                    <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+                                        -{Math.round((1 - (props.product.price - props.product.moneyOff) / props.product.price) * 100)}%
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        <Link to={`/productdetail/${productId}`} className="block relative overflow-hidden self-end">
+                            <Button type="primary" className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200">
+                                Xem chi tiết
+                            </Button>
                         </Link>
-                        
-
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+import { Color } from "antd/es/color-picker";
 
 //NotificationResponse
 export interface NotificationResponse {
@@ -56,23 +57,27 @@ export interface OrderResponse {
     orderNoteCanceled: string;
     totalPrice: number;
     shipFee: number;
+    totalMoneyOff: number;
+    finalPrice: number;
     dateReceive: string;
     dateExpected: string;
-    dateCancel: string
+    dateCancel: string;
 }
 
 // OrderItemResponse
 export interface OrderItemResponse {
     orderItemId: string;
-    price: number;
+    finalPrice: number;
+    originalPrice: number;
     quantity: number;
+    isReviewed: boolean;
+    moneyOffPerOneProduct: number;
     orderId: string;
     color: string;
     size: string;
     productName: string;
     productId: string;
     productAttributeId: string;
-    reviewed: boolean;
 }
 
 //PaymentResponse
@@ -99,6 +104,7 @@ export interface ProductResponse {
     description: string;
     quantitySold: number;
     price: number;
+    moneyOff: number;
     typeName: string;
     categoryName: string;
     brandName: string;

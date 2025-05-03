@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CartItemModel } from "../../../model/CartItemModel";
 import { useEffect, useState } from "react";
 import { getListCartItemByCartID } from "../../../api/user/CartAPI";
@@ -10,8 +10,8 @@ import { toast } from "react-toastify";
 const Cart: React.FC = () => {
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
-    const navigate = useNavigate();
     const [flag, setFlag] = useState(false);
+
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -20,8 +20,7 @@ const Cart: React.FC = () => {
             .catch((error) => {
                 console.error('Error fetching cart items:', error);
             });
-    }, [cartID,flag]);
-
+    }, [cartID, flag]);
 
     const deleteCartItem = async (cartItemId: string) => {
         const url = `http://localhost:8080/api/cart/deleteCartItem?cartItemID=${cartItemId}`;
@@ -40,7 +39,12 @@ const Cart: React.FC = () => {
             toast.error('Không thể xóa sản phẩm khỏi giỏ hàng');
         }
     }
-
+  
+    const getProvisionalPrice = () => {
+        return listCartItem.reduce((acc, item) => {
+            return acc + (item.price - item.moneyOff) * item.quantity;
+        }, 0);
+    }
 
     if (listCartItem.length === 0) {
         return (
@@ -95,7 +99,7 @@ const Cart: React.FC = () => {
                     <>
                         <div className="space-y-4">
                             {listCartItem.map((item, index) => (
-                                <CartItemProp key={item.cartItemId} cartItem={item} deleteCartItem={deleteCartItem} setFlag={() => setFlag(!flag)} />
+                                <CartItemProp key={item.cartItemId} cartItem={item} deleteCartItem={deleteCartItem} setFlag={() => setFlag(!flag) }/>
                             ))}
                         </div>
 
@@ -104,16 +108,16 @@ const Cart: React.FC = () => {
                             <div className="space-y-4">
                                 <div className="flex justify-between text-base text-gray-600">
                                     <span>Tạm tính</span>
-                                    <span>{NumberFormat(listCartItem.reduce((sum, item) => sum + item.price * item.quantity, 0))} VNĐ</span>
+                                    <span>{NumberFormat(getProvisionalPrice())} VNĐ</span>
                                 </div>
                                 <div className="flex justify-between text-base text-gray-600">
                                     <span>Phí vận chuyển</span>
-                                    <span>Miễn phí</span>
+                                    <span>{NumberFormat(30000)} VNĐ</span>
                                 </div>
                                 <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
                                     <span className="text-lg font-medium text-gray-900">Tổng tiền</span>
                                     <span className="text-2xl font-bold text-red-500">
-                                        {NumberFormat(listCartItem.reduce((sum, item) => sum + item.price * item.quantity, 0))} VNĐ
+                                        {NumberFormat(getProvisionalPrice() + 30000)} VNĐ
                                     </span>
                                 </div>
                                 <Link to={`/checkOut/${cartID}`} className="w-full mt-6 bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2 font-medium">

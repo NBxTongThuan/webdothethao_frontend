@@ -19,6 +19,7 @@ import { CategoryResponse } from "../../../api/interface/Responses";
 interface ModalProps {
     onClose: () => void;
     category: CategoryResponse;
+    setFlag: () => void;
 }
 
 const EditCategory: React.FC<ModalProps> = (props) => {
@@ -130,9 +131,7 @@ const EditCategory: React.FC<ModalProps> = (props) => {
             if (response.ok) {
                 toast.success("Cập nhật danh mục thành công");
                 props.onClose();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+                props.setFlag();
             } else {
                 toast.error("Cập nhật danh mục thất bại");
                 props.onClose();

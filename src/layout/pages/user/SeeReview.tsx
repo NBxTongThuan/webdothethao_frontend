@@ -9,6 +9,7 @@ interface SeeReviewProps {
     orderItemId: string;
     userName: string;
     onClose: () => void;
+    setFlag: () => void;
 }
 
 
@@ -64,14 +65,13 @@ const SeeReview:React.FC<SeeReviewProps> = (props) => {
                     "reviewId": review?.reviewId,
                     "rating": rating,
                     "comment": comment,
-                })
+                }),
+                credentials: "include",
             });
             if (response.ok) {
                 props.onClose();
                 toast.success("Cập nhật đánh giá thành công");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+                props.setFlag();
             }
             else {
                 props.onClose();

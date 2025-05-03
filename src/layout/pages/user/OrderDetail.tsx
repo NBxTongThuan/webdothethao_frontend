@@ -76,6 +76,9 @@ const OrderDetail: React.FC = () => {
         }
     }, [orderItems]);
 
+    console.log(order);
+    console.log(orderItems);
+
     if (loading) {
         return (
             <div className="flex justify-start items-center h-screen">
@@ -162,7 +165,7 @@ const OrderDetail: React.FC = () => {
 
     const isPaymented = (): boolean => {
 
-        return order.status == "PENDING" && payment?.paymentStatus == "PENDING" && payment.paymentMethod == "VN_PAY";
+        return order.status === "PENDING" && payment?.paymentStatus === "PENDING" && payment.paymentMethod === "VN_PAY";
 
     }
 
@@ -189,32 +192,32 @@ const OrderDetail: React.FC = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-lg p-6 mb-6 border border-gray-100">
                 <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">Chi tiết đơn hàng</h1>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)} shadow-sm`}>
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">Chi tiết đơn hàng</h1>
+                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(order.status)} shadow-sm`}>
                         {getStatusText(order.status)}
                     </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
                     <div className="space-y-4">
-                        <h2 className="text-lg font-semibold mb-4 text-gray-700 flex items-center">
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
                             <i className="fas fa-shopping-bag text-red-500 mr-2"></i>
                             Thông tin đơn hàng
                         </h2>
                         <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-lg shadow-sm">
-                            <div className="text-gray-600 text-left">Mã đơn hàng:</div>
-                            <div className="font-medium text-left text-gray-800">{order.orderId}</div>
+                            <div className="text-gray-600 text-left font-medium">Mã đơn hàng:</div>
+                            <div className="font-semibold text-left text-gray-800">{order.orderId}</div>
 
-                            <div className="text-gray-600 text-left">Ngày đặt hàng:</div>
-                            <div className="font-medium text-left text-gray-800">{new Date(order.createdDate).toLocaleDateString('vi-VN')}</div>
+                            <div className="text-gray-600 text-left font-medium">Ngày đặt hàng:</div>
+                            <div className="font-semibold text-left text-gray-800">{new Date(order.createdDate).toLocaleDateString('vi-VN')}</div>
 
-                            <div className="text-gray-600 text-left">Ngày giao dự kiến:</div>
-                            <div className="font-medium text-left text-gray-800">{new Date(order.dateExpected).toLocaleDateString('vi-VN')}</div>
+                            <div className="text-gray-600 text-left font-medium">Ngày giao dự kiến:</div>
+                            <div className="font-semibold text-left text-gray-800">{new Date(order.dateExpected).toLocaleDateString('vi-VN')}</div>
 
                             {order.dateReceive && (
                                 <>
-                                    <div className="text-gray-600 text-left">Ngày giao hàng:</div>
-                                    <div className="font-medium text-left text-gray-800">{new Date(order.dateReceive).toLocaleDateString('vi-VN')}</div>
+                                    <div className="text-gray-600 text-left font-medium">Ngày giao hàng:</div>
+                                    <div className="font-semibold text-left text-gray-800">{new Date(order.dateReceive).toLocaleDateString('vi-VN')}</div>
                                 </>
                             )}
 
@@ -229,10 +232,13 @@ const OrderDetail: React.FC = () => {
                             <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice)} VNĐ</div>
 
                             <div className="text-gray-600 text-left">Phí vận chuyển:</div>
-                            <div className="font-medium text-left text-gray-800">{NumberFormat(order.shipFee)} VNĐ</div>
+                            <div className="font-medium text-left text-gray-800 ml-2"> {NumberFormat(order.shipFee)} VNĐ</div>
 
-                            <div className="text-gray-600 text-left">Tổng tiền:</div>
-                            <div className="font-medium text-red-600 text-left">{NumberFormat(order.totalPrice + order.shipFee)} VNĐ</div>
+                            <div className="text-gray-600 text-left">Tổng tiền giảm:</div>
+                            <div className="font-medium text-red-600 text-left ml-2"> {NumberFormat(order.totalMoneyOff)} VNĐ</div>
+
+                            <div className="text-gray-600 text-left">Tổng số tiền cần thanh toán:</div>
+                            <div className="font-medium text-red-600 text-left">{NumberFormat(order.finalPrice)} VNĐ</div>
 
                             <div className="text-gray-600 text-left">Phương thức thanh toán:</div>
                             <div className="font-medium text-red-600 text-left">{payment?.paymentMethod === 'CASH_ON_DELIVERY' ? "Thanh toán khi nhận hàng" : "Thanh toán VN-Pay"}</div>
@@ -241,7 +247,7 @@ const OrderDetail: React.FC = () => {
                             <div className="font-medium text-red-600 text-left">{getPaymentStatus(payment?.paymentStatus + "")}</div>
 
                             <div className="text-gray-600 text-left"></div>
-                            {isPaymented() == true && <div className="font-medium text-green-600 text-left">
+                            {isPaymented() === true && <div className="font-medium text-green-600 text-left">
                                 <Button className="px-6 py-3 bg-blue-600 text-white rounded-2xl hover:bg-blue-700 transition duration-300 font-semibold shadow-md"
                                     onClick={() => handleRePayment()}
                                 >
@@ -297,7 +303,7 @@ const OrderDetail: React.FC = () => {
                     </div>
                 )}
 
-                {order.status == "PENDING" && (
+                {order.status === "PENDING" && (
                     <div className="mb-6 text-right">
                         <button
                             onClick={() => setShowOrderCancel(true)}
@@ -352,16 +358,26 @@ const OrderDetail: React.FC = () => {
                                     <div className="text-left text-gray-800">{item.quantity}</div>
 
                                     <div className="text-gray-600 text-left">Đơn giá:</div>
-                                    <div className="font-medium text-red-600 text-left">{NumberFormat(item.price)} VNĐ</div>
+                                    <div className="font-medium text-red-600 text-left flex items-center gap-2">
+                                        <span className="text-xl font-bold animate-pulse">
+                                            {NumberFormat(item.finalPrice)} VNĐ
+                                        </span>
+                                        {item.moneyOffPerOneProduct > 0 && <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold">
+                                            -{Math.round((1 - item.finalPrice / item.originalPrice) * 100)}%
+                                        </span>}
+                                        {item.moneyOffPerOneProduct > 0 && <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
+                                            {NumberFormat(item.originalPrice)} VNĐ
+                                        </span>}
+                                    </div>
 
                                     <div className="text-gray-600 text-left">Tổng tiền:</div>
-                                    <div className="font-medium text-red-600 text-left">{NumberFormat(item.price * item.quantity)} VNĐ</div>
+                                    <div className="font-medium text-red-600 text-left">{NumberFormat(item.finalPrice * item.quantity)} VNĐ</div>
 
-                                    {order.status == "DELIVERED" && (
+                                    {order.status === "DELIVERED" && (
                                         <div className="text-gray-600 text-left">Đánh giá:</div>
                                     )}
                                     <div className="text-left">
-                                        {item.reviewed == false && order.status == "DELIVERED"
+                                        {item.isReviewed === false && order.status === "DELIVERED"
                                             &&
                                             <Button
                                                 onClick={() => {
@@ -376,7 +392,7 @@ const OrderDetail: React.FC = () => {
                                         }
 
                                         {
-                                            item.reviewed == true && order.status == "DELIVERED" &&
+                                            item.isReviewed === true && order.status === "DELIVERED" &&
                                             <Button
                                                 onClick={() => {
                                                     setShowSeeReview(true);
@@ -413,6 +429,7 @@ const OrderDetail: React.FC = () => {
                                 orderItemId={selectedItem?.orderItemId + ""}
                                 userName={user?.userName + ""}
                                 onClose={() => setShowSeeReview(false)}
+                                setFlag={() => setReviewFlag(!reviewFlag)}
                             />
                         )
                     }

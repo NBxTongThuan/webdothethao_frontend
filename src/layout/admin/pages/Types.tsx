@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../components/AdminLayout';
-import { CategoryResponse, TypesResponse } from '../../../api/interface/Responses';
-import { getAllCategories, getAllCategory } from '../../../api/admin/CategoryAPI';
-import { Table, Button, Tag, ConfigProvider, Modal, message } from 'antd';
+import { TypesResponse } from '../../../api/interface/Responses';
+import { Table, Button, Tag, ConfigProvider, Modal } from 'antd';
 import { EditOutlined, DeleteOutlined, CheckOutlined } from '@ant-design/icons';
 import Column from 'antd/es/table/Column';
-import AddCategory from '../components/AddCategory';
 import { toast } from 'react-toastify';
 import { AlertTriangle, CheckCircle2, X } from 'lucide-react';
-import EditCategory from '../components/EditCategory';
 import { getAllType } from '../../../api/admin/AdminTypesAPI';
-import { error } from 'console';
 import AddType from '../components/AddType';
 import EditType from '../components/EditType';
 
@@ -23,9 +19,9 @@ const Types: React.FC = () => {
     const [showDeleteTypeModal, setShowDeleteTypeModal] = useState(false);
     const [showEnableTypeModal, setShowEnableTypeModal] = useState(false);
     const [showEditTypeModal, setShowEditTypeModal] = useState(false);
-    
+    const [flag, setFlag] = useState(false);
 
-    const token = localStorage.getItem('token');
+
 
 
     useEffect(() => {
@@ -39,13 +35,12 @@ const Types: React.FC = () => {
             .catch(error => {
                 console.error('Error fetching categories:', error);
             });
-    }, [currentPage, size]);
+    }, [currentPage, size, flag]);
 
 
     const [record, setRecord] = useState<TypesResponse | null>(null);
 
     const handleShowDeleteModal = (record: TypesResponse) => {
-        // TODO: Implement delete functionality
         setRecord(record);
         setShowDeleteTypeModal(true);
 
@@ -70,8 +65,8 @@ const Types: React.FC = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Vô hiệu hóa thể loại thành công');
@@ -79,9 +74,7 @@ const Types: React.FC = () => {
                     toast.error('Vô hiệu hóa thể loại thất bại');
                 }
                 setShowDeleteTypeModal(false);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setFlag(!flag);
 
             } catch (error) {
                 toast.error('Vô hiệu hóa thể loại thất bại');
@@ -98,8 +91,8 @@ const Types: React.FC = () => {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                        },
+                    credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Kích hoạt thể loại thành công');
@@ -107,9 +100,7 @@ const Types: React.FC = () => {
                     toast.error('Kích hoạt thể loại thất bại');
                 }
                 setShowEnableTypeModal(false);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                setFlag(!flag);
             } catch (error) {
                 toast.error('Kích hoạt thể loại thất bại');
             }

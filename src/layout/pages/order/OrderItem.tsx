@@ -49,8 +49,8 @@ const OrderItem: React.FC<OrderItemProps> = ({ cartItem }) => {
                         <p className="text-sm text-gray-500">Mã sản phẩm: {cartItem.productId}</p>
                         <div className="flex items-center space-x-2">
                             <span className="text-sm text-gray-500">Màu sắc:</span>
-                            <div 
-                                className="w-4 h-4 rounded-full border border-gray-300" 
+                            <div
+                                className="w-4 h-4 rounded-full border border-gray-300"
                                 style={{ backgroundColor: cartItem.color }}
                             />
                         </div>
@@ -68,12 +68,30 @@ const OrderItem: React.FC<OrderItemProps> = ({ cartItem }) => {
                 </div>
             </div>
             <div className="text-right w-1/4 pl-4">
-                <p className="text-lg font-medium text-gray-900">
-                    {NumberFormat(cartItem.price)} VNĐ
-                </p>
-                <p className="text-sm text-gray-500">
-                    {NumberFormat(cartItem.price * cartItem.quantity)} VNĐ
-                </p>
+                <div className="flex flex-col items-end space-y-1">
+                    {cartItem?.moneyOff && cartItem?.moneyOff > 0 ? (
+                        <>
+                            <span className="text-gray-400 text-sm line-through">
+                                {NumberFormat(cartItem.price)} VNĐ
+                            </span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-lg font-semibold text-red-500 whitespace-nowrap">
+                                    {NumberFormat(cartItem.price - cartItem.moneyOff)} VNĐ
+                                </span>
+                                <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-medium">
+                                    -{Math.round((1 - (cartItem.price - cartItem.moneyOff) / cartItem.price) * 100)}%
+                                </span>
+                            </div>
+                        </>
+                    ) : (
+                        <span className="text-lg font-semibold text-red-500">
+                            {NumberFormat(cartItem?.price || 0)} VNĐ
+                        </span>
+                    )}
+                    <p className="text-sm text-gray-600">
+                        Tổng: {NumberFormat(cartItem.price * cartItem.quantity)} VNĐ
+                    </p>
+                </div>
             </div>
         </div>
     );

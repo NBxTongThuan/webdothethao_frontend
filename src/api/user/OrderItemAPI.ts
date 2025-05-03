@@ -16,15 +16,17 @@ export const getOrderItemsByOrderId = async (orderId: string): Promise<OrderItem
 
     const orderItems: OrderItemResponse[] = listOrderItem.map((orderItem: OrderItemResponse) => ({
         orderItemId: orderItem.orderItemId,
-        price: orderItem.price,
+        finalPrice: orderItem.finalPrice,
+        originalPrice: orderItem.originalPrice,
         quantity: orderItem.quantity,
+        isReviewed: orderItem.isReviewed,
         orderId: orderItem.orderId,
+        moneyOffPerOneProduct: orderItem.moneyOffPerOneProduct,
         color: orderItem.color,
         size: orderItem.size,
         productName: orderItem.productName,
         productId: orderItem.productId,
         productAttributeId: orderItem.productAttributeId,
-        reviewed: orderItem.reviewed
     }));
     return orderItems;
 }

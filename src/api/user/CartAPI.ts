@@ -15,6 +15,7 @@ export async function getListCartItemByCartID(cartID: string): Promise<CartItemM
         listCart.push({
             cartItemId: responseData[key].cartItemId,
             price: responseData[key].price,
+            moneyOff: responseData[key].moneyOff,
             quantity: responseData[key].quantity,
             productAttributeId: responseData[key].productAttributeId,
             productId: responseData[key].productId,

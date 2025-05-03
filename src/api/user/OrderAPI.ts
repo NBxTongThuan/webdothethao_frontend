@@ -44,6 +44,8 @@ export const getOrders = async (userName: string, page: number, size: number,ord
             orderNote: order.orderNote,
             orderNoteCanceled: order.orderNoteCanceled,
             totalPrice: order.totalPrice,
+            totalMoneyOff: order.totalMoneyOff,
+            finalPrice: order.finalPrice,
             shipFee: order.shipFee,
             dateReceive: order.dateReceive,
             dateExpected: order.dateExpected
@@ -85,6 +87,8 @@ export const getOrderById = async (orderId: string): Promise<OrderResponse> => {
             orderNote: data.orderNote,
             orderNoteCanceled: data.orderNoteCanceled,
             totalPrice: data.totalPrice,
+            totalMoneyOff: data.totalMoneyOff,
+            finalPrice: data.finalPrice,
             shipFee: data.shipFee,
             dateReceive: data.dateReceive,
             dateExpected: data.dateExpected,

@@ -19,7 +19,6 @@ const ListProduct: React.FC<ListProductInterface> = (props) => {
 
     useEffect(() => {
         setLoadingData(true);
-
         const fetchData = async () => {
             try {
                 let response;

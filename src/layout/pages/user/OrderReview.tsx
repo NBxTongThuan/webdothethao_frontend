@@ -21,12 +21,6 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
     const [rating, setRating] = useState(0);
     const [comment, setComment] = useState("");
 
-    console.log(props.orderItemId);
-    console.log(props.productId);
-    console.log(props.productAttributeId);
-    console.log(props.userName);
-    console.log(rating);
-    console.log(comment);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -61,7 +55,8 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
                     "productId": props.productId,
                     "productAttributeId": props.productAttributeId,
                     "userName": props.userName
-                })
+                }),
+                credentials: "include",
             });
             if (response.ok) {
                 props.onClose();

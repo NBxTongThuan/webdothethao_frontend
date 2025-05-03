@@ -294,8 +294,15 @@ const Dashboard: React.FC = () => {
                                             setStartDate(start.format('YYYY-MM-DD'));
                                             setEndDate(end.format('YYYY-MM-DD'));
                                         }
+                                    } else {
+                                        setStartDate(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
+                                        setEndDate(format(new Date(), 'yyyy-MM-dd'));
                                     }
-                                }}
+                                }
+
+                                }
+                            
+
                             />
                         </div>
                         <div className="h-80">

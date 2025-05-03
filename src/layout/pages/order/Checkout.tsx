@@ -28,7 +28,7 @@ const Checkout: React.FC = () => {
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const navigate = useNavigate();
-    const {user} = useAuth();
+    // const {user} = useAuth();
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -39,16 +39,6 @@ const Checkout: React.FC = () => {
             }
             );
     }, [cartID]);
-
-    const [orderItems, setOrderItems] = useState<OrderItemModel[]>([]);
-
-    useEffect(() => {
-        setOrderItems(listCartItem.map(item => new OrderItemModel(item.price, item.quantity, item.productAttributeId)));
-    }, [listCartItem]);
-
-    // const [orders, setOrders] = useState<OrdersModel>(new OrdersModel(getUserName(token + "") + "", 0, '', '', '', '', '', '', '', '', []));
-
-
 
     const [formData, setFormData] = useState<FormData>({
         fullName: '',
@@ -80,7 +70,7 @@ const Checkout: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        // Load districts when province changes
+       
         const loadDistricts = async () => {
             if (formData.toProvince) {
                 try {
@@ -98,7 +88,6 @@ const Checkout: React.FC = () => {
     }, [formData.toProvince]);
 
     useEffect(() => {
-        // Load wards when district changes
         const loadWards = async () => {
             if (formData.toDistrict) {
                 try {
@@ -123,14 +112,18 @@ const Checkout: React.FC = () => {
         }));
     };
 
+    const getProvisionalPrice = () => {
+        return listCartItem.reduce((acc, item) => {
+            return acc + (item.price - item.moneyOff) * item.quantity;
+        }, 0);
+    }
+
+
     const hadleOrderCOD = async () => {
         if (formData.paymentMethod == 'cod') {
 
             const url = `http://localhost:8080/api/orders/codOrder`;
             const data = {
-                userName: user?.userName,
-                totalPrice: finalTotal,
-                shipFee: shippingFee,
                 orderNote: formData.note,
                 toAddress: formData.address,
                 toProvince: handleProvinceName(formData.toProvince),
@@ -139,17 +132,13 @@ const Checkout: React.FC = () => {
                 toPhone: formData.phone,
                 toName: formData.fullName,
                 toEmail: formData.email,
-                orderItems: orderItems.map(item => ({
-                    price: item.price,
-                    quantity: item.quantity,
-                    productAttributeId: item.productAttributeId
-                }))
+
             }
 
             console.log(data);
 
             try {
-                const response = await fetch(url,{
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -158,10 +147,10 @@ const Checkout: React.FC = () => {
                     credentials: 'include'
                 });
 
-                if(response.ok){
+                if (response.ok) {
                     toast.success('Đặt hàng thành công');
                     navigate('/orderSuccess');
-                }else{
+                } else {
                     toast.error('Đặt hàng thất bại');
                 }
             } catch (error) {
@@ -175,9 +164,6 @@ const Checkout: React.FC = () => {
 
             const url = `http://localhost:8080/api/payment/vnpay/create`;
             const data = {
-                userName: user?.userName,
-                totalPrice: finalTotal,
-                shipFee: shippingFee,
                 orderNote: formData.note,
                 toAddress: formData.address,
                 toProvince: handleProvinceName(formData.toProvince),
@@ -186,15 +172,10 @@ const Checkout: React.FC = () => {
                 toPhone: formData.phone,
                 toName: formData.fullName,
                 toEmail: formData.email,
-                orderItems: orderItems.map(item => ({
-                    price: item.price,
-                    quantity: item.quantity,
-                    productAttributeId: item.productAttributeId
-                }))
             }
 
             try {
-                const response = await fetch(url,{
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -219,10 +200,9 @@ const Checkout: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(formData.paymentMethod == 'cod')
-        {
+        if (formData.paymentMethod == 'cod') {
             hadleOrderCOD();
-        }else{
+        } else {
             hadleOrderVNPay();
         }
     };
@@ -239,7 +219,7 @@ const Checkout: React.FC = () => {
         const ward = wards.find(w => w.WardCode == wardCode);
         return ward ? ward.WardName : '';
     }
-    const total = listCartItem.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = getProvisionalPrice();
     const shippingFee = 30000;
     const finalTotal = total + shippingFee;
 

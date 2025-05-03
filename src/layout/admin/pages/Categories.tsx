@@ -39,13 +39,7 @@ const Categories: React.FC = () => {
 
     const [record, setRecord] = useState<CategoryResponse | null>(null);
 
-    const handleEdit = (record: CategoryResponse) => {
-        // TODO: Implement edit functionality
-        console.log('Edit category:', record);
-    };
-
     const handleShowDeleteModal = (record: CategoryResponse) => {
-        // TODO: Implement delete functionality
         setRecord(record);
         setShowDeleteCategoryModal(true);
 
@@ -70,8 +64,8 @@ const Categories: React.FC = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    credentials: "include",
                 });
                 if (response.ok) {
                     toast.success('Vô hiệu hóa danh mục thành công');
@@ -96,8 +90,8 @@ const Categories: React.FC = () => {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
+                    },
+                    credentials: "include",
                 });
                 if (response.ok) {
                     toast.success('Kích hoạt danh mục thành công');
@@ -110,11 +104,6 @@ const Categories: React.FC = () => {
                 toast.error('Kích hoạt danh mục thất bại');
             }
         }
-    };
-
-    const handleAdd = () => {
-        // TODO: Implement add functionality
-        console.log('Add new category');
     };
 
     return (
@@ -292,12 +281,14 @@ const Categories: React.FC = () => {
                     </div>
                     {showAddCategoryModal &&
                         <AddCategory
-                            onClose={() => setShowAddCategoryModal(false)} />}
+                            onClose={() => setShowAddCategoryModal(false)}
+                            setFlag={() => setFlag(!flag)} />}
 
                     {showEditCategoryModal && record &&
                         <EditCategory
                             onClose={() => setShowEditCategoryModal(false)}
                             category={record}
+                            setFlag={() => setFlag(!flag)}
                         />}
                 </div>
             </AdminLayout>
