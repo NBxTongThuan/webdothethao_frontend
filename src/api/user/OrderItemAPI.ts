@@ -19,7 +19,7 @@ export const getOrderItemsByOrderId = async (orderId: string): Promise<OrderItem
         finalPrice: orderItem.finalPrice,
         originalPrice: orderItem.originalPrice,
         quantity: orderItem.quantity,
-        isReviewed: orderItem.isReviewed,
+        reviewed: orderItem.reviewed,
         orderId: orderItem.orderId,
         moneyOffPerOneProduct: orderItem.moneyOffPerOneProduct,
         color: orderItem.color,

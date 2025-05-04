@@ -13,7 +13,8 @@ import {
     TagsOutlined,
     AppstoreOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined
+    MenuUnfoldOutlined,
+    PercentageOutlined
 } from '@ant-design/icons';
 
 const Sidebar: React.FC = () => {
@@ -45,6 +46,7 @@ const Sidebar: React.FC = () => {
         { path: '/admin/orders', icon: <ShoppingCartOutlined />, label: 'Quản lý đơn hàng' },
         { path: '/admin/categories', icon: <TagsOutlined />, label: 'Quản lý danh mục' },
         { path: '/admin/types', icon: <AppstoreOutlined />, label: 'Quản lý thể loại' },
+        { path: '/admin/discounting-product', icon: <PercentageOutlined />, label: 'Sản phẩm giảm giá' }
     ];
 
     return (

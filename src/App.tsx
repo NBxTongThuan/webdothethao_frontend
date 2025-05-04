@@ -28,55 +28,55 @@ import ScrollToTop from './util/ScrollToTop';
 import Shop from './layout/pages/Shop';
 import { AuthProvider } from './util/AuthContext';
 import OrderSuccess from './result-page/OrderSuccess';
+import DiscountingProducts from './layout/admin/pages/DiscoutingProducs';
 
 
 
-const MyRoute = () =>{
+const MyRoute = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const location = useLocation();
-
   const isAdminPath = location.pathname.startsWith("/admin")
 
-  return(
+  return (
 
     <div>
-         {!isAdminPath && <Navbar searchKeywords={searchKeyword} setSearchKeywords={setSearchKeyword} />}
-        <Routes>
+      {!isAdminPath && <Navbar searchKeywords={searchKeyword} setSearchKeywords={setSearchKeyword} />}
+      <Routes>
 
-{/* User Path */}
-          <Route path='/' element={<HomePage  />} ></Route>
-          <Route path='/productdetail/:productId' element={<ProductDetail />} ></Route>
-          <Route path='/Login' element={<Login />} ></Route>
-          <Route path='/Register' element={<Register />} ></Route>
-          <Route path='/Active/:email/:activeCode' element={<ActiveAccount />} />
-          <Route path='/Cart/:cartID' element={<Cart />} />
-          <Route path='/aboutUS' element={<AboutUs />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path="/checkOut/:cartID" element={<Checkout />} />
-          <Route path="/userDetail" element={<UserDetail />} />
-          <Route path="/editProfile" element={<EditProfile />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
-          <Route path="/forgotPassword" element={<ForgotPassword />} />
-          <Route path="/resetPassword/:email/:forgotPasswordCode" element={<ResetPassword />} />
-          <Route path="/myOrder" element={<MyOrder />} />
-          <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
-          <Route path="/payment-return/:status" element={<PaymentReturnPage />} />
-          <Route path="/shop" element={<Shop searchKeyword={searchKeyword} />} />
-          <Route path="/shop/:categoryId" element={<Shop searchKeyword={searchKeyword} />} />
-          <Route path="/orderSuccess" element={<OrderSuccess />} />
+        {/* User Path */}
+        <Route path='/' element={<HomePage />} ></Route>
+        <Route path='/productdetail/:productId' element={<ProductDetail />} ></Route>
+        <Route path='/Login' element={<Login />} ></Route>
+        <Route path='/Register' element={<Register />} ></Route>
+        <Route path='/Active/:email/:activeCode' element={<ActiveAccount />} />
+        <Route path='/Cart/:cartID' element={<Cart />} />
+        <Route path='/aboutUS' element={<AboutUs />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path="/checkOut/:cartID" element={<Checkout />}/>
+        <Route path="/userDetail" element={<UserDetail />} />
+        <Route path="/editProfile" element={<EditProfile />} />
+        <Route path="/changePassword" element={<ChangePassword />} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/resetPassword/:email/:forgotPasswordCode" element={<ResetPassword />} />
+        <Route path="/myOrder" element={<MyOrder />} />
+        <Route path="/orderDetail/:orderId" element={<OrderDetail />} />
+        <Route path="/payment-return/:status" element={<PaymentReturnPage />} />
+        <Route path="/shop" element={<Shop searchKeyword={searchKeyword} />} />
+        <Route path="/shop/:categoryId" element={<Shop searchKeyword={searchKeyword} />} />
+        <Route path="/orderSuccess" element={<OrderSuccess />} />
 
-{/* Admin path */}
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/orders" element={<Orders />} />
-          <Route path="/admin/categories" element={<Categories />} />
-          <Route path="/admin/types" element={<Types />} />
-          <Route path='/admin' element={<LoginAdmin />} />
-
-        </Routes>
-       {!isAdminPath && <Footer />}
+        {/* Admin path */}
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/users" element={<Users />} />
+        <Route path="/admin/products" element={<Products />} />
+        <Route path="/admin/orders" element={<Orders />} />
+        <Route path="/admin/categories" element={<Categories />} />
+        <Route path="/admin/types" element={<Types />} />
+        <Route path='/admin' element={<LoginAdmin />} />
+        <Route path="/admin/discounting-product" element={<DiscountingProducts />} />
+      </Routes>
+      {!isAdminPath && <Footer />}
     </div>
   );
 
@@ -88,7 +88,7 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <ScrollToTop />
-          <MyRoute/>
+          <MyRoute />
           <ToastContainer
             position='bottom-center'
             autoClose={3000}

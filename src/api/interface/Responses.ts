@@ -70,7 +70,7 @@ export interface OrderItemResponse {
     finalPrice: number;
     originalPrice: number;
     quantity: number;
-    isReviewed: boolean;
+    reviewed: boolean;
     moneyOffPerOneProduct: number;
     orderId: string;
     color: string;

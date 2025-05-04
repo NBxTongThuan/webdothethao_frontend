@@ -16,7 +16,6 @@ const Shop: React.FC<ShopProps> = (props) => {
         categoryIdNumber = parseInt(categoryId + '');
     } catch (error) {
         categoryIdNumber = 0;
-        console.log(error);
     }
     if (Number.isNaN(categoryIdNumber)) {
         categoryIdNumber = 0;

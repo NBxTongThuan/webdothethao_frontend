@@ -377,7 +377,7 @@ const OrderDetail: React.FC = () => {
                                         <div className="text-gray-600 text-left">Đánh giá:</div>
                                     )}
                                     <div className="text-left">
-                                        {item.isReviewed === false && order.status === "DELIVERED"
+                                        {item.reviewed === false && order.status === "DELIVERED"
                                             &&
                                             <Button
                                                 onClick={() => {
@@ -392,7 +392,7 @@ const OrderDetail: React.FC = () => {
                                         }
 
                                         {
-                                            item.isReviewed === true && order.status === "DELIVERED" &&
+                                            item.reviewed === true && order.status === "DELIVERED" &&
                                             <Button
                                                 onClick={() => {
                                                     setShowSeeReview(true);

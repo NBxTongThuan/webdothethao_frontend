@@ -62,8 +62,6 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
 
     }, []);
 
-    console.log(props.product.moneyOff);
-
     if (loadingData) {
         return (
             <div>

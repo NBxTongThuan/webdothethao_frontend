@@ -129,3 +129,22 @@ export async function getSameTypeProduct(productId: string): Promise<ProductMode
 
     return listProducts;    
 }
+
+export async function getDiscountingProduct(page:number): Promise<ProductModel[]> {
+    const link: string = `http://localhost:8080/api/products/discountingProduct?page=${page}&size=4`;
+
+    const response = await requestAPI(link);
+
+    const responseDATA = response._embedded?.productsResponseList ?? [];
+
+    const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
+        product_id: item.productId,
+        description: item.productName,
+        product_name: item.description,
+        moneyOff: item.moneyOff,
+        price: item.price,
+        quantity_sold: item.quantitySold
+    }));
+
+    return listProducts;
+}

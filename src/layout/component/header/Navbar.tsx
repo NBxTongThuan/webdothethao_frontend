@@ -1,9 +1,12 @@
-import { use, useEffect, useState } from "react";
+import { ReactNode, use, useEffect, useState } from "react";
 import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck, Key } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
 import { getListCate } from "../../../api/user/CategoriesAPI";
 import { useAuth } from "../../../util/AuthContext";
+import { AutoComplete, Input } from "antd";
+import { getAllProducts } from "../../../api/user/ProductsAPI";
+import ProductModel from "../../../model/ProductModel";
 
 interface NavbarInterface {
   searchKeywords: string;
@@ -17,23 +20,54 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const {user,logout} = useAuth();
+  const { user, logout } = useAuth();
 
-
+  const [allProducts, setAllProducts] = useState<ProductModel[]>([]);
+  const [suggestions, setSuggestions] = useState<{ value: string, label: ReactNode }[]>([]);
 
   useEffect(() => {
-    if(user){
+    if (temporaryKeywords === "") return;
+    const fetchData = async () => {
+      try {
+        const response = await getAllProducts(0);
+        setAllProducts(response.listProduct);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchData();
+  }, [temporaryKeywords]);
+
+  const handleSearch = (value: string) => {
+    if (!value) {
+      setSuggestions([]);
+      return;
+    }
+    const filtered = allProducts
+      .filter((item) =>
+        item.product_name.includes(value)
+      )
+      .map((item) => ({ value: item.product_name, label: <Link to={`/productdetail/${item.product_id}`}>{item.product_name}</Link> }));
+    setSuggestions(filtered);
+  };
+
+  useEffect(() => {
+    if (user) {
       setCartID(user?.cartId + "");
-    }else{
+    } else {
       setCartID(null);
     }
   }, [user]);
 
   const onSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTemporaryKeywords(event.target.value);
+    if (event.target.value.length === 0) {
+      props.setSearchKeywords("");
+    }
   }
 
   const onSearchButtonClicked = () => {
+    props.setSearchKeywords(temporaryKeywords);
     navigate(`/shop?searchKeyword=${temporaryKeywords}`);
   }
 
@@ -55,7 +89,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
     <nav className="bg-gray-800">
       <div className="container mx-auto px-4 py-2 flex items-center justify-between h-16">
         <a className="text-white text-lg font-bold" href="/">
-          <img src="/images/logo192.png" style={{ width: "100px",height:"50px" }} />
+          <img src="/images/logo192.png" style={{ width: "100px", height: "50px" }} />
         </a>
         <button className="text-white md:hidden" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="fas fa-bars"></span>
@@ -90,15 +124,21 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
         </div>
 
         {/* Tìm kiếm */}
-        <div className="flex items-center justify-center space-x-2">
-          <input
-            className="px-4 py-2 rounded bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            type="search"
-            placeholder="Tìm kiếm"
-            aria-label="Search"
-            onChange={onSearchInputChange}
-            onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()}
-          />
+        <div className="flex items-center justify-center space-x-2 ">
+          <AutoComplete
+            options={suggestions}
+            style={{ width: 300 }}
+            onSearch={handleSearch}
+            filterOption={false}
+          >
+            <Input
+              type="search"
+              placeholder="Tìm kiếm"
+              aria-label="Search"
+              onChange={onSearchInputChange}
+              onKeyDown={e => e.key === "Enter" && onSearchButtonClicked()}
+            />
+          </AutoComplete>
           <button
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             onClick={onSearchButtonClicked}
