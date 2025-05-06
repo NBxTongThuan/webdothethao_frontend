@@ -119,3 +119,55 @@ export const getDiscountingProduct = async (page: number, size: number): Promise
         throw error;
     }
 }
+
+export const getInStockProduct = async (page: number, size: number): Promise<responseData> => {
+
+    try {
+        const response = await fetch(`${url}/getInStockProducts?page=${page}&size=${size}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        console.log(data);
+
+        const listProduct = data._embedded?.adminProductsResponseList;
+
+        if (!listProduct || listProduct.length === 0) {
+            return {
+                totalPage: 0,
+                listProduct: [],
+                totalSize: 0
+            };
+        }
+        const products: ProductResponse[] = listProduct.map((product: ProductResponse) => ({
+            productId: product.productId,
+            productName: product.productName,
+            description: product.description,
+            quantitySold: product.quantitySold,
+            price: product.price,
+            moneyOff: product.moneyOff,
+            typeName: product.typeName,
+            categoryName: product.categoryName,
+            brandName: product.brandName,
+            inStock: product.inStock
+        }));
+        return {
+            totalPage: data.page.totalPages,
+            listProduct: products,
+            totalSize: data.page.totalElements
+        };
+
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        throw error;
+    }
+
+}

@@ -2,15 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { CartItemModel } from '../../../model/CartItemModel';
 import { getListCartItemByCartID } from '../../../api/user/CartAPI';
-import OrderItemModel from '../../../model/OrderItemModel';
 import OrderItem from './OrderItem';
 import { getProvinces, getDistricts, getWards } from '../../../api/user/AddressAPI';
 import { toast } from 'react-toastify';
 import { District, Province, Ward } from '../../../api/interface/Responses';
-import { useAuth } from '../../../util/AuthContext';
 interface FormData {
     fullName: string;
-    email: string;
     phone: string;
     toProvince: string;
     toDistrict: string;
@@ -28,7 +25,7 @@ const Checkout: React.FC = () => {
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const navigate = useNavigate();
-    // const {user} = useAuth();
+
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
             .then((cartItems) => {
@@ -42,7 +39,6 @@ const Checkout: React.FC = () => {
 
     const [formData, setFormData] = useState<FormData>({
         fullName: '',
-        email: '',
         phone: '',
         toProvince: '',
         toDistrict: '',
@@ -70,7 +66,7 @@ const Checkout: React.FC = () => {
     }, []);
 
     useEffect(() => {
-       
+
         const loadDistricts = async () => {
             if (formData.toProvince) {
                 try {
@@ -131,7 +127,6 @@ const Checkout: React.FC = () => {
                 toWard: handleWardName(formData.toWard),
                 toPhone: formData.phone,
                 toName: formData.fullName,
-                toEmail: formData.email,
 
             }
 
@@ -171,7 +166,6 @@ const Checkout: React.FC = () => {
                 toWard: handleWardName(formData.toWard),
                 toPhone: formData.phone,
                 toName: formData.fullName,
-                toEmail: formData.email,
             }
 
             try {
@@ -244,20 +238,6 @@ const Checkout: React.FC = () => {
                                             type="text"
                                             name="fullName"
                                             value={formData.fullName}
-                                            onChange={handleChange}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Email <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
                                             onChange={handleChange}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                             required

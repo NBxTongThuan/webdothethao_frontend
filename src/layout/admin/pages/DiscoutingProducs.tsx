@@ -11,6 +11,7 @@ import UpdateDiscountingPrice from "../components/UpdateDiscountingPrice";
 import { X } from "lucide-react";
 import { CheckCircle2 } from "lucide-react";
 import { toast } from "react-toastify";
+import AddDiscountingProducts from "./AddDiscountingProducts";
 const DiscountingProducts: React.FC = () => {
 
     const [products, setProducts] = useState<ProductResponse[]>([]);
@@ -20,6 +21,8 @@ const DiscountingProducts: React.FC = () => {
     const [showUpdateDiscountingPrice, setShowUpdateDiscountingPrice] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ProductResponse>();
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+    const [showAddDiscountingProducts, setShowAddDiscountingProducts] = useState(false);
 
     const handleSubmit = async () => {
         const response = await fetch('http://localhost:8080/api/admin/products/stoppingDiscount?productId=' + selectedItem?.productId, {
@@ -76,7 +79,7 @@ const DiscountingProducts: React.FC = () => {
             <AdminLayout>
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-2xl font-bold text-gray-800">Sản phẩm giảm giá</h1>
-                    <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-blue-600 hover:bg-blue-700">
+                    <Button type="primary" icon={<PlusOutlined />} size="large" className="bg-blue-600 hover:bg-blue-700" onClick={() => setShowAddDiscountingProducts(true)}>
                         Thêm sản phẩm giảm giá
                     </Button>
                 </div>
@@ -200,7 +203,9 @@ const DiscountingProducts: React.FC = () => {
                         }
                     </div>
                 </div>
-
+                {
+                    showAddDiscountingProducts && <AddDiscountingProducts onClose={() => setShowAddDiscountingProducts(false)} setFlag={() => setFlag(!flag)} />
+                }
             </AdminLayout>
         </ConfigProvider>
     );

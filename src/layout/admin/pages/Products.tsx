@@ -17,7 +17,6 @@ const Products: React.FC = () => {
 
     const token = localStorage.getItem('token');
     const [listProduct, setListProduct] = useState<ProductResponse[]>([]);
-    const [totalPage, setTotalPage] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);
     const [selectedItem, setSelectedItem] = useState<ProductResponse>();
@@ -32,7 +31,6 @@ const Products: React.FC = () => {
         getAllProduct(currentPage - 1, size)
             .then(response => {
                 setListProduct(response.listProduct);
-                setTotalPage(response.totalPage);
                 setTotalElement(response.totalSize);
             })
             .catch(
