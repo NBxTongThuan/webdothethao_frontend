@@ -94,6 +94,7 @@ const UserDetail: React.FC = () => {
                 </div>
               </div>
 
+
               {/* Right Column */}
               <div className="bg-gray-50 rounded-xl p-6 space-y-6">
                 <h3 className="text-xl font-semibold text-gray-900 text-left">Địa chỉ</h3>

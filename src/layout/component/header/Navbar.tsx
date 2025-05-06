@@ -188,6 +188,8 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Thông tin cá nhân
               </Link>}
 
+             
+
               {user && <Link
                 to="/myOrder"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
@@ -195,7 +197,13 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 <CartCheck className="w-4 h-4 mr-2" />
                 Đơn hàng của tôi
               </Link>}
-
+              {user && <Link
+                to="/userDetail"
+                className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
+              >
+                <div className="w-4 h-4 fas fa-map-marker-alt mr-2" />
+                Địa chỉ nhận hàng
+              </Link>}
 
               {
                 user && <Link
