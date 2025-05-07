@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getProvinces, getDistricts, getWards } from "../../../api/user/AddressAPI";
 import { District, Province, Ward } from "../../../api/interface/Responses";
 import { toast } from "react-toastify";
+import { User, Phone, Building2, Home, MapPin } from "lucide-react";
 
 interface ModalProps {
     onClose: () => void;
@@ -129,7 +130,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
                         >
                             <Form.Item
                                 name="toName"
-                                label="Tên người nhận"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <User className="h-4 w-4 mr-2 text-gray-500" />
+                                        Tên người nhận
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập tên người nhận!' }]}
                             >
                                 <Input placeholder="Nhập tên người nhận" />
@@ -137,7 +143,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toPhone"
-                                label="Số điện thoại"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                                        Số điện thoại
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
                             >
                                 <Input placeholder="Nhập số điện thoại" />
@@ -145,7 +156,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toProvince"
-                                label="Tỉnh/Thành phố"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Building2 className="h-4 w-4 mr-2 text-gray-500" />
+                                        Tỉnh/Thành phố
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
                             >
                                 <Select
@@ -162,7 +178,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toDistrict"
-                                label="Quận/Huyện"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Building2 className="h-4 w-4 mr-2 text-gray-500" />
+                                        Quận/Huyện
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
                             >
                                 <Select
@@ -180,7 +201,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toWard"
-                                label="Phường/Xã"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Home className="h-4 w-4 mr-2 text-gray-500" />
+                                        Phường/Xã
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
                             >
                                 <Select
@@ -197,7 +223,12 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toAddress"
-                                label="Địa chỉ chi tiết"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                                        Địa chỉ chi tiết
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập địa chỉ chi tiết!' }]}
                             >
                                 <Input placeholder="Nhập địa chỉ chi tiết" />

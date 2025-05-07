@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Button, Card, ConfigProvider, Modal, Space, Table } from "antd";
 import Column from "antd/es/table/Column";
 import EditMyAddress from "./EditMyAddress";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, Trash } from "lucide-react";
 import AddMyAddress from "./AddMyAddress";
 
 const MyAddress: React.FC = () => {
@@ -153,6 +153,7 @@ const MyAddress: React.FC = () => {
                                                     setShowEditMyAddress(true);
                                                 }
                                             }
+                                            icon={<Pencil className="h-4 w-4 mr-2" />}
                                         >
                                             Sửa
                                         </Button>
@@ -167,6 +168,7 @@ const MyAddress: React.FC = () => {
                                                     console.log(showEditMyAddress);
                                                 }
                                             }
+                                            icon={<Trash className="h-4 w-4 mr-2" />}
                                         >
                                             Xóa
                                         </Button>

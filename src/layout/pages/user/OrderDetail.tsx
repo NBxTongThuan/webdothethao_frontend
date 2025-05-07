@@ -24,6 +24,7 @@ const OrderDetail: React.FC = () => {
     const [showSeeReview, setShowSeeReview] = useState(false);
     const [payment, setPayment] = useState<PaymentResponse>();
     const [reviewFlag, setReviewFlag] = useState(false);
+    const [flag, setFlag] = useState(false);
 
     const { user } = useAuth();
 
@@ -36,7 +37,7 @@ const OrderDetail: React.FC = () => {
                 .catch(setError)
                 .finally(() => setLoading(false));
         }
-    }, [orderId]);
+    }, [orderId, flag]);
 
     useEffect(() => {
         if (orderId) {
@@ -44,7 +45,7 @@ const OrderDetail: React.FC = () => {
                 .then(setOrderItems)
                 .catch(setError);
         }
-    }, [orderId, reviewFlag]);
+    }, [orderId, reviewFlag, flag]);
 
     useEffect(() => {
 
@@ -54,7 +55,7 @@ const OrderDetail: React.FC = () => {
                 .catch(setError)
         }
 
-    }, [orderId])
+    }, [orderId, flag])
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -75,9 +76,6 @@ const OrderDetail: React.FC = () => {
             fetchImages();
         }
     }, [orderItems]);
-
-    console.log(order);
-    console.log(orderItems);
 
     if (loading) {
         return (
@@ -320,6 +318,7 @@ const OrderDetail: React.FC = () => {
                     <OrderCancel
                         orderId={order.orderId}
                         onClose={() => setShowOrderCancel(false)}
+                        setFlag={() => setFlag(!flag)}
                     />
                 )}
 

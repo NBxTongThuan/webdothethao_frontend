@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 interface ModalProps {
   orderId: string;
   onClose: () => void;
+  setFlag: () => void;
 }
 
 const OrderCancel: React.FC<ModalProps> = (props) => {
@@ -30,9 +31,7 @@ const OrderCancel: React.FC<ModalProps> = (props) => {
             if(response.ok){
                 props.onClose();
                 toast.success("Hủy đơn hàng thành công");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
+                props.setFlag();
             }  
             else{
                 props.onClose();

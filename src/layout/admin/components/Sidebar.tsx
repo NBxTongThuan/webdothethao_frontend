@@ -27,6 +27,7 @@ const Sidebar: React.FC = () => {
         return name ? name.charAt(0).toUpperCase() : '';
     };
 
+
     const getRandomColor = (name: string) => {
         const colors = [
             '#f56a00', '#7265e6', '#ffbf00', '#00a2ae',

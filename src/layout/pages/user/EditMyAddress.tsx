@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { getProvinces, getDistricts, getWards } from "../../../api/user/AddressAPI";
 import { District, Province, Ward } from "../../../api/interface/Responses";
 import { toast } from "react-toastify";
+import { User, Phone, Building2, Home, MapPin } from 'lucide-react';
 
 interface ModalProps {
     myAddress: MyAddressResponse | undefined;
@@ -59,7 +60,7 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
     useEffect(() => {
         if (selectedProvince) {
-            form.setFieldValue("toDistrict",null)
+            form.setFieldValue("toDistrict", null)
             getDistricts(selectedProvince)
                 .then(districtsData => {
                     setDistricts(districtsData);
@@ -93,24 +94,30 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
     const handleProvinceName = (provinceCode: string) => {
         const province = provinces.find(p => p.ProvinceCode == provinceCode + "");
-        return province ? province.ProvinceName : '';
+        return province ? province.ProvinceName : provinceCode;
     }
     const handleDistrictName = (districtCode: string) => {
         const district = districts.find(d => d.DistrictCode == districtCode);
-        return district ? district.DistrictName : '';
+        return district ? district.DistrictName : districtCode;
     }
     const handleWardName = (wardCode: string) => {
         const ward = wards.find(w => w.WardCode == wardCode);
-        return ward ? ward.WardName : '';
+        return ward ? ward.WardName : wardCode;
     }
 
     const handleSubmit = async (values: any) => {
 
-        if (values.toDistrict == null) {
-            toast.error("abc");
-            console.log(values.toDistrict);
+        if (values.toDistrict == "") {
+            toast.error("Vui lòng chọn quận/huyện!");
             return;
         }
+
+        if (values.toWard == "") {
+            toast.error("Vui lòng chọn phường/xã!");
+            return;
+        }
+
+
 
         try {
             const response = await fetch('http://localhost:8080/api/address/updateAddress', {
@@ -166,31 +173,50 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
                         >
                             <Form.Item
                                 name="toName"
-                                label="Tên người nhận"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <User className="h-4 w-4 mr-2 text-gray-500" />
+                                        Tên người nhận
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập tên người nhận!' }]}
                             >
-                                <Input placeholder="Nhập tên người nhận" />
+                                <Input
+                                    placeholder="Nhập tên người nhận"
+
+                                />
                             </Form.Item>
 
                             <Form.Item
                                 name="toPhone"
-                                label="Số điện thoại"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Phone className="h-4 w-4 mr-2 text-gray-500" />
+                                        Số điện thoại
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
                             >
-                                <Input placeholder="Nhập số điện thoại" />
+                                <Input
+                                    placeholder="Nhập số điện thoại"
+
+                                />
                             </Form.Item>
 
                             <Form.Item
                                 name="toProvince"
-                                label="Tỉnh/Thành phố"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Building2 className="h-4 w-4 mr-2 text-gray-500" />
+                                        Tỉnh/Thành phố
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn tỉnh/thành phố!' }]}
                             >
                                 <Select
                                     placeholder="Chọn tỉnh/thành phố"
                                     onChange={(value) => {
                                         setSelectedProvince(value);
-                                        setSelectedDistrict("");
-                                        console.log(selectedDistrict);
                                     }}
                                 >
                                     {provinces.map(province => (
@@ -203,7 +229,12 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toDistrict"
-                                label="Quận/Huyện"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Building2 className="h-4 w-4 mr-2 text-gray-500" />
+                                        Quận/Huyện
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn quận/huyện!' }]}
                             >
                                 <Select
@@ -221,7 +252,12 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toWard"
-                                label="Phường/Xã"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <Home className="h-4 w-4 mr-2 text-gray-500" />
+                                        Phường/Xã
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng chọn phường/xã!' }]}
                             >
                                 <Select
@@ -238,10 +274,17 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
                             <Form.Item
                                 name="toAddress"
-                                label="Địa chỉ chi tiết"
+                                label={
+                                    <span className="flex items-center text-gray-700">
+                                        <MapPin className="h-4 w-4 mr-2 text-gray-500" />
+                                        Địa chỉ chi tiết
+                                    </span>
+                                }
                                 rules={[{ required: true, message: 'Vui lòng nhập địa chỉ chi tiết!' }]}
                             >
-                                <Input placeholder="Nhập địa chỉ chi tiết" />
+                                <Input
+                                    placeholder="Nhập địa chỉ chi tiết"
+                                />
                             </Form.Item>
 
                             <div className="flex justify-end space-x-4 mt-6">
