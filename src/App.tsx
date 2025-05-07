@@ -29,6 +29,7 @@ import Shop from './layout/pages/Shop';
 import { AuthProvider } from './util/AuthContext';
 import OrderSuccess from './result-page/OrderSuccess';
 import DiscountingProducts from './layout/admin/pages/DiscoutingProducs';
+import MyAddress from './layout/pages/user/MyAddress';
 
 
 
@@ -65,6 +66,7 @@ const MyRoute = () => {
         <Route path="/shop" element={<Shop searchKeyword={searchKeyword} />} />
         <Route path="/shop/:categoryId" element={<Shop searchKeyword={searchKeyword} />} />
         <Route path="/orderSuccess" element={<OrderSuccess />} />
+        <Route path="/myAddress" element={<MyAddress />} />
 
         {/* Admin path */}
         <Route path="/admin/dashboard" element={<Dashboard />} />

@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, Tag, ConfigProvider, Descriptions, Input, Select, Form, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Table, Tag, ConfigProvider, Input, Select, Form } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ImageResponse, ProductAttributeResponse, ProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
-import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProductAttributeAPI';
+import { ImageResponse, ProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
 import { toast } from "react-toastify";
-import { X, ArrowLeft, Edit, Trash2, CheckCircle, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building } from 'lucide-react';
+import { X, ArrowLeft, Edit, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building } from 'lucide-react';
 import { getAllImage } from '../../../api/admin/AdminImageAPI';
 import { getTypeByCategoryName } from '../../../api/admin/AdminTypesAPI';
 import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
-const { Column } = Table;
-const { Item } = Descriptions;
 
 interface ModalProps {
     product: ProductResponse | undefined;

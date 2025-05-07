@@ -29,7 +29,7 @@ export const getProvinces = async (): Promise<Province[]> => {
 };
 
 
-export const getDistricts = async (provinceCode: number): Promise<District[]> => {
+export const getDistricts = async (provinceCode: string): Promise<District[]> => {
     try {
         const response = await fetch(`${GHN_API_URL}districts?provinceCode=${provinceCode}`, {
             headers: {
@@ -52,7 +52,7 @@ export const getDistricts = async (provinceCode: number): Promise<District[]> =>
     }
 };
 
-export const getWards = async (districtCode: number): Promise<Ward[]> => {
+export const getWards = async (districtCode: string): Promise<Ward[]> => {
     try {
         const response = await fetch(`${GHN_API_URL}wards?districtCode=${districtCode}`, {
             headers: {

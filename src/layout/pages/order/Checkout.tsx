@@ -5,7 +5,9 @@ import { getListCartItemByCartID } from '../../../api/user/CartAPI';
 import OrderItem from './OrderItem';
 import { getProvinces, getDistricts, getWards } from '../../../api/user/AddressAPI';
 import { toast } from 'react-toastify';
-import { District, Province, Ward } from '../../../api/interface/Responses';
+import { District, MyAddressResponse, Province, Ward } from '../../../api/interface/Responses';
+import { getAddress } from '../../../api/user/MyAddressAPI';
+import { Select } from 'antd';
 interface FormData {
     fullName: string;
     phone: string;
@@ -21,10 +23,23 @@ interface FormData {
 const Checkout: React.FC = () => {
 
 
-
+    const [listMyAddress, setListMyAddress] = useState<MyAddressResponse[]>([]);
     const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        getAddress()
+            .then(response => {
+                setListMyAddress(response);
+            })
+            .catch(
+                error => {
+                    toast.error("Không lấy được thông tin người dùng!");
+                }
+            )
+    }
+        , [])
 
     useEffect(() => {
         getListCartItemByCartID(cartID + "")
@@ -70,7 +85,7 @@ const Checkout: React.FC = () => {
         const loadDistricts = async () => {
             if (formData.toProvince) {
                 try {
-                    const districtsData = await getDistricts(Number(formData.toProvince));
+                    const districtsData = await getDistricts(formData.toProvince);
                     setDistricts(districtsData);
                     setFormData(prev => ({ ...prev, toDistrict: '', toWard: '' }));
                 } catch (error) {
@@ -87,7 +102,7 @@ const Checkout: React.FC = () => {
         const loadWards = async () => {
             if (formData.toDistrict) {
                 try {
-                    const wardsData = await getWards(Number(formData.toDistrict));
+                    const wardsData = await getWards(formData.toDistrict);
                     setWards(wardsData);
                     setFormData(prev => ({ ...prev, toWard: '' }));
                 } catch (error) {
@@ -225,6 +240,10 @@ const Checkout: React.FC = () => {
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">Thanh toán</h1>
                 <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <Select
+                            placeholder="Chọn địa chỉ">
+                                
+                            </Select>
                         {/* Thông tin giao hàng */}
                         <div className="lg:col-span-4 space-y-6">
                             <div className="bg-white rounded-lg shadow p-6">

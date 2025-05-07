@@ -82,7 +82,7 @@ const EditProfile: React.FC = () => {
 
     useEffect(() => {
         if (selectedProvince) {
-            getDistricts(parseInt(selectedProvince))
+            getDistricts(selectedProvince)
                 .then(districtsData => {
                     setDistricts(districtsData);
                     setWards([]);
@@ -96,7 +96,7 @@ const EditProfile: React.FC = () => {
 
     useEffect(() => {
         if (selectedDistrict) {
-            getWards(parseInt(selectedDistrict))
+            getWards(selectedDistrict)
                 .then(wardsData => {
                     setWards(wardsData);
                 })

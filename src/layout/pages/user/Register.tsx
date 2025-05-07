@@ -13,7 +13,6 @@ const Register: React.FC = () => {
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
     const [errorRePassword, setErrorRePassword] = useState('');
-    const [annouce, setAnnouce] = useState('');
 
 
     //HANDLE SUBMIT

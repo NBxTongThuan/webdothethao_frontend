@@ -1,4 +1,16 @@
-import { Color } from "antd/es/color-picker";
+//MyAddressResponse
+export interface MyAddressResponse{
+
+    addressId: string;
+    toName: string;
+    toPhone: string;
+    toDistrict: string;
+    toProvince: string;
+    toWard: string;
+    toAddress: string;
+
+}
+
 
 //NotificationResponse
 export interface NotificationResponse {

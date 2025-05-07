@@ -1,4 +1,4 @@
-import { ReactNode, use, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Cart, Search, Person, ChevronDown, BoxArrowInRight, PersonPlus, BoxArrowInLeft, PersonDash, CartCheck, Key } from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { CategoriesModel } from "../../../model/CategoriesModel";
@@ -198,7 +198,7 @@ const Navbar: React.FC<NavbarInterface> = (props) => {
                 Đơn hàng của tôi
               </Link>}
               {user && <Link
-                to="/userDetail"
+                to="/myAddress"
                 className="flex items-center px-4 py-2 text-gray-800 hover:bg-gray-100 whitespace-nowrap"
               >
                 <div className="w-4 h-4 fas fa-map-marker-alt mr-2" />
