@@ -60,7 +60,7 @@ const Types: React.FC = () => {
         if (record) {
 
             try {
-                const url = `http://localhost:8080/api/admin/types/disableType?typeId=${record.typeId}`;
+                const url = `http://localhost:8080/api/admin/types/disable?typeId=${record.typeId}`;
                 const response = await fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -86,7 +86,7 @@ const Types: React.FC = () => {
     const handleEnable = async () => {
         if (record) {
             try {
-                const url = `http://localhost:8080/api/admin/types/enableType?typeId=${record.typeId}`;
+                const url = `http://localhost:8080/api/admin/types/enable?typeId=${record.typeId}`;
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {

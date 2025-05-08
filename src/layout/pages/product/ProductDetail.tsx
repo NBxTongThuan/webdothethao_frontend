@@ -164,7 +164,7 @@ const ProductDetail: React.FC = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/api/cart/addToCart", {
+      const response = await fetch("http://localhost:8080/api/cart/add", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

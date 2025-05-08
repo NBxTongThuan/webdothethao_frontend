@@ -12,7 +12,7 @@ interface responseData{
 
 export const getAllOrders = async (page:number,size:number,orderStatus: string):Promise<responseData> => {
     try {
-        const response = await fetch(`${API_URL}/getAllOrder?page=${page}&size=${size}&orderStatus=${orderStatus}`,
+        const response = await fetch(`${API_URL}/get-all?page=${page}&size=${size}&orderStatus=${orderStatus}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -65,7 +65,7 @@ export const getAllOrders = async (page:number,size:number,orderStatus: string):
 };
 
 export const getOrderStats = async (): Promise<number> => {
-    const response = await fetch(`${API_URL}/totalOrderToday`,
+    const response = await fetch(`${API_URL}/total-today`,
         {
             method: "GET",
             credentials: "include",
@@ -77,7 +77,7 @@ export const getOrderStats = async (): Promise<number> => {
 
 export const getRevenueOfMonth = async (): Promise<number> => {
     try {
-        const response = await fetch(`${API_URL}/getRevenueOfMonth`,
+        const response = await fetch(`${API_URL}/revenue-of-month`,
             {
                 method: "GET",
                 credentials: "include",
@@ -108,7 +108,7 @@ export const getRevenueOfMonth = async (): Promise<number> => {
 
 export const getRevenueByDate = async (startDate: string, endDate: string): Promise<RevenueResponse[]> => {
     try {
-        const response = await fetch(`${API_URL}/getRevenueByDate?start=${startDate}&end=${endDate}`,
+        const response = await fetch(`${API_URL}/revenue-by-date?start=${startDate}&end=${endDate}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -131,7 +131,7 @@ export const getRevenueByDate = async (startDate: string, endDate: string): Prom
 }
 
 export const getNewOrder = async (page:number,size:number): Promise<responseData> => {
-    const response = await fetch(`${API_URL}/getNewOrders?page=${page}&size=${size}`,
+    const response = await fetch(`${API_URL}/new?page=${page}&size=${size}`,
         {
             method: "GET",
             credentials: "include",
@@ -170,3 +170,43 @@ export const getNewOrder = async (page:number,size:number): Promise<responseData
         totalSize: data.page.totalElements
     };
 }
+
+
+export const getOrderAdminById = async (orderId: string): Promise<OrderResponse> => {
+    try {
+        const response = await fetch(`${API_URL}/get-by-id?orderId=${orderId}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+        if (!response.ok) {
+            throw new Error('Network response was not ok'); 
+        }
+        const data = await response.json();
+        return ({
+            orderId: data.orderId,
+            status: data.status,
+            createdDate: data.createdDate,
+            toName: data.toName,
+            toPhone: data.toPhone,
+            toEmail: data.toEmail,
+            toProvince: data.toProvince,
+            toDistrict: data.toDistrict,
+            toWard: data.toWard,
+            toAddress: data.toAddress,
+            orderNote: data.orderNote,
+            orderNoteCanceled: data.orderNoteCanceled,
+            totalPrice: data.totalPrice,
+            totalMoneyOff: data.totalMoneyOff,
+            finalPrice: data.finalPrice,
+            shipFee: data.shipFee,
+            dateReceive: data.dateReceive,
+            dateExpected: data.dateExpected,
+            dateCancel:data.dateCancel
+        });
+    } catch (error) {
+        console.error('Error fetching order:', error);
+        throw error;
+    }
+};

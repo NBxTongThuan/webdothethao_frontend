@@ -20,7 +20,7 @@ export default function EditProductAttribute({ productAttribute, onClose, setFla
             return;
         }
 
-        const url = `http://localhost:8080/api/admin/productAttribute/updateProductAttribute`;
+        const url = `http://localhost:8080/api/admin/product-attribute/update`;
 
         try {
             const response = await fetch(url, {

@@ -42,7 +42,7 @@ const OrderReview: React.FC<OrderReviewProps> = (props) => {
         console.log(comment);
 
         try {
-            const url = `http://localhost:8080/api/reviews/addReview`;
+            const url = `http://localhost:8080/api/reviews/add`;
             const response = await fetch(url, {
                 method: "POST",
                 headers: {

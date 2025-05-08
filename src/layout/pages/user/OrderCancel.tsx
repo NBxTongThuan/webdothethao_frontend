@@ -17,7 +17,7 @@ const OrderCancel: React.FC<ModalProps> = (props) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try{
-            const url = `http://localhost:8080/api/orders/cancelOrder`;
+            const url = `http://localhost:8080/api/orders/cancel`;
             const response = await fetch(url, {
                 method: "PUT",
                 headers: {
@@ -26,7 +26,8 @@ const OrderCancel: React.FC<ModalProps> = (props) => {
                 body: JSON.stringify({
                   orderId: props.orderId,
                   orderCancelNote: orderCancelNote
-                })
+                }),
+                credentials: "include"
             });
             if(response.ok){
                 props.onClose();

@@ -1,9 +1,9 @@
 import React from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { Button, Result } from "antd";
 
 const PaymentReturnPage: React.FC = () => {
-  const location = useLocation();
+
   const { status } = useParams(); 
 
   const isSuccess = status === "success";

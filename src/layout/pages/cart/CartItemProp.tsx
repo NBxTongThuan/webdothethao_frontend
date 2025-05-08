@@ -53,7 +53,7 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
         }
 
         if (prop.cartItem.quantity > 1) {
-            const url = `http://localhost:8080/api/cartItem/updateQuantity`;
+            const url = `http://localhost:8080/api/cart-item/update-quantity`;
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
@@ -82,7 +82,7 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
         }
 
         if (prop.cartItem.quantity < prop.cartItem.remainQuantity) {
-            const url = `http://localhost:8080/api/cartItem/updateQuantity`;
+            const url = `http://localhost:8080/api/cart-item/update-quantity`;
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {

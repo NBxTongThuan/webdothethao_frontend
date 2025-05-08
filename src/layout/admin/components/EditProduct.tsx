@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ImageResponse, ProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
 import { toast } from "react-toastify";
 import { X, ArrowLeft, Edit, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building } from 'lucide-react';
-import { getAllImage } from '../../../api/admin/AdminImageAPI';
+
 import { getTypeByCategoryName } from '../../../api/admin/AdminTypesAPI';
 import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
+import { getAllImage } from '../../../api/admin/AdminImagesAPI';
 
 interface ModalProps {
     product: ProductResponse | undefined;

@@ -124,7 +124,7 @@ const EditProfile: React.FC = () => {
               {
                 label: 'Cập nhật',
                 onClick: async () => {
-                  const url = `http://localhost:8080/api/userDetail/updateUserDetail`;
+                  const url = `http://localhost:8080/api/user-detail/update`;
                 const data = {
                 userDetailId: formData.userDetailId,
                 userName: formData.userName,

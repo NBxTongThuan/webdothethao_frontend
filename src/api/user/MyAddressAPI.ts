@@ -1,10 +1,10 @@
 import { MyAddressResponse } from "../interface/Responses";
 
-const API_URL = 'http://localhost:8080/api/address';
+const API_URL = 'http://localhost:8080/api/my-address';
 
 export const getAddress = async (): Promise<MyAddressResponse[]> => {
     try {
-        const response = await fetch(`${API_URL}/getAddress`,
+        const response = await fetch(`${API_URL}/get`,
             {
                 method: "GET",
                 credentials: "include"

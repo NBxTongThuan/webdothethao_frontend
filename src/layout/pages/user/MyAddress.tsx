@@ -31,7 +31,7 @@ const MyAddress: React.FC = () => {
 
     const deleteAddress = async () => {
 
-        const response = await fetch(`http://localhost:8080/api/address/deleteById?addressId=${selectAddress?.addressId}`,
+        const response = await fetch(`http://localhost:8080/api/my-address/delete-by-id?addressId=${selectAddress?.addressId}`,
             {
                 method: "DELETE",
                 credentials: 'include'

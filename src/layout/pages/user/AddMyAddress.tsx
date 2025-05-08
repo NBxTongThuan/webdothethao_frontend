@@ -76,7 +76,7 @@ const AddMyAddress: React.FC<ModalProps> = (props) => {
 
         console.log(values);
         try {
-            const response = await fetch('http://localhost:8080/api/address/addAddress', {
+            const response = await fetch('http://localhost:8080/api/my-address/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -3,7 +3,7 @@ import { Review } from "../interface/Responses";
 import requestAPI from "./RequestApi";
 
 export async function getListReview(productId: string): Promise<ReviewsModel[]> { 
-    const link:string = `http://localhost:8080/api/reviews/getListReviews?productId=${productId}`;
+    const link:string = `http://localhost:8080/api/reviews/get-list-by-product-id?productId=${productId}`;
 
     const response = await requestAPI(link);
 
@@ -29,7 +29,7 @@ export async function getListReview(productId: string): Promise<ReviewsModel[]> 
 
 
     export async function getAReview(orderItemId: string): Promise<Review | null> {
-    const link:string = `http://localhost:8080/api/reviews/seeAReview?orderItemId=${orderItemId}`;
+    const link:string = `http://localhost:8080/api/reviews/see-review?orderItemId=${orderItemId}`;
 
     const response = await requestAPI(link,true);
 

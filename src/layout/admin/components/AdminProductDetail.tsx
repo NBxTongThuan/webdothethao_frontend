@@ -6,9 +6,10 @@ import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProdu
 import { toast } from "react-toastify";
 import { X, ArrowLeft, Edit, Trash2, CheckCircle, Package, Tag as LucideTag, Folder, List, ShoppingCart, CircleDot, FileText, Hash, Building, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import EditProduct from './EditProduct';
-import { getAllImage } from '../../../api/admin/AdminImageAPI';
+
 import EditProductAttribute from './EditProductAttribute';
 import { getCategoryByName } from '../../../api/admin/CategoryAPI';
+import { getAllImage } from '../../../api/admin/AdminImagesAPI';
 const { Column } = Table;
 const { Item } = Descriptions;
 
@@ -22,7 +23,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
 
     const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeResponse[]>([]);
 
-    const [totalPage, setTotalPage] = useState<number>(0);
+
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);
     const [showDeleteProductAttributeModal, setShowDeleteProductAttributeModal] = useState<boolean>(false);
@@ -64,7 +65,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
             quantity: quantity
         }
 
-        const url = `http://localhost:8080/api/admin/productAttribute/addProductAttribute`;
+        const url = `http://localhost:8080/api/admin/product-attribute/add`;
         const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -132,7 +133,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     }
 
     const handleEnableProductAttribute = async () => {
-        const url = `http://localhost:8080/api/admin/productAttribute/enableProductAttribute?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
+        const url = `http://localhost:8080/api/admin/product-attribute/enable?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
         const response = await fetch(url, {
             method: "PUT",
             credentials: "include",
@@ -149,7 +150,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     }
 
     const handleDeleteProductAttribute = async () => {
-        const url = `http://localhost:8080/api/admin/productAttribute/disableProductAttribute?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
+        const url = `http://localhost:8080/api/admin/product-attribute/disable?productAttributeId=${selectedProductAttribute?.productAttributeId}`;
 
         const response = await fetch(url, {
             method: "DELETE",
@@ -182,7 +183,6 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                 .then(
                     response => {
                         setListProductAttribute(response.listProductAttribute);
-                        setTotalPage(response.totalPage);
                         setTotalElement(response.totalSize);
                     }
                 )

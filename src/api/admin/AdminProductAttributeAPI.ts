@@ -1,6 +1,6 @@
 import { ProductAttributeResponse } from "../interface/Responses";
 
-const URL = "http://localhost:8080/api/admin/productAttribute";
+const URL = "http://localhost:8080/api/admin/product-attribute";
 interface responseData {
     totalPage: number;
     listProductAttribute: ProductAttributeResponse[],
@@ -10,7 +10,7 @@ interface responseData {
 export const getAllProductAttributeByProductId = async (productId:string,page: number, size: number): Promise<responseData> => {
 
     try {
-        const response = await fetch(`${URL}/getAllProductAttributeByProductId?productId=${productId}&page=${page}&size=${size}`,
+        const response = await fetch(`${URL}/get-page-by-product-id?productId=${productId}&page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",

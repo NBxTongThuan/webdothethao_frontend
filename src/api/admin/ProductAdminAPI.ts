@@ -11,7 +11,7 @@ interface responseData {
 export const getAllProduct = async (page: number, size: number): Promise<responseData> => {
 
     try {
-        const response = await fetch(`${url}/getAllProduct?page=${page}&size=${size}`,
+        const response = await fetch(`${url}/get-page?page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -60,7 +60,7 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
 
 export const getCountIsInStockProduct = async (): Promise<number> => {
     try {
-        const response = await fetch(`${url}/getCountIsInStockProduct`,
+        const response = await fetch(`${url}/get-count-enable`,
             {
                 method: "GET",
                 credentials: "include",
@@ -76,7 +76,7 @@ export const getCountIsInStockProduct = async (): Promise<number> => {
 
 export const getDiscountingProduct = async (page: number, size: number): Promise<responseData> => {
     try {
-        const response = await fetch(`${url}/getDiscountingProducts?page=${page}&size=${size}`,
+        const response = await fetch(`${url}/get-page-discount?page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -123,7 +123,7 @@ export const getDiscountingProduct = async (page: number, size: number): Promise
 export const getInStockProduct = async (page: number, size: number): Promise<responseData> => {
 
     try {
-        const response = await fetch(`${url}/getInStockProducts?page=${page}&size=${size}`,
+        const response = await fetch(`${url}/get-enable?page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",

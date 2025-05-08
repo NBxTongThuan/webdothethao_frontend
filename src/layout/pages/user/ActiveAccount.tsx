@@ -21,7 +21,7 @@ const ActiveAccount: React.FC = () => {
 
     const ActiveFt = async () => {
         try {
-            const url =`http://localhost:8080/api/account/Active?email=${email}&activeCode=${activeCode}`;
+            const url =`http://localhost:8080/api/account/active?email=${email}&activeCode=${activeCode}`;
             const response = await fetch(url,{
                 method: 'GET',
          });

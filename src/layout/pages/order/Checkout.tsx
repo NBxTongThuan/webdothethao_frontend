@@ -145,7 +145,7 @@ const Checkout: React.FC = () => {
     const hadleOrderCOD = async (values: any) => {
         if (values.paymentMethod == 'cod') {
 
-            const url = `http://localhost:8080/api/orders/codOrder`;
+            const url = `http://localhost:8080/api/orders/cod-order`;
             const data = {
                 orderNote: values.note,
                 toAddress: values.toAddress,
@@ -182,7 +182,7 @@ const Checkout: React.FC = () => {
     const hadleOrderVNPay = async (values: any) => {
         if (values.paymentMethod == 'vn-pay') {
 
-            const url = `http://localhost:8080/api/payment/vnpay/create`;
+            const url = `http://localhost:8080/api/payment/vn-pay/create`;
             const data = {
                 orderNote: values.note,
                 toAddress: values.toAddress,

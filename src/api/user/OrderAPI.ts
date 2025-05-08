@@ -10,7 +10,7 @@ interface responseData{
 }
 export const getOrders = async (userName: string, page: number, size: number,orderStatus: string): Promise<responseData> => {
     try {
-        const response = await fetch(`${API_URL}/myOrders?userName=${userName}&page=${page}&size=${size}&orderStatus=${orderStatus}`,
+        const response = await fetch(`${API_URL}/my-orders?userName=${userName}&page=${page}&size=${size}&orderStatus=${orderStatus}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -63,7 +63,7 @@ export const getOrders = async (userName: string, page: number, size: number,ord
 
 export const getOrderById = async (orderId: string): Promise<OrderResponse> => {
     try {
-        const response = await fetch(`${API_URL}/getOrderByOrderId?orderId=${orderId}`,
+        const response = await fetch(`${API_URL}/get-by-id?orderId=${orderId}`,
             {
                 method: "GET",
                 credentials: "include",

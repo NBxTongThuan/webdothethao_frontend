@@ -1,9 +1,8 @@
 import { OrderItemResponse } from "../interface/Responses";
 
-const API_URL = 'http://localhost:8080/api/order-items';
+const API_URL = 'http://localhost:8080/api/admin/order-items';
 
-
-export const getOrderItemsByOrderId = async (orderId: string): Promise<OrderItemResponse[]> => {
+export const AdminGetOrderItemsByOrderId = async (orderId: string): Promise<OrderItemResponse[]> => {
     const response = await fetch(`${API_URL}/list?orderId=${orderId}`,
         {
             method: "GET",

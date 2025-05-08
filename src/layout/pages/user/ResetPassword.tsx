@@ -23,7 +23,7 @@ const ResetPassword = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const url = `http://localhost:8080/api/account/resetPassword`;
+            const url = `http://localhost:8080/api/account/reset-password`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {

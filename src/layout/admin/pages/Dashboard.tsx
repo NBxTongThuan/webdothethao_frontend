@@ -137,8 +137,6 @@ const Dashboard: React.FC = () => {
         ],
     };
 
-    console.log(listNotification);
-
 
 
     const [userStats, setUserStats] = useState<UserStatsResponse | null>(null);

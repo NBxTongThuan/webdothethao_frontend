@@ -36,7 +36,7 @@ async function getProduct(endpoint: string): Promise<ProductsAPIInterface>  {
 
 
 export async function get1Product(productId: string): Promise<ProductModel>  {
-    const link:string = `http://localhost:8080/api/products/oneproduct?productId=${productId}`;
+    const link:string = `http://localhost:8080/api/products/get-by-id?productId=${productId}`;
 
     const response = await requestAPI(link);
 
@@ -55,26 +55,26 @@ export async function get1Product(productId: string): Promise<ProductModel>  {
 
 
 export async function getAllProducts(page:number): Promise<ProductsAPIInterface> {
-    const link: string = `http://localhost:8080/api/products?page=${page}&size=8`
+    const link: string = `http://localhost:8080/api/products/get-all?page=${page}&size=8`
     console.log(link);
     return getProduct(link);
 }
 
 export async function getProductsByCategoryIdAndProductName(categoryId: number, productName: string, currentPage:number): Promise<ProductsAPIInterface> {
    
-    let link: string = `http://localhost:8080/api/products/listByName?productName=${productName}&page=${currentPage}&size=8`;
+    let link: string = `http://localhost:8080/api/products/page-by-name?productName=${productName}&page=${currentPage}&size=8`;
 
     if(productName ==='' && categoryId === 0){
-        link = `http://localhost:8080/api/products?page=0&size=8`;
+        link = `http://localhost:8080/api/products/get-all?page=0&size=8`;
     }else if(productName ==='' && categoryId > 0){
-        link = `http://localhost:8080/api/products/listByCateId?categoryId=${categoryId}&page=${currentPage}&size=8`;
+        link = `http://localhost:8080/api/products/page-by-category-id?categoryId=${categoryId}&page=${currentPage}&size=8`;
     }
     return getProduct(link);
 
 }
 
 export async function getTop4Product(): Promise<ProductModel[]> {
-    const link: string = `http://localhost:8080/api/products/top4?page=0&size=4`;
+    const link: string = `http://localhost:8080/api/products/top-4?page=0&size=4`;
 
     const response = await requestAPI(link);
 
@@ -93,7 +93,7 @@ export async function getTop4Product(): Promise<ProductModel[]> {
 }
 
 export async function get4NewestProduct(): Promise<ProductModel[]> {
-    const link: string = `http://localhost:8080/api/products/topNewestProduct?page=0&size=4`;
+    const link: string = `http://localhost:8080/api/products/page-newest?page=0&size=4`;
 
     const response = await requestAPI(link);
 
@@ -112,7 +112,7 @@ export async function get4NewestProduct(): Promise<ProductModel[]> {
 }
 
 export async function getSameTypeProduct(productId: string): Promise<ProductModel[]> {
-    const link: string = `http://localhost:8080/api/products/sameProductType?productId=${productId}&page=0&size=4`;
+    const link: string = `http://localhost:8080/api/products/same?productId=${productId}&page=0&size=4`;
 
     const response = await requestAPI(link);
 
@@ -131,7 +131,7 @@ export async function getSameTypeProduct(productId: string): Promise<ProductMode
 }
 
 export async function getDiscountingProduct(page:number): Promise<ProductModel[]> {
-    const link: string = `http://localhost:8080/api/products/discountingProduct?page=${page}&size=4`;
+    const link: string = `http://localhost:8080/api/products/discounting?page=${page}&size=4`;
 
     const response = await requestAPI(link);
 

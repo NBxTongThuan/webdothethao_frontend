@@ -28,7 +28,7 @@ export const NotificationProp: React.FC<NotificationPropProps> = ({ notification
     };
 
     const handleIsRead = async () => {
-       const url = `http://localhost:8080/api/admin/notifications/setIsRead?notificationId=${notification.notificationId}`;
+       const url = `http://localhost:8080/api/admin/notifications/set-read?notificationId=${notification.notificationId}`;
        const response = await fetch(url, {
         method: 'PUT',
         headers: {

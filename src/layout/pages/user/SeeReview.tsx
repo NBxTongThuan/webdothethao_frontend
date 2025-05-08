@@ -55,7 +55,7 @@ const SeeReview:React.FC<SeeReviewProps> = (props) => {
         console.log(comment);
 
         try {
-            const url = `http://localhost:8080/api/reviews/updateReview`;
+            const url = `http://localhost:8080/api/reviews/update`;
             const response = await fetch(url, {
                 method: "PUT",
                 headers: {

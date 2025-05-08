@@ -59,7 +59,7 @@ const Categories: React.FC = () => {
         if (record) {
 
             try {
-                const url = `http://localhost:8080/api/admin/categories/disableCategory?categoryId=${record.categoriesId}`;
+                const url = `http://localhost:8080/api/admin/categories/disable?categoryId=${record.categoriesId}`;
                 const response = await fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -85,7 +85,7 @@ const Categories: React.FC = () => {
     const handleEnable = async () => {
         if (record) {
             try {
-                const url = `http://localhost:8080/api/admin/categories/enableCategory?categoryId=${record.categoriesId}`;
+                const url = `http://localhost:8080/api/admin/categories/enable?categoryId=${record.categoriesId}`;
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {

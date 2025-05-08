@@ -26,7 +26,7 @@ const Users: React.FC = () => {
         if (selectedUser) {
 
             try {
-                const url = `http://localhost:8080/api/account/lockAccount?userId=${selectedUser.userId}`;
+                const url = `http://localhost:8080/api/account/lock-account?userId=${selectedUser.userId}`;
                 const response = await fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -55,7 +55,7 @@ const Users: React.FC = () => {
         if (selectedUser) {
 
             try {
-                const url = `http://localhost:8080/api/account/unLockAccount?userId=${selectedUser.userId}`;
+                const url = `http://localhost:8080/api/account/unLock-account?userId=${selectedUser.userId}`;
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {

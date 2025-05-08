@@ -30,7 +30,7 @@ const Register: React.FC = () => {
         const isRePasswordValid = !checkRePassword(rePassword);
 
         if(isUserNameValid && isEmailValid && isPasswordValid && isRePasswordValid){
-            const url = 'http://localhost:8080/api/account/Register';
+            const url = 'http://localhost:8080/api/account/register';
             const data = {
                 userName: userName,
                 email: email,

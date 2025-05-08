@@ -12,7 +12,7 @@ export const getAllCategories = async (page: number, size: number): Promise<resp
 
 
     try {
-        const response = await fetch(`${API_URL}/getAllCategory?page=${page}&size=${size}`,
+        const response = await fetch(`${API_URL}/get-page?page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -58,7 +58,7 @@ export const getAllCategory = async () => {
 
 
     try {
-        const response = await fetch(`${API_URL}/findAll`,
+        const response = await fetch(`${API_URL}/find-all`,
             {
                 method: "GET",
                 credentials: "include",
@@ -98,7 +98,7 @@ export const getAllCategory = async () => {
 
 export const getCategoryByName = async (categoryName: string): Promise<CategoryResponse> => {
     try {   
-        const response = await fetch(`${API_URL}/getByCategoryName?categoryName=${categoryName}`,
+        const response = await fetch(`${API_URL}/get-by-name?categoryName=${categoryName}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -114,7 +114,7 @@ export const getCategoryByName = async (categoryName: string): Promise<CategoryR
 
 export const checkCategoryNameExist = async (categoryName: string): Promise<boolean> => {
     try {
-        const response = await fetch(`${API_URL}/checkCategoryExists?categoryName=${categoryName}`,
+        const response = await fetch(`${API_URL}/check-exists?categoryName=${categoryName}`,
             {
                 method: "GET",
                 credentials: "include",

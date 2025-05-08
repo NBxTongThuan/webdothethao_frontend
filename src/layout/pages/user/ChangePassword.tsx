@@ -40,7 +40,7 @@ const ChangePassword = () => {
             return;
         }
         console.log(formData);
-        const url = `http://localhost:8080/api/account/changePassword`;
+        const url = `http://localhost:8080/api/account/change-password`;
         const response = await fetch(url, {
             method: 'PUT',
             headers: {

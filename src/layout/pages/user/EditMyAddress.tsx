@@ -120,7 +120,7 @@ const EditMyAddress: React.FC<ModalProps> = (props) => {
 
 
         try {
-            const response = await fetch('http://localhost:8080/api/address/updateAddress', {
+            const response = await fetch('http://localhost:8080/api/my-address/update', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

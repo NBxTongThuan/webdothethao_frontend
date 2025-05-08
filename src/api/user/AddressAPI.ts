@@ -1,6 +1,6 @@
 import { District, Province, Ward } from "../interface/Responses";
 
-const GHN_API_URL = `http://localhost:8080/api/`
+const GHN_API_URL = `http://localhost:8080/api/vn/address/`
 
 
 

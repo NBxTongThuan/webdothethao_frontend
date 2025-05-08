@@ -23,7 +23,7 @@ const Cart: React.FC = () => {
     }, [cartID, flag]);
 
     const deleteCartItem = async (cartItemId: string) => {
-        const url = `http://localhost:8080/api/cart/deleteCartItem?cartItemID=${cartItemId}`;
+        const url = `http://localhost:8080/api/cart/delete-cart-item?cartItemID=${cartItemId}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {

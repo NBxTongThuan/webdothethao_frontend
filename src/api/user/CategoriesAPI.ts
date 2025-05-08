@@ -25,7 +25,7 @@ export async function getListCate(): Promise<CategoriesModel[]> {
 
 export async function getTopCategory(page: number, size: number): Promise<CategoryResponse[]> {
 
-    const link: string = `http://localhost:8080/api/categories/top4Category?page=${page}&size=${size}`;
+    const link: string = `http://localhost:8080/api/categories/top-4?page=${page}&size=${size}`;
     const response = await requestAPI(link);
     const responseDATA = response;
 

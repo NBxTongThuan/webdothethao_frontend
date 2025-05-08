@@ -135,7 +135,7 @@ const OrderDetail: React.FC = () => {
     const handleRePayment = async () => {
 
         if (isPaymented()) {
-            const url = `http://localhost:8080/api/payment/vnpay/reCreate?paymentId=${payment?.paymentId}`;
+            const url = `http://localhost:8080/api/payment/vn-pay/re-create?paymentId=${payment?.paymentId}`;
 
             try {
                 const response = await fetch(url, {

@@ -44,7 +44,7 @@ const Products: React.FC = () => {
         if (selectedItem) {
 
             try {
-                const url = `http://localhost:8080/api/admin/products/disInStock?productId=${selectedItem.productId}`;
+                const url = `http://localhost:8080/api/admin/products/disable?productId=${selectedItem.productId}`;
                 const response = await fetch(url, {
                     method: 'DELETE',
                     headers: {
@@ -70,7 +70,7 @@ const Products: React.FC = () => {
     const handleEnableProduct = async () => {
         if (selectedItem) {
             try {
-                const url = `http://localhost:8080/api/admin/products/inStock?productId=${selectedItem.productId}`;
+                const url = `http://localhost:8080/api/admin/products/enable?productId=${selectedItem.productId}`;
                 const response = await fetch(url, {
                     method: 'PUT',
                     headers: {

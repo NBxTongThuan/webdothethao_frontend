@@ -29,7 +29,7 @@ const AddCategory: React.FC<ModalProps> = (props) => {
 
     const checkCategoryNameExist = async (categoryName: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/categories/checkCategoryExists?categoryName=${categoryName}`);
+            const response = await fetch(`http://localhost:8080/api/admin/categories/check-exists?categoryName=${categoryName}`);
             const data = await response.json();
             if (data) {
                 setCategoryNameError("Tên danh mục đã tồn tại");
@@ -94,7 +94,7 @@ const AddCategory: React.FC<ModalProps> = (props) => {
             }
 
             try {
-                const response = await fetch(`http://localhost:8080/api/admin/categories/addCategory`, {
+                const response = await fetch(`http://localhost:8080/api/admin/categories/add`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

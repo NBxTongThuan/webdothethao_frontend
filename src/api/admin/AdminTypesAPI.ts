@@ -12,7 +12,7 @@ export const getAllType = async (page:number, size:number):Promise<responseData>
 
     try 
     {
-        const response = await fetch(`${API_URL}/getAllType?page=${page}&size=${size}`,
+        const response = await fetch(`${API_URL}/get-page?page=${page}&size=${size}`,
             {
                 method: "GET",
                 credentials: "include",
@@ -58,7 +58,7 @@ export const getTypeByCategoryName = async (categoryName:string):Promise<TypesRe
 
     try
     {
-        const  response = await fetch(`${API_URL}/getTypeByCategoryName?categoryName=${categoryName}`,
+        const  response = await fetch(`${API_URL}/get-by-category-name?categoryName=${categoryName}`,
             {
                 method: "GET",
                 credentials: "include",

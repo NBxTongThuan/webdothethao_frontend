@@ -21,7 +21,7 @@ const ForgotPassword = () => {
         
         try {
             
-            const url = `http://localhost:8080/api/account/forgotPassword?email=${formData.email}`;
+            const url = `http://localhost:8080/api/account/forgot-password?email=${formData.email}`;
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {

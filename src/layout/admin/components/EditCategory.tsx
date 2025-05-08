@@ -38,7 +38,7 @@ const EditCategory: React.FC<ModalProps> = (props) => {
 
         if (categoryName.trim() != oldCategoryName) {
             try {
-                const response = await fetch(`http://localhost:8080/api/admin/categories/checkCategoryExists?categoryName=${categoryName}`);
+                const response = await fetch(`http://localhost:8080/api/admin/categories/check-exists?categoryName=${categoryName}`);
                 const data = await response.json();
                 if (data) {
                     setCategoryNameError("Tên danh mục đã tồn tại");
@@ -120,7 +120,7 @@ const EditCategory: React.FC<ModalProps> = (props) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/categories/updateCategory`, {
+            const response = await fetch(`http://localhost:8080/api/admin/categories/update`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

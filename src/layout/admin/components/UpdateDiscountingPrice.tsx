@@ -48,7 +48,7 @@ const UpdateDiscountingPrice: React.FC<ModalProps> = (props) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/products/updateDiscountingPrice?productId=${props.product?.productId}&moneyOff=${discountingPrice}`, {
+            const response = await fetch(`http://localhost:8080/api/admin/products/update-discount?productId=${props.product?.productId}&moneyOff=${discountingPrice}`, {
                 method: "PUT",
                 credentials: "include"
             });

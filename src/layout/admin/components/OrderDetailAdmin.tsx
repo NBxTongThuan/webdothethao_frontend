@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getOrderById } from "../../../api/user/OrderAPI";
-import { getOrderItemsByOrderId } from "../../../api/user/OrderItemAPI";
-import { get1Image } from "../../../api/user/ImagesAPI";
-import NumberFormat from "../../../util/NumberFormat";
 import { Button, ConfigProvider, Modal } from "antd";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { motion, AnimatePresence } from 'framer-motion';
-import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
 import { toast } from "react-toastify";
 import 'antd/dist/reset.css';
-
+import { getOrderAdminById } from "../../../api/admin/AdminOrderAPI";
+import { AdminGetOrderItemsByOrderId } from "../../../api/admin/AdminOrderItemAPI";
+import { AdminGetPaymentByOrderId } from "../../../api/admin/AdminPaymentAPI";
+import { AdminGet1Image } from "../../../api/admin/AdminImagesAPI";
+import NumberFormat from "../../../util/NumberFormat";
 interface ModalProps {
     orderId: string;
     onClose: () => void;
@@ -31,7 +29,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     const [showDeliveredConfirm, setShowDeliveredConfirm] = useState(false);
     useEffect(() => {
         if (props.orderId) {
-            getOrderById(props.orderId)
+            getOrderAdminById(props.orderId)
                 .then(response => {
                     if (response) {
                         setOrder(response);
@@ -48,7 +46,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
 
     useEffect(() => {
         if (props.orderId) {
-            getOrderItemsByOrderId(props.orderId)
+            AdminGetOrderItemsByOrderId(props.orderId)
                 .then(response => {
                     if (response) {
                         setOrderItems(response);
@@ -62,7 +60,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
 
     useEffect(() => {
         if (props.orderId) {
-            getPaymentByOrderId(props.orderId)
+            AdminGetPaymentByOrderId(props.orderId)
                 .then(response => {
                     if (response) {
                         setPayment(response);
@@ -77,7 +75,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     useEffect(() => {
         const fetchImages = async () => {
             const imagePromises = orderItems.map(item =>
-                get1Image(item.productId)
+                    AdminGet1Image(item.productId)
                     .then(image => ({ id: item.productId, data: image?.data?.toString() || '' }))
                     .catch(() => ({ id: item.productId, data: '' }))
             );
@@ -107,7 +105,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     }
 
     const handleOrder = async (orderId: string, orderStatus: string, orderCancelNote: string) => {
-        const url = 'http://localhost:8080/api/admin/orders/updateOrder';
+        const url = 'http://localhost:8080/api/admin/orders/update';
         const data = {
             "orderId": orderId,
             "orderStatus": orderStatus,

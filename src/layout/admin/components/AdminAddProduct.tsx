@@ -6,10 +6,10 @@ import { ImageResponse, ProductAttributeResponse, ProductResponse, TypesResponse
 import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProductAttributeAPI';
 import { toast } from "react-toastify";
 import { X, ArrowLeft, Edit, Trash2, CheckCircle, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building, Plus, Delete } from 'lucide-react';
-import { getAllImage } from '../../../api/admin/AdminImageAPI';
 import { getAllType, getTypeByCategoryName } from '../../../api/admin/AdminTypesAPI';
 import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
 import { getAllCategory } from '../../../api/admin/CategoryAPI';
+import { getAllImage } from '../../../api/admin/AdminImagesAPI';
 const { Column } = Table;
 const { Item } = Descriptions;
 
@@ -44,7 +44,7 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
     const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeRequest[]>([]);
 
     const checkExistsProduct = async () => {
-        const url = `http://localhost:8080/api/admin/products/checkExists`;
+        const url = `http://localhost:8080/api/admin/products/check-exists`;
         if (form.getFieldValue("productName") === undefined || form.getFieldValue("typeName") === undefined || form.getFieldValue("brandName") === undefined) {
             return;
         }
@@ -247,7 +247,7 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
         }
 
         try {
-            const url = `http://localhost:8080/api/admin/products/addProduct`;
+            const url = `http://localhost:8080/api/admin/products/add`;
             const response = await fetch(url, {
                 method: "POST",
                 body: JSON.stringify(product),

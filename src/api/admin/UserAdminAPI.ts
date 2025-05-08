@@ -1,9 +1,14 @@
 import { UserResponse, UserStatsResponse } from "../interface/Responses";
 
-const url = "http://localhost:8080/api/users";
+const url = "http://localhost:8080/api/admin/users";
 
 export const getUserStats = async (): Promise<UserStatsResponse> => {
-    const response = await fetch(`${url}/stats`);
+    const response = await fetch(`${url}/stats`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
     return response.json();
 
 }
@@ -16,7 +21,7 @@ interface responseData {
 
 
 export const getUserList = async (page: number, size: number): Promise<responseData> => {
-    const response = await fetch(`${url}/allUser?page=${page}&size=${size}`,
+    const response = await fetch(`${url}/all?page=${page}&size=${size}`,
         {
             method: "GET",
             credentials: "include",

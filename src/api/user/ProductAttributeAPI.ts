@@ -5,7 +5,7 @@ export async function getListProductAttributes(productId: string): Promise<Produ
 
     const listProductAttributes:ProductAttributeModel[] = [];
 
-    const link: string = `http://localhost:8080/api/productAttribute?productId=${productId}`;
+    const link: string = `http://localhost:8080/api/product-attribute?productId=${productId}`;
 
     const response = await requestAPI(link);
 

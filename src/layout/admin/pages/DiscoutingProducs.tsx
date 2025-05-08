@@ -25,7 +25,7 @@ const DiscountingProducts: React.FC = () => {
     const [showAddDiscountingProducts, setShowAddDiscountingProducts] = useState(false);
 
     const handleSubmit = async () => {
-        const response = await fetch('http://localhost:8080/api/admin/products/stoppingDiscount?productId=' + selectedItem?.productId, {
+        const response = await fetch('http://localhost:8080/api/admin/products/stop-discount?productId=' + selectedItem?.productId, {
             method: 'PUT',
             credentials: 'include'
         });

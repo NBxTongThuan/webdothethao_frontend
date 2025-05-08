@@ -1,10 +1,10 @@
 import { PaymentResponse } from "../interface/Responses";
 
-const API_URL = 'http://localhost:8080/api/payment';
+const API_URL = 'http://localhost:8080/api/admin/payment';
 
 // /getPayment
 
-export const getPaymentByOrderId = async (orderId: string): Promise<PaymentResponse> => {
+export const AdminGetPaymentByOrderId = async (orderId: string): Promise<PaymentResponse> => {
 
     try {
         const response = await fetch(`${API_URL}/get-payment?orderId=${orderId}`,
