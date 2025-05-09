@@ -61,9 +61,15 @@ export const Notifications = (props: ModalProps) => {
             dataSource={listNotifications}
             pagination={{
                 current: currentPage,
-                pageSize: size,
                 total: totalSize,
+                pageSize: size,
+                onChange: (page) => setCurrentPage(page),
+                onShowSizeChange: (current, size) => setSize(size),
+                showSizeChanger: true,
+                pageSizeOptions: ['4', '8', '12', '16', '20'],
+                showTotal: (total) => `Tổng ${total} thông báo`
             }}
+            
             >
              <Column
                 title="Tiêu đề"
