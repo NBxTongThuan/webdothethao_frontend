@@ -9,6 +9,7 @@ import TopCategory from "../component/TopCategory";
 import { TopDiscountingProduct } from "../component/TopDiscountingProduct";
 import { toast } from "react-toastify";
 import ChatBox from "../component/ChatBox";
+import PrintInvoicePage from "../component/PrintInvoicePage";
 const HomePage: React.FC = () => {
     return (
         <div className="space-y-12">
@@ -101,7 +102,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             </section>
-            {/* <ChatBox /> */}
+            <ChatBox />
         </div>
     );
 }

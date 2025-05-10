@@ -16,13 +16,11 @@ const { Item } = Descriptions;
 interface ModalProps {
     product: ProductResponse | undefined;
     onClose: () => void;
-
 }
 
 const AdminProductDetail: React.FC<ModalProps> = (props) => {
 
     const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeResponse[]>([]);
-
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);

@@ -37,7 +37,6 @@ export const getUserList = async (page: number, size: number): Promise<responseD
     
     const users = data._embedded?.userResponseList;
 
-    console.log(users);
 
     if (!users || users.length === 0) {
         return {

@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getOrderById } from "../../../api/user/OrderAPI";
 import { getOrderItemsByOrderId } from "../../../api/user/OrderItemAPI";
 import { get1Image } from "../../../api/user/ImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
 import OrderCancel from "./OrderCancel";
-import { Button } from "antd";
+import { Button, ModalProps } from "antd";
 import OrderReview from "./OrderReview";
 import SeeReview from "./SeeReview";
 import { OrderItemResponse, OrderResponse, PaymentResponse } from "../../../api/interface/Responses";
 import { getPaymentByOrderId } from "../../../api/user/PaymentAPI";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../util/AuthContext";
-const OrderDetail: React.FC = () => {
+import PrintInvoicePage from "../../component/PrintInvoicePage";
+
+const OrderDetail:React.FC = () => {
     const { orderId } = useParams();
     const [order, setOrder] = useState<OrderResponse>();
     const [loading, setLoading] = useState(true);
@@ -25,6 +27,7 @@ const OrderDetail: React.FC = () => {
     const [payment, setPayment] = useState<PaymentResponse>();
     const [reviewFlag, setReviewFlag] = useState(false);
     const [flag, setFlag] = useState(false);
+    const [showPrintInvoice, setShowPrintInvoice] = useState(false);
 
     const { user } = useAuth();
 
@@ -167,7 +170,6 @@ const OrderDetail: React.FC = () => {
 
     }
 
-    console.log(isPaymented());
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -191,9 +193,18 @@ const OrderDetail: React.FC = () => {
             <div className="bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-lg p-6 mb-6 border border-gray-100">
                 <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">Chi tiết đơn hàng</h1>
-                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(order.status)} shadow-sm`}>
-                        {getStatusText(order.status)}
-                    </span>
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setShowPrintInvoice(true)}
+                            className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 hover:text-blue-700 transition-colors duration-200 font-medium shadow-sm"
+                        >
+                            <i className="fas fa-print mr-2"></i>
+                            In hóa đơn
+                        </button>
+                        <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(order.status)} shadow-sm`}>
+                            {getStatusText(order.status)}
+                        </span>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
@@ -434,6 +445,27 @@ const OrderDetail: React.FC = () => {
                     }
                 </div>
             </div>
+
+            {showPrintInvoice && (
+                <PrintInvoicePage
+                    orderId={order.orderId}
+                    customerName={order.toName}
+                    address={order.toAddress}
+                    phone={order.toPhone}
+                    email={order.toEmail}
+                    items={orderItems.map(item => ({
+                        name: item.productName,
+                        quantity: item.quantity,
+                        price: item.finalPrice,
+                        color: item.color,
+                        size: item.size
+
+                    }))}
+                    total={order.finalPrice}
+                    onClose={() => setShowPrintInvoice(false)}
+                    visible={showPrintInvoice}
+                />
+            )}
         </div>
     );
 };

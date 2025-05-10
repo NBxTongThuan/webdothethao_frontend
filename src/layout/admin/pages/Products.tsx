@@ -5,7 +5,6 @@ import { Button, ConfigProvider, Modal, Table, Tag } from 'antd';
 import Column from 'antd/es/table/Column';
 import NumberFormat from '../../../util/NumberFormat';
 import AdminProductDetail from '../components/AdminProductDetail';
-import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 import { X, Plus, AlertTriangle, CheckCircle2, Eye, Trash2, CheckCircle } from 'lucide-react';
 import { ProductResponse } from '../../../api/interface/Responses';
 import { getAllProduct } from '../../../api/admin/ProductAdminAPI';
@@ -49,8 +48,8 @@ const Products: React.FC = () => {
                     method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     }
+                    , credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Ngưng bán sản phẩm thành công');
@@ -75,8 +74,8 @@ const Products: React.FC = () => {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
                     }
+                    , credentials: 'include'
                 });
                 if (response.ok) {
                     toast.success('Bán lại sản phẩm thành công');
