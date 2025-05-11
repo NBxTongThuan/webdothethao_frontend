@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Tag, ConfigProvider, Input, Select, Form } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ImageResponse, ProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
+import { ImageResponse, AdminProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
 import { toast } from "react-toastify";
 import { X, ArrowLeft, Edit, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building } from 'lucide-react';
 
@@ -10,12 +10,10 @@ import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
 import { getAllImage } from '../../../api/admin/AdminImagesAPI';
 
 interface ModalProps {
-    product: ProductResponse | undefined;
+    product: AdminProductResponse | undefined;
     onClose: () => void;
+    setFlag: () => void;
 }
-
-
-
 
 const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const [listImage, setListImage] = useState<ImageResponse[]>([]);
@@ -31,37 +29,37 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const handleNewListImage = async (): Promise<ImageResponse[]> => {
         const files = [file1, file2, file3];
         const updatedList: ImageResponse[] = [];
-      
+
         for (let i = 0; i < 3; i++) {
-          const oldImage = listImage[i];
-          const file = files[i];
-      
-          if (file) {
-            const base64 = await getBase64(file);
-            if (oldImage) {
-              updatedList.push({
-                ...oldImage,
-                data: base64 || "",
-              });
-            }else{
-                updatedList.push({
-                    imageId: "",
-                    name: file.name,
-                    data: base64 || "",
-                    url: ""
-                    
-                });
+            const oldImage = listImage[i];
+            const file = files[i];
+
+            if (file) {
+                const base64 = await getBase64(file);
+                if (oldImage) {
+                    updatedList.push({
+                        ...oldImage,
+                        data: base64 || "",
+                    });
+                } else {
+                    updatedList.push({
+                        imageId: "",
+                        name: file.name,
+                        data: base64 || "",
+                        url: ""
+
+                    });
+                }
+            } else {
+                if (oldImage) {
+                    updatedList.push(oldImage);
+                }
             }
-          } else {
-            if (oldImage) {
-              updatedList.push(oldImage);
-            }
-          }
         }
         // Cập nhật state đúng cách (nếu cần dùng ở ngoài)
         // setNewListImage(updatedList);
         return updatedList;
-      };
+    };
 
 
     const getBase64 = (file: File): Promise<string | null> => {
@@ -109,12 +107,13 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
             productName: form.getFieldValue("productName"),
             typeId: await handleGetTypeId(),
             brandId: await handleGetBrandId(),
+            importPrice: form.getFieldValue("importPrice"),
             price: form.getFieldValue("productPrice"),
             description: form.getFieldValue("description"),
             listUpdateImage: newListImage
         }
 
-        try{
+        try {
             const url = `http://localhost:8080/api/admin/products/update`;
             const response = await fetch(url, {
                 method: "PUT",
@@ -122,19 +121,20 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(product),
-                credentials:'include'
+                credentials: 'include'
             });
-            if(response.ok === true){
+            if (response.ok === true) {
                 toast.success("Cập nhật sản phẩm thành công");
                 props.onClose();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            }else{
+                props.setFlag();
+             
+            } else {
                 toast.error("Cập nhật sản phẩm thất bại");
+                props.onClose();
             }
-        }catch(error){
+        } catch (error) {
             toast.error("Cập nhật sản phẩm thất bại");
+            props.onClose();
         }
     }
 
@@ -182,6 +182,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     typeName: props.product?.typeName,
                                     brandName: props.product?.brandName,
                                     quantitySold: props.product?.quantitySold,
+                                    importPrice: props.product?.importPrice,
                                     description: props.product?.description,
                                     productPrice: props.product?.price,
                                     image1: listImage[0]?.data,
@@ -217,6 +218,14 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                         rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm' }]}
                                     >
                                         <Input type='number' placeholder="Nhập giá sản phẩm" className="rounded-lg" />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        label={<span className="font-medium text-gray-700 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Giá nhập</span>}
+                                        name="importPrice"
+                                        rules={[{ required: true, message: 'Vui lòng nhập giá nhập' }]}
+                                    >
+                                        <Input type='number' placeholder="Nhập giá nhập" className="rounded-lg [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
                                     </Form.Item>
 
                                     <Form.Item
@@ -258,12 +267,14 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                         <Input disabled className="bg-gray-50 text-gray-500 rounded-lg" />
                                     </Form.Item>
 
+                                    <div className="col-span-2">
                                     <Form.Item
                                         label={<span className="font-medium text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả</span>}
                                         name="description"
                                     >
                                         <Input.TextArea placeholder="Nhập mô tả" className="rounded-lg" rows={4} />
                                     </Form.Item>
+                                    </div>
 
                                     <div className="col-span-2 grid grid-cols-3 gap-6">
                                         <Form.Item
@@ -271,10 +282,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                             name="image1"
                                         >
                                             <div className="space-y-2">
-                                                {listImage.length > 0 ? 
+                                                {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[0] ? 
-                                                            <img src={listImage[0].data} alt="Ảnh 1" className="w-full h-full object-cover" /> 
+                                                        {listImage[0] ?
+                                                            <img src={listImage[0].data} alt="Ảnh 1" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>
@@ -289,10 +300,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                             name="image2"
                                         >
                                             <div className="space-y-2">
-                                                {listImage.length > 0 ? 
+                                                {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[1] ? 
-                                                            <img src={listImage[1].data} alt="Ảnh 2" className="w-full h-full object-cover" /> 
+                                                        {listImage[1] ?
+                                                            <img src={listImage[1].data} alt="Ảnh 2" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>
@@ -307,10 +318,10 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                             name="image3"
                                         >
                                             <div className="space-y-2">
-                                                {listImage.length > 0 ? 
+                                                {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[2] ? 
-                                                            <img src={listImage[2].data} alt="Ảnh 3" className="w-full h-full object-cover" /> 
+                                                        {listImage[2] ?
+                                                            <img src={listImage[2].data} alt="Ảnh 3" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>

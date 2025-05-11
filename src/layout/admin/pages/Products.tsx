@@ -6,7 +6,7 @@ import Column from 'antd/es/table/Column';
 import NumberFormat from '../../../util/NumberFormat';
 import AdminProductDetail from '../components/AdminProductDetail';
 import { X, Plus, AlertTriangle, CheckCircle2, Eye, Trash2, CheckCircle } from 'lucide-react';
-import { ProductResponse } from '../../../api/interface/Responses';
+import { AdminProductResponse } from '../../../api/interface/Responses';
 import { getAllProduct } from '../../../api/admin/ProductAdminAPI';
 import AdminAddProduct from '../components/AdminAddProduct';
 
@@ -14,11 +14,10 @@ import AdminAddProduct from '../components/AdminAddProduct';
 
 const Products: React.FC = () => {
 
-    const token = localStorage.getItem('token');
-    const [listProduct, setListProduct] = useState<ProductResponse[]>([]);
+    const [listProduct, setListProduct] = useState<AdminProductResponse[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);
-    const [selectedItem, setSelectedItem] = useState<ProductResponse>();
+    const [selectedItem, setSelectedItem] = useState<AdminProductResponse>();
     const [totalElement, setTotalElement] = useState<number>(0);
     const [showProductDetail, setShowProductDetail] = useState(false);
     const [showDisInStockProduct, setShowDisInStockProduct] = useState(false);
@@ -45,7 +44,7 @@ const Products: React.FC = () => {
             try {
                 const url = `http://localhost:8080/api/admin/products/disable?productId=${selectedItem.productId}`;
                 const response = await fetch(url, {
-                    method: 'DELETE',
+                    method: 'DELETE',   
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -274,7 +273,7 @@ const Products: React.FC = () => {
                                     align='center'
                                     key="action"
                                     width={250}
-                                    render={(_, record: ProductResponse) => (
+                                    render={(_, record: AdminProductResponse) => (
                                         <div className="flex justify-center gap-3">
                                             <Button
                                                 type="primary"
@@ -321,7 +320,7 @@ const Products: React.FC = () => {
                             </Table>
                             {
                                 showProductDetail &&
-                                (<AdminProductDetail product={selectedItem} onClose={() => setShowProductDetail(false)} />)
+                                (<AdminProductDetail product={selectedItem} onClose={() => setShowProductDetail(false)} setFlag = {() => setFlag(!flag)} />)
                             }
 
                             {

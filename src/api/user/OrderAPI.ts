@@ -48,7 +48,9 @@ export const getOrders = async (userName: string, page: number, size: number,ord
             finalPrice: order.finalPrice,
             shipFee: order.shipFee,
             dateReceive: order.dateReceive,
-            dateExpected: order.dateExpected
+            dateExpected: order.dateExpected,
+            dateCancel: order.dateCancel
+            
         }));
         return {
             totalPage: data.page.totalPages,

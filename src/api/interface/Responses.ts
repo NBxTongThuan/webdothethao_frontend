@@ -92,6 +92,47 @@ export interface OrderItemResponse {
     productAttributeId: string;
 }
 
+// AdminOrderResponse
+export interface AdminOrderResponse {
+    orderId: string;
+    status: string;
+    createdDate: string;
+    toName: string;
+    toPhone: string;
+    toEmail: string;
+    totalImportPrice: number;
+    toProvince: string;
+    toDistrict: string;
+    toWard: string;
+    toAddress: string;
+    orderNote: string;
+    orderNoteCanceled: string;
+    totalPrice: number;
+    shipFee: number;
+    totalMoneyOff: number;
+    finalPrice: number;
+    dateReceive: string;
+    dateExpected: string;
+    dateCancel: string;
+}
+
+// OrderItemResponse
+export interface AdminOrderItemResponse {
+    orderItemId: string;
+    finalPrice: number;
+    originalPrice: number;
+    quantity: number;
+    reviewed: boolean;
+    moneyOffPerOneProduct: number;
+    importPrice: number;
+    orderId: string;
+    color: string;
+    size: string;
+    productName: string;
+    productId: string;
+    productAttributeId: string;
+}
+
 //PaymentResponse
 export interface PaymentResponse {
     paymentId: string;
@@ -107,6 +148,21 @@ export interface ImageResponse {
     data: string;
     url: string;
     name: string;
+}
+
+//AdminProductResponse
+export interface AdminProductResponse {
+    productId: string;
+    productName: string;
+    description: string;
+    quantitySold: number;
+    importPrice: number;
+    price: number;
+    moneyOff: number;
+    typeName: string;
+    categoryName: string;
+    brandName: string;
+    inStock: boolean;
 }
 
 //ProductResponse

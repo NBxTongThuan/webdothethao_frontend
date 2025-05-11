@@ -235,11 +235,22 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
             return;
         }
 
+        if (form.getFieldValue("importPrice") === undefined || form.getFieldValue("productPrice") === undefined) {
+            toast.error("Vui lòng nhập giá nhập và giá bán sản phẩm");
+            return;
+        }
+
+        if (form.getFieldValue("importPrice") >= form.getFieldValue("productPrice")) {
+            toast.error("Giá nhập sản phẩm không được lớn hơn giá bán sản phẩm");
+            return;
+        }
+
         const newListImage = await handleNewListImage();
         const product = {
             productName: form.getFieldValue("productName"),
             typeId: await handleGetTypeId(),
             brandId: await handleGetBrandId(),
+            importPrice: form.getFieldValue("importPrice"),
             price: form.getFieldValue("productPrice"),
             productDescription: form.getFieldValue("description"),
             listProductAttribute: listProductAttribute,
@@ -308,98 +319,111 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                                 className="mt-8"
                                 onFinish={handleSubmit}
                             >
-                                <div className="grid grid-cols-2 gap-8">
-                                    <div className="space-y-6">
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Danh mục</span>}
-                                            name="categoryName"
-                                            rules={[{ required: true, message: 'Vui lòng chọn danh mục' }]}
-                                        >
-                                            <Select
-                                                placeholder="Chọn danh mục"
-                                                className="rounded-lg w-full"
-                                                onChange={(value) => handleGetListType(value)}
+                                <div className="space-y-6">
+                                    <div className="grid grid-cols-2 gap-8">
+                                        <div className="space-y-6">
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Danh mục</span>}
+                                                name="categoryName"
+                                                rules={[{ required: true, message: 'Vui lòng chọn danh mục' }]}
                                             >
-                                                {listCategory.map((category) => (
-                                                    <Select.Option key={category.categoriesId} value={category.categoriesName}>
-                                                        {category.categoriesName}
-                                                    </Select.Option>
-                                                ))}
-                                            </Select>
-                                        </Form.Item>
+                                                <Select
+                                                    placeholder="Chọn danh mục"
+                                                    className="rounded-lg w-full"
+                                                    onChange={(value) => handleGetListType(value)}
+                                                >
+                                                    {listCategory.map((category) => (
+                                                        <Select.Option key={category.categoriesId} value={category.categoriesName}>
+                                                            {category.categoriesName}
+                                                        </Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
 
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><List className="h-4 w-4" /> Loại sản phẩm</span>}
-                                            name="typeName"
-                                            rules={[{ required: true, message: 'Vui lòng chọn loại' }]}
-                                        >
-                                            <Select placeholder="Chọn loại" className="rounded-lg w-full" onChange={() => {
-                                                form.resetFields(["productName"]);
-                                                setErrorProductName("");
-                                            }}>
-                                                {listType.map((type) => (
-                                                    <Select.Option key={type.typeName} value={type.typeName}>{type.typeName}</Select.Option>
-                                                ))}
-                                            </Select>
-                                        </Form.Item>
-
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Tag className="h-4 w-4" /> Tên sản phẩm</span>}
-                                            name="productName"
-                                            rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
-                                        >
-                                            <Input
-                                                placeholder="Nhập tên sản phẩm"
-                                                className="rounded-lg"
-                                                onChange={(e) => {
-                                                    form.setFieldsValue({
-                                                        productName: e.target.value,
-                                                    });
-                                                    checkExistsProduct();
-                                                }}
-                                            />
-                                            {errorProductName && <p className="text-red-500 text-sm">{errorProductName}</p>}
-                                        </Form.Item>
-                                    </div>
-
-                                    <div className="space-y-6">
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Giá sản phẩm</span>}
-                                            name="productPrice"
-                                            rules={[{ required: true, message: 'Vui lòng nhập giá sản phẩm' }]}
-                                        >
-                                            <Input type='number' placeholder="Nhập giá sản phẩm" className="rounded-lg" />
-                                        </Form.Item>
-
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Building className="h-4 w-4" /> Thương hiệu</span>}
-                                            name="brandName"
-                                            rules={[{ required: true, message: 'Vui lòng chọn thương hiệu' }]}
-                                        >
-                                            <Select
-                                                placeholder="Chọn thương hiệu"
-                                                className="rounded-lg w-full"
-                                                onChange={() => {
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><List className="h-4 w-4" /> Loại sản phẩm</span>}
+                                                name="typeName"
+                                                rules={[{ required: true, message: 'Vui lòng chọn loại' }]}
+                                            >
+                                                <Select placeholder="Chọn loại" className="rounded-lg w-full" onChange={() => {
                                                     form.resetFields(["productName"]);
                                                     setErrorProductName("");
-                                                }}
+                                                }}>
+                                                    {listType.map((type) => (
+                                                        <Select.Option key={type.typeName} value={type.typeName}>{type.typeName}</Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Tag className="h-4 w-4" /> Tên sản phẩm</span>}
+                                                name="productName"
+                                                rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm' }]}
                                             >
-                                                {listBrand.map((brand) => (
-                                                    <Select.Option key={brand.brandName} value={brand.brandName}>{brand.brandName}</Select.Option>
-                                                ))}
-                                            </Select>
-                                        </Form.Item>
+                                                <Input
+                                                    placeholder="Nhập tên sản phẩm"
+                                                    className="rounded-lg"
+                                                    onChange={(e) => {
+                                                        form.setFieldsValue({
+                                                            productName: e.target.value,
+                                                        });
+                                                        checkExistsProduct();
+                                                    }}
+                                                />
+                                                {errorProductName && <p className="text-red-500 text-sm">{errorProductName}</p>}
+                                            </Form.Item>
+                                        </div>
 
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả sản phẩm</span>}
-                                            name="description"
-                                            rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
-                                        >
-                                            <Input.TextArea placeholder="Nhập mô tả chi tiết về sản phẩm" className="rounded-lg" rows={4} />
-                                        </Form.Item>
+                                        <div className="space-y-6">
+
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Giá nhập sản phẩm</span>}
+                                                name="importPrice"
+                                                rules={[{ required: true, message: 'Vui lòng nhập giá nhập sản phẩm' }]}
+                                            >
+                                                <Input type='number' placeholder="Nhập giá nhập sản phẩm" className="rounded-lg" />
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Giá sản phẩm</span>}
+                                                name="productPrice"
+                                                rules={[{ required: true, message: 'Vui lòng nhập giá bán sản phẩm' }]}
+                                            >
+                                                <Input type='number' placeholder="Nhập giá sản phẩm" className="rounded-lg" />
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Building className="h-4 w-4" /> Thương hiệu</span>}
+                                                name="brandName"
+                                                rules={[{ required: true, message: 'Vui lòng chọn thương hiệu' }]}
+                                            >
+                                                <Select
+                                                    placeholder="Chọn thương hiệu"
+                                                    className="rounded-lg w-full"
+                                                    onChange={() => {
+                                                        form.resetFields(["productName"]);
+                                                        setErrorProductName("");
+                                                    }}
+                                                >
+                                                    {listBrand.map((brand) => (
+                                                        <Select.Option key={brand.brandName} value={brand.brandName}>{brand.brandName}</Select.Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+
+
+                                        </div>
+
                                     </div>
-                                </div>
 
+                                    <Form.Item
+                                        label={<span className="font-medium text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả sản phẩm</span>}
+                                        name="description"
+                                        rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
+                                    >
+                                        <Input.TextArea placeholder="Nhập mô tả chi tiết về sản phẩm" className="rounded-lg" rows={4} />
+                                    </Form.Item>
+                                </div>
                                 <div className="mt-8 space-y-6">
                                     <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                                         <Image className="h-5 w-5 text-blue-600" />

@@ -46,10 +46,6 @@ const Register: React.FC = () => {
                     body: JSON.stringify(data)
                 });
 
-               
-
-                console.log(response.ok);
-
                 if (response.ok) {
                     toast.success("Đăng ký thành công, vui lòng kiểm tra email của bạn để kích hoạt tài khoản");
                 } else {
@@ -67,13 +63,11 @@ const Register: React.FC = () => {
 
     //HANDLE USERNAME
     const checkUserNameExist = async (userName: string) => {
-        const url = `http://localhost:8080/api/users/checkExistsByUserName?userName=${userName}`;
+        const url = `http://localhost:8080/api/users/check-exists-by-user-name?userName=${userName}`;
 
         try {
             const response = await fetch(url);
             const data = await response.json();
-            console.log(data);
-
             if (data) {
                 setErrorUserName('Tên đăng nhập đã tồn tại');
                 return true;
@@ -97,13 +91,11 @@ const Register: React.FC = () => {
     //HANDLE EMAIL
 
     const checkEmailExist = async (email: string) => {
-        const url = `http://localhost:8080/api/users/checkExistsByEmail?email=${email}`;
+        const url = `http://localhost:8080/api/users/check-exists-by-email?email=${email}`;
 
         try {
             const response = await fetch(url);
             const data = await response.json();
-            console.log(data);
-
             if (data) {
                 setErrorEmail('Email đã tồn tại');
                 return true;

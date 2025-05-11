@@ -1,12 +1,12 @@
 import { promises } from "dns";
-import { OrderResponse, RevenueResponse } from "../interface/Responses";
+import { RevenueResponse, AdminOrderResponse } from "../interface/Responses";
 
 
 const API_URL = 'http://localhost:8080/api/admin/orders';
 
 interface responseData{
     totalPage: number;
-    listOrder: OrderResponse[],
+    listOrder: AdminOrderResponse[],
     totalSize:number
 }
 
@@ -34,7 +34,7 @@ export const getAllOrders = async (page:number,size:number,orderStatus: string):
             };
         }
 
-        const orders: OrderResponse[] = listOrder.map((order: OrderResponse) => ({
+        const orders: AdminOrderResponse[] = listOrder.map((order: AdminOrderResponse) => ({
             orderId: order.orderId,
             status: order.status,
             createdDate: order.createdDate,
@@ -50,7 +50,9 @@ export const getAllOrders = async (page:number,size:number,orderStatus: string):
             totalPrice: order.totalPrice,
             shipFee: order.shipFee,
             dateReceive: order.dateReceive,
-            dateExpected: order.dateExpected
+            dateExpected: order.dateExpected,
+            dateCancel: order.dateCancel,
+            totalImportPrice: order.totalImportPrice
         }));
         return {
             totalPage: data.page.totalPages,
@@ -146,7 +148,7 @@ export const getNewOrder = async (page:number,size:number): Promise<responseData
             totalSize: 0
         };
     }
-    const orders: OrderResponse[] = listOrder.map((order: OrderResponse) => ({
+    const orders: AdminOrderResponse[] = listOrder.map((order: AdminOrderResponse) => ({
         orderId: order.orderId,
         status: order.status,
         createdDate: order.createdDate,
@@ -162,7 +164,9 @@ export const getNewOrder = async (page:number,size:number): Promise<responseData
         totalPrice: order.totalPrice,
         shipFee: order.shipFee,
         dateReceive: order.dateReceive,
-        dateExpected: order.dateExpected
+        dateExpected: order.dateExpected,
+        dateCancel: order.dateCancel,
+        totalImportPrice: order.totalImportPrice
     }));
     return {
         totalPage: data.page.totalPages,
@@ -172,7 +176,7 @@ export const getNewOrder = async (page:number,size:number): Promise<responseData
 }
 
 
-export const getOrderAdminById = async (orderId: string): Promise<OrderResponse> => {
+export const getOrderAdminById = async (orderId: string): Promise<AdminOrderResponse> => {
     try {
         const response = await fetch(`${API_URL}/get-by-id?orderId=${orderId}`,
             {
@@ -203,7 +207,8 @@ export const getOrderAdminById = async (orderId: string): Promise<OrderResponse>
             shipFee: data.shipFee,
             dateReceive: data.dateReceive,
             dateExpected: data.dateExpected,
-            dateCancel:data.dateCancel
+            dateCancel:data.dateCancel,
+            totalImportPrice: data.totalImportPrice
         });
     } catch (error) {
         console.error('Error fetching order:', error);

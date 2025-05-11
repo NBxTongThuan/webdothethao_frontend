@@ -1,10 +1,10 @@
-import { ProductResponse } from "../interface/Responses";
+import {  AdminProductResponse, ProductResponse } from "../interface/Responses";
 
 const url = "http://localhost:8080/api/admin/products";
 
 interface responseData {
     totalPage: number;
-    listProduct: ProductResponse[],
+    listProduct: AdminProductResponse[],
     totalSize: number
 }
 
@@ -33,11 +33,12 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
                 totalSize: 0
             };
         }
-        const products: ProductResponse[] = listProduct.map((product: ProductResponse) => ({
+        const products: AdminProductResponse[] = listProduct.map((product: AdminProductResponse) => ({
             productId: product.productId,
             productName: product.productName,
             description: product.description,
             quantitySold: product.quantitySold,
+            importPrice: product.importPrice,
             price: product.price,
             moneyOff: product.moneyOff,
             typeName: product.typeName,
@@ -53,6 +54,49 @@ export const getAllProduct = async (page: number, size: number): Promise<respons
 
     } catch (error) {
         console.error('Error fetching orders:', error);
+        throw error;
+    }
+
+}
+
+
+export const getByProductId = async (productId: string): Promise<AdminProductResponse> => {
+
+    try {
+        const response = await fetch(`${url}/get-by-id?productId=${productId}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+
+        const product = data;
+
+    
+        const productResponse: AdminProductResponse = {
+            productId: product.productId,
+            productName: product.productName,
+            description: product.description,
+            quantitySold: product.quantitySold,
+            importPrice: product.importPrice,
+            price: product.price,
+            moneyOff: product.moneyOff,
+            typeName: product.typeName,
+            categoryName: product.categoryName,
+            brandName: product.brandName,
+            inStock: product.inStock
+        }
+        return productResponse;
+
+
+    } catch (error) {
+        console.error('Error fetching product:', error);
         throw error;
     }
 
@@ -97,11 +141,12 @@ export const getDiscountingProduct = async (page: number, size: number): Promise
                 totalSize: 0
             };
         }
-        const products: ProductResponse[] = listProduct.map((product: ProductResponse) => ({
+        const products: AdminProductResponse[] = listProduct.map((product: AdminProductResponse) => ({
             productId: product.productId,
             productName: product.productName,
             description: product.description,
             quantitySold: product.quantitySold,
+            importPrice: product.importPrice,
             price: product.price,
             moneyOff: product.moneyOff,
             typeName: product.typeName,
@@ -147,11 +192,12 @@ export const getInStockProduct = async (page: number, size: number): Promise<res
                 totalSize: 0
             };
         }
-        const products: ProductResponse[] = listProduct.map((product: ProductResponse) => ({
+        const products: AdminProductResponse[] = listProduct.map((product: AdminProductResponse) => ({
             productId: product.productId,
             productName: product.productName,
             description: product.description,
             quantitySold: product.quantitySold,
+            importPrice: product.importPrice,
             price: product.price,
             moneyOff: product.moneyOff,
             typeName: product.typeName,

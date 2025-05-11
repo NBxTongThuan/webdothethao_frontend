@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, Tag, ConfigProvider, Descriptions, Modal, Select, Form, Input } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ImageResponse, ProductAttributeResponse, ProductResponse, CategoryResponse } from '../../../api/interface/Responses';
+import { ImageResponse, ProductAttributeResponse, CategoryResponse, AdminProductResponse } from '../../../api/interface/Responses';
 import { getAllProductAttributeByProductId } from '../../../api/admin/AdminProductAttributeAPI';
 import { toast } from "react-toastify";
-import { X, ArrowLeft, Edit, Trash2, CheckCircle, Package, Tag as LucideTag, Folder, List, ShoppingCart, CircleDot, FileText, Hash, Building, Plus, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { X, ArrowLeft, Edit, Trash2, CheckCircle, Package, Tag as LucideTag, Folder, List, ShoppingCart, CircleDot, FileText, Hash, Building, Plus, AlertTriangle, CheckCircle2, DollarSign } from 'lucide-react';
 import EditProduct from './EditProduct';
 
 import EditProductAttribute from './EditProductAttribute';
 import { getCategoryByName } from '../../../api/admin/CategoryAPI';
 import { getAllImage } from '../../../api/admin/AdminImagesAPI';
+import { getByProductId } from '../../../api/admin/ProductAdminAPI';
 const { Column } = Table;
 const { Item } = Descriptions;
 
 interface ModalProps {
-    product: ProductResponse | undefined;
+    product: AdminProductResponse | undefined;
     onClose: () => void;
+    setFlag: () => void;
 }
 
 const AdminProductDetail: React.FC<ModalProps> = (props) => {
 
     const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeResponse[]>([]);
+
+    const [product, setProduct] = useState<AdminProductResponse>();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [size, setSize] = useState<number>(8);
@@ -41,10 +45,6 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     const [listImage, setListImage] = useState<ImageResponse[]>([]);
 
     const handleAddAttribute = async () => {
-
-        console.log(color);
-        console.log(attributeSize);
-        console.log(quantity);
 
         if (color === "" || attributeSize === "" || quantity === 0) {
             toast.error("Vui lòng nhập đầy đủ thông tin");
@@ -166,6 +166,12 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
     }
 
     useEffect(() => {
+        getByProductId(props.product?.productId + "").then((response: AdminProductResponse) => {
+            setProduct(response);
+        });
+    }, [props.product, flag]);
+
+    useEffect(() => {
         getAllImage(props.product?.productId + "")
             .then((response: ImageResponse[]) => {
                 setListImage(response);
@@ -173,7 +179,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
             .catch((error: any) => {
                 toast.error("Không lấy được danh sách ảnh!");
             });
-    }, [props.product]);
+    }, [props.product, flag]);
 
     useEffect(
         () => {
@@ -286,33 +292,37 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     className="bg-white rounded-lg overflow-hidden"
                                 >
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Hash className="h-4 w-4" /> Mã sản phẩm</span>}>
-                                        <span className="font-mono text-gray-700 text-base px-3 py-1 bg-gray-100 rounded-full">{props.product?.productId}</span>
+                                        <span className="font-mono text-gray-700 text-base px-3 py-1 bg-gray-100 rounded-full">{product?.productId}</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Tag className="h-4 w-4" /> Tên sản phẩm</span>}>
-                                        <span className="text-gray-800 text-base font-medium">{props.product?.productName}</span>
+                                        <span className="text-gray-800 text-base font-medium">{product?.productName}</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Danh mục</span>}>
-                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.categoryName}</span>
+                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{product?.categoryName}</span>
                                     </Item>
-                                    <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Giá bán</span>}>
-                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.price?.toLocaleString('vi-VN')} VNĐ</span>
+                                    <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Giá nhập</span>}>
+                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{product?.importPrice?.toLocaleString('vi-VN')} VNĐ</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><List className="h-4 w-4" /> Loại</span>}>
-                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.typeName}</span>
+                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{product?.typeName}</span>
                                     </Item>
+                                    <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Folder className="h-4 w-4" /> Giá bán</span>}>
+                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{product?.price?.toLocaleString('vi-VN')} VNĐ</span>
+                                    </Item>
+
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><Building className="h-4 w-4" /> Hãng</span>}>
-                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{props.product?.brandName}</span>
+                                        <span className="text-gray-700 text-base px-3 py-1 bg-blue-50 text-blue-700 rounded-full">{product?.brandName}</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><ShoppingCart className="h-4 w-4" /> Số lượng bán</span>}>
-                                        <span className="text-blue-600 font-medium text-base">{props.product?.quantitySold?.toLocaleString('vi-VN')}</span>
+                                        <span className="text-blue-600 font-medium text-base">{product?.quantitySold?.toLocaleString('vi-VN')}</span>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><CircleDot className="h-4 w-4" /> Trạng thái</span>}>
-                                        <Tag color={props.product?.inStock ? 'success' : 'error'} className="px-3 py-1 rounded-full">
-                                            {props.product?.inStock ? "Đang bán" : "Ngưng bán"}
+                                        <Tag color={product?.inStock ? 'success' : 'error'} className="px-3 py-1 rounded-full">
+                                            {product?.inStock ? "Đang bán" : "Ngưng bán"}
                                         </Tag>
                                     </Item>
                                     <Item label={<span className="font-bold text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả</span>} span={2}>
-                                        <p className="text-gray-600 whitespace-pre-wrap text-base bg-gray-50 p-4 rounded-lg">{props.product?.description}</p>
+                                        <p className="text-gray-600 whitespace-pre-wrap text-base bg-gray-50 p-4 rounded-lg">{product?.description}</p>
                                     </Item>
                                 </Descriptions>
                             </div>
@@ -345,8 +355,9 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                 </Button>
                                 {showEditProductModal && (
                                     <EditProduct
-                                        product={props.product}
+                                        product={product}
                                         onClose={() => setShowEditProductModal(false)}
+                                        setFlag={() => {setFlag(!flag);}}
                                     />
                                 )}
                             </div>
@@ -586,7 +597,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     onClose={() => {
                                         setShowEditProductAttributeModal(false);
                                     }}
-                                    setFlag={() => setFlag(!flag)}
+                                    setFlag={() => {setFlag(!flag);}}
                                 />
                             )}
                         </div>
