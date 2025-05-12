@@ -6,24 +6,25 @@ import CartItemProp from "./CartItemProp";
 import NumberFormat from "../../../util/NumberFormat";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../../../util/AuthContext";
 
 const Cart: React.FC = () => {
-    const { cartID } = useParams();
+    const { user } = useAuth();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const [flag, setFlag] = useState(false);
 
     useEffect(() => {
-        getListCartItemByCartID(cartID + "")
+        getListCartItemByCartID()
             .then((cartItems) => {
                 setListCartItem(cartItems);
             })
             .catch((error) => {
                 console.error('Error fetching cart items:', error);
             });
-    }, [cartID, flag]);
+    }, [flag]);
 
     const deleteCartItem = async (cartItemId: string) => {
-        const url = `http://localhost:8080/api/cart/delete-cart-item?cartItemID=${cartItemId}`;
+        const url = `http://localhost:8080/api/cart/delete-cart-item?cartItemId=${cartItemId}`;
         const response = await fetch(url, {
             method: 'DELETE',
             headers: {
@@ -73,8 +74,8 @@ const Cart: React.FC = () => {
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">Giỏ hàng của bạn</h1>
-                        {cartID && (
-                            <p className="mt-1 text-sm text-gray-500">Mã giỏ hàng: #{cartID}</p>
+                        {user?.cartId && (
+                            <p className="mt-1 text-sm text-gray-500">Mã giỏ hàng: #{user?.cartId}</p>
                         )}
                     </div>
                     <Link to="/shop" className="inline-flex items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200">
@@ -83,7 +84,7 @@ const Cart: React.FC = () => {
                     </Link>
                 </div>
 
-                {!cartID ? (
+                {!user?.cartId ? (
                     <div className="text-center py-16">
                         <div className="rounded-full bg-gray-100 w-16 h-16 flex items-center justify-center mx-auto mb-4">
                             <i className="fas fa-shopping-cart text-2xl text-gray-400"></i>
@@ -120,7 +121,7 @@ const Cart: React.FC = () => {
                                         {NumberFormat(getProvisionalPrice() + 30000)} VNĐ
                                     </span>
                                 </div>
-                                <Link to={`/checkOut/${cartID}`} className="w-full mt-6 bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2 font-medium">
+                                <Link to={`/checkOut/${user?.cartId}`} className="w-full mt-6 bg-red-500 text-white py-4 px-6 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center justify-center space-x-2 font-medium">
                                     <i className="fas"></i>
                                     <span>Đặt hàng</span>
                                 </Link>

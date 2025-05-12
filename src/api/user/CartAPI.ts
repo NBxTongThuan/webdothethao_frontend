@@ -1,8 +1,8 @@
 import { CartItemModel } from "../../model/CartItemModel";
 import requestAPI from "./RequestApi";
 
-export async function getListCartItemByCartID(cartID: string): Promise<CartItemModel[]> {
-    const link: string = `http://localhost:8080/api/cart/get-list?cartId=${cartID}`;
+export async function getListCartItemByCartID(): Promise<CartItemModel[]> {
+    const link: string = `http://localhost:8080/api/cart/get-list`;
 
     const response = await requestAPI(link,true);
 

@@ -9,25 +9,14 @@ import { District, MyAddressResponse, Province, Ward } from '../../../api/interf
 import { getAddress } from '../../../api/user/MyAddressAPI';
 import { Form, Input, Radio, Select } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { CreditCard, Wallet, User, Phone, MapPin, Building2, Home, MessageSquare, Wallpaper } from 'lucide-react';
+import { CreditCard, Wallet, User, Phone, MapPin, Building2, Home, MessageSquare } from 'lucide-react';
 const { Option } = Select;
-interface FormData {
-    fullName: string;
-    phone: string;
-    toProvince: string;
-    toDistrict: string;
-    toWard: string;
-    address: string;
-    note: string;
-    paymentMethod: string;
-}
 
 
 const Checkout: React.FC = () => {
 
     const [form] = Form.useForm();
     const [listMyAddress, setListMyAddress] = useState<MyAddressResponse[]>([]);
-    const { cartID } = useParams();
     const [listCartItem, setListCartItem] = useState<CartItemModel[]>([]);
     const navigate = useNavigate();
     const [selectedAddress, setSelectedAddress] = useState<MyAddressResponse | null>(null);
@@ -47,7 +36,7 @@ const Checkout: React.FC = () => {
         , []);
 
     useEffect(() => {
-        getListCartItemByCartID(cartID + "")
+        getListCartItemByCartID()
             .then((cartItems) => {
                 setListCartItem(cartItems);
             })
@@ -55,7 +44,7 @@ const Checkout: React.FC = () => {
                 console.error('Error fetching cart items:', error);
             }
             );
-    }, [cartID]);
+    }, []);
 
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
@@ -63,15 +52,7 @@ const Checkout: React.FC = () => {
     const [selectedProvince, setSelectedProvince] = useState<string>('');
     const [selectedDistrict, setSelectedDistrict] = useState<string>('');
 
-    const handleProvinceCode = (provinceName: string) => {
-        const province = provinces.find(p => p.ProvinceName == provinceName + "");
-        return province ? province.ProvinceCode : '';
-    }
 
-    const handleDistrictCode = (districtCode: string) => {
-        const district = districts.find(d => d.DistrictCode == districtCode);
-        return district ? district.DistrictCode : '';
-    }
 
     useEffect(() => {
         // Load provinces when component mounts
