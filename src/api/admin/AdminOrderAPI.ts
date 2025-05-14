@@ -1,5 +1,5 @@
 import { promises } from "dns";
-import { RevenueResponse, AdminOrderResponse } from "../interface/Responses";
+import { RevenueResponse, AdminOrderResponse, InterestResponse } from "../interface/Responses";
 
 
 const API_URL = 'http://localhost:8080/api/admin/orders';
@@ -131,6 +131,32 @@ export const getRevenueByDate = async (startDate: string, endDate: string): Prom
         throw error;
     }
 }
+
+
+export const getInterestByDate = async (startDate: string, endDate: string): Promise<InterestResponse[]> => {
+    try {
+        const response = await fetch(`${API_URL}/interest-by-date?start=${startDate}&end=${endDate}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+        const data = await response.json();
+        const listRevenue = data;
+        if(!listRevenue || listRevenue.length === 0){
+            return [];
+        }
+        const revenue: InterestResponse[] = listRevenue.map((revenue: InterestResponse) => ({
+            total: revenue.total,
+            date: revenue.date
+        }));
+        return revenue;
+    } catch (error) {
+        console.error('Error fetching interest by date:', error);
+        throw error;
+    }
+}
+
 
 export const getNewOrder = async (page:number,size:number): Promise<responseData> => {
     const response = await fetch(`${API_URL}/new?page=${page}&size=${size}`,

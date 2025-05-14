@@ -1,3 +1,11 @@
+export interface ChatMessageResponse {
+    sender: string;
+    receiver: string;
+    content: string;
+    createdAt: string;
+}
+
+
 //MyAddressResponse
 export interface MyAddressResponse{
 
@@ -42,6 +50,12 @@ export interface UserResponse {
 
 //RevenueResponse
 export interface RevenueResponse {
+    date: string;
+    total: number;
+}
+
+//InterestResponse
+export interface InterestResponse {
     date: string;
     total: number;
 }

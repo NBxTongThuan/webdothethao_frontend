@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useChatSocket from "../../hook/ChatBoxContext";
-
+import { getChatMessage } from "../../api/ChatMessageAPI";
 interface ChatMessage {
   sender: string;
   content: string;
@@ -10,28 +10,22 @@ interface ChatMessage {
 export default function ChatBox() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMsg, setNewMsg] = useState("");
+  const [totalPage, setTotalPage] = useState(0);
+  const [totalSize, setTotalSize] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [flag, setFlag] = useState(false);
 
   const { sendMessage } = useChatSocket((msg: ChatMessage) => {
     setMessages((prev) => [...prev, msg]);
   });
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/chat/history", {
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setMessages(data);
-        } else {
-          setMessages([]);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching chat history:", error);
-        setMessages([]);
-      });
-  }, []);
+    getChatMessage(currentPage-1, 10).then((data) => {
+      setMessages(data.listMessage);
+      setTotalPage(data.totalPage);
+      setTotalSize(data.totalSize);
+    });
+  }, [currentPage, flag]);
 
   const handleSend = () => {
     if (newMsg.trim()) {
@@ -58,7 +52,12 @@ export default function ChatBox() {
           placeholder="Nhập tin nhắn..."
         />
         <button
-          onClick={handleSend}
+          onClick={
+          () =>{
+            handleSend();
+            setFlag(!flag);
+          }
+          }
           className="bg-blue-500 text-white px-3 py-1 rounded"
         >
           Gửi

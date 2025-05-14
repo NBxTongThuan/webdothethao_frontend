@@ -12,8 +12,8 @@ import {
     Legend
 } from 'chart.js';
 import { getUserStats } from '../../../api/admin/UserAdminAPI';
-import { UserStatsResponse, RevenueResponse, NotificationResponse, OrderResponse } from '../../../api/interface/Responses';
-import { getOrderStats, getRevenueOfMonth, getRevenueByDate, getNewOrder } from '../../../api/admin/AdminOrderAPI';
+import { UserStatsResponse, RevenueResponse, NotificationResponse, OrderResponse, InterestResponse } from '../../../api/interface/Responses';
+import { getOrderStats, getRevenueOfMonth, getRevenueByDate, getNewOrder, getInterestByDate } from '../../../api/admin/AdminOrderAPI';
 import NumberFormat from '../../../util/NumberFormat';
 import { getCountIsInStockProduct } from '../../../api/admin/ProductAdminAPI';
 import { Button, DatePicker, Pagination, Popover, Table } from 'antd';
@@ -24,6 +24,7 @@ import Column from 'antd/es/table/Column';
 import OrderDetailAdmin from '../components/OrderDetailAdmin';
 import { Link } from 'react-router-dom';
 import Notifications from './Notifications';
+import ChatBox from '../../component/ChatBox';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -37,15 +38,16 @@ ChartJS.register(
 const Dashboard: React.FC = () => {
 
     const [data, setData] = useState<RevenueResponse[]>([]);
+    const [data2, setData2] = useState<RevenueResponse[]>([]);
 
     const formatDate = (dateStr: string) => {
         return format(new Date(dateStr), 'dd/MM/yyyy');
     };
 
     const labels = data.map((item: RevenueResponse) => formatDate(item.date)); // ví dụ: '21/04'
-    const values = data.map((item: RevenueResponse) => (item.total / 1_000_000).toFixed(2)); // triệu VNĐ
+    const values = data.map((item: RevenueResponse) => (item.total).toFixed(2)); // triệu VNĐ
+    const values2 = data2.map((item: InterestResponse) => (item.total).toFixed(2)); // triệu VNĐ
     const [listNotification, setListNotification] = useState<NotificationResponse[]>([]);
-    const [totalNotificationPage, setTotalNotificationPage] = useState<number>(0);
     const [totalNotificationSize, setTotalNotificationSize] = useState<number>(0);
     const [currentNotificationPage, setCurrentNotificationPage] = useState<number>(1);
     const [startDate, setStartDate] = useState<string>(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
@@ -106,7 +108,6 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         getUnReadNotifications(currentNotificationPage - 1, 5).then(response => {
             setListNotification(response.listNotification);
-            setTotalNotificationPage(response.totalPage);
             setTotalNotificationSize(response.totalSize);
         });
     }, [currentNotificationPage, notificationFlag]);
@@ -123,17 +124,35 @@ const Dashboard: React.FC = () => {
 
     }, [startDate, endDate, flag]);
 
+    useEffect(() => {
+        if (startDate && endDate) {
+            getInterestByDate(startDate, endDate).then(
+                (data) => {
+                    setData2(data);
+                }
+            );
+        }
+    }, [startDate, endDate, flag]);
+
     const revenueData = {
         labels: labels,
         datasets: [
             {
-                label: 'Doanh thu (triệu VNĐ)',
-                data: values,
+                label: 'Doanh thu (VNĐ)',
+                data: values.map(v => String(v)),
                 borderColor: 'rgb(59, 130, 246)',
                 backgroundColor: 'rgba(59, 130, 246, 0.5)',
                 tension: 0.4,
                 fill: true,
             },
+            {
+                label: 'Tiền lãi (VNĐ)',
+                data: values2.map(v => String(v)),
+                borderColor: 'rgb(206, 24, 24)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                tension: 0.4,
+                fill: true,
+            }
         ],
     };
 
@@ -305,7 +324,9 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div className="h-80">
 
-                            {data.length > 0 ? <Line
+                            {data.length > 0 ? 
+                                
+                                <Line
                                 data={revenueData}
                                 options={{
                                     responsive: true,
@@ -329,7 +350,9 @@ const Dashboard: React.FC = () => {
                                         },
                                     },
                                 }}
-                            /> : <div className="flex items-center justify-center h-full">
+                            />
+
+                                 : <div className="flex items-center justify-center h-full">
                                 <p className="text-gray-500">Không có dữ liệu</p>
                             </div>}
                         </div>
@@ -471,6 +494,7 @@ const Dashboard: React.FC = () => {
                         }
                     </div>
                 </div>
+                {/* <ChatBox /> */}
             </div>
         </AdminLayout>
     );

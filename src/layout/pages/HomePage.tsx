@@ -102,7 +102,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             </section>
-            <ChatBox />
+            {/* <ChatBox /> */}
         </div>
     );
 }
