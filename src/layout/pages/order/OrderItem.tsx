@@ -8,15 +8,15 @@ interface OrderItemProps {
 }
 
 const OrderItem: React.FC<OrderItemProps> = ({ cartItem }) => {
-    const [imageData, setImageData] = useState<string>("");
+    const [imageUrl, setImageUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         get1Image(cartItem.productId)
             .then((image) => {
-                if (image && image.data) {
-                    setImageData(image.data.toString());
+                if (image && image.url) {
+                    setImageUrl(image.url);
                 }
             })
             .catch((error) => {
@@ -37,7 +37,7 @@ const OrderItem: React.FC<OrderItemProps> = ({ cartItem }) => {
                         </div>
                     ) : (
                         <img
-                            src={imageData || "/images/no-image.png"}
+                            src={imageUrl || "/images/no-image.png"}
                             alt={cartItem.productName}
                             className="w-full h-full object-cover rounded-lg"
                         />

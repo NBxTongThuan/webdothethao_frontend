@@ -130,9 +130,8 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                 updatedList.push({
                     imageId: "",
                     name: file.name,
-                    data: base64 || "",
-                    url: ""
-
+                    data: "",
+                    url: "/images/product_image/"+file.name
                 });
             }
         }

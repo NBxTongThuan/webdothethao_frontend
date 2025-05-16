@@ -1,4 +1,6 @@
+import UserDetailModel from "../../model/UserDetailModel";
 import { UserResponse, UserStatsResponse } from "../interface/Responses";
+import requestAPI from "../user/RequestApi";
 
 const url = "http://localhost:8080/api/admin/users";
 
@@ -60,5 +62,29 @@ export const getUserList = async (page: number, size: number): Promise<responseD
         listUser: list,
         totalSize: data.page.totalElements
     };
+}
+
+
+export async function adminGetUserDetail(userName: string): Promise<UserDetailModel> {
+    const link: string = `http://localhost:8080/api/admin/user-detail/get-by-name?userName=${userName}`;
+
+    const response = await requestAPI(link,true);
+
+    const responseDATA = response;
+
+    const userDetail: UserDetailModel = new UserDetailModel(
+        responseDATA.userDetailId,
+        responseDATA.firstName,
+        responseDATA.lastName,
+        responseDATA.gender,
+        responseDATA.dateOfBirth,
+        responseDATA.phoneNumber,
+        responseDATA.province,
+        responseDATA.district,
+        responseDATA.ward,
+        responseDATA.address
+    );      
+
+    return userDetail;
 }
 

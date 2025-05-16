@@ -334,7 +334,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                     {listImage.length > 0 ? listImage.map((image: ImageResponse, index: number) => (
                                         <div key={index} className="relative group">
                                             <img
-                                                src={image.data}
+                                                src={image.url}
                                                 alt={`Ảnh sản phẩm ${index + 1}`}
                                                 className="w-full h-64 object-cover rounded-lg shadow-md transition-transform duration-300 group-hover:scale-105"
                                             />

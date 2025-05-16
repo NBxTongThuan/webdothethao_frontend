@@ -64,12 +64,12 @@ const OrderDetail:React.FC = () => {
         const fetchImages = async () => {
             const imagePromises = orderItems.map(item =>
                 get1Image(item.productId)
-                    .then(image => ({ id: item.productId, data: image?.data?.toString() || '' }))
-                    .catch(() => ({ id: item.productId, data: '' }))
+                    .then(image => ({ id: item.productId, url: image?.url || '' }))
+                    .catch(() => ({ id: item.productId, url: '' }))
             );
             const images = await Promise.all(imagePromises);
             const imageMap = images.reduce((acc, curr) => {
-                acc[curr.id] = curr.data;
+                acc[curr.id] = curr.url;
                 return acc;
             }, {} as { [key: string]: string });
             setItemImages(imageMap);

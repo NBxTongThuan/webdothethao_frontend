@@ -15,7 +15,7 @@ interface CartItemPropInterface {
 }
 
 const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
-    const [imageData, setImageData] = useState<string>("");
+    const [imageUrl, setImageUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState(true);
     const [product, setProduct] = useState<ProductModel>();
 
@@ -33,8 +33,8 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
     useEffect(() => {
         get1Image(prop.cartItem.productId.toString())
             .then((image) => {
-                if (image && image.data) {
-                    setImageData(image.data.toString());
+                if (image && image.url) {
+                    setImageUrl(image.url);
                 }
             })
             .catch((error) => {
@@ -118,7 +118,7 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                         ) : (
                             <Link to={`/productdetail/${prop.cartItem.productId}`}>
                                 <img
-                                    src={imageData || "/images/no-image.png"}
+                                    src={imageUrl || "/images/no-image.png"}
                                     alt={prop.cartItem.productName}
                                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                                 />
@@ -132,9 +132,9 @@ const CartItemProp: React.FC<CartItemPropInterface> = (prop) => {
                             <h2 className="text-xl font-bold text-gray-800 mb-1 hover:text-red-500 transition-colors duration-200">
                                 {prop.cartItem.productName}
                             </h2>
-                            <p className="text-gray-600 line-clamp-2">
+                            {/* <p className="text-gray-600 line-clamp-2">
                                 {prop.cartItem.productDescription}
-                            </p>
+                            </p> */}
 
                             <div className="flex items-center space-x-4 mt-2">
                                 <div className="flex items-center space-x-2">

@@ -24,8 +24,8 @@ async function getProduct(endpoint: string): Promise<ProductsAPIInterface>  {
 
     const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
         product_id: item.productId,
-        description: item.productName,
-        product_name: item.description,
+        description: item.description,
+        product_name: item.productName,
         moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
@@ -44,8 +44,8 @@ export async function get1Product(productId: string): Promise<ProductModel>  {
 
     return ({
         product_id: responseDATA.productId,
-        description: responseDATA.productName,
-        product_name: responseDATA.description,
+        description: responseDATA.description,
+        product_name: responseDATA.productName,
         moneyOff: responseDATA.moneyOff,
         price: responseDATA.price,
         quantity_sold: responseDATA.quantitySold
@@ -56,7 +56,7 @@ export async function get1Product(productId: string): Promise<ProductModel>  {
 
 export async function getAllProducts(page:number): Promise<ProductsAPIInterface> {
     const link: string = `http://localhost:8080/api/products/get-all?page=${page}&size=8`
-    console.log(link);
+
     return getProduct(link);
 }
 
@@ -82,8 +82,8 @@ export async function getTop4Product(): Promise<ProductModel[]> {
 
     const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
         product_id: item.productId,
-        description: item.productName,
-        product_name: item.description,
+        description: item.description,
+        product_name: item.productName,
         moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
@@ -101,8 +101,8 @@ export async function get4NewestProduct(): Promise<ProductModel[]> {
 
     const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
         product_id: item.productId,
-        description: item.productName,
-        product_name: item.description,
+        description: item.description,
+        product_name: item.productName,
         moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
@@ -120,8 +120,8 @@ export async function getSameTypeProduct(productId: string): Promise<ProductMode
 
     const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
         product_id: item.productId,
-        description: item.productName,
-        product_name: item.description,
+        description: item.description,
+        product_name: item.productName,
         moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold
@@ -139,8 +139,8 @@ export async function getDiscountingProduct(page:number): Promise<ProductModel[]
 
     const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
         product_id: item.productId,
-        description: item.productName,
-        product_name: item.description,
+        description: item.description,
+        product_name: item.productName,
         moneyOff: item.moneyOff,
         price: item.price,
         quantity_sold: item.quantitySold

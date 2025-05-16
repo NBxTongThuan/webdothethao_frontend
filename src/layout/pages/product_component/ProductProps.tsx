@@ -89,7 +89,7 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                     {productImage ? (
                         <div className="relative">
                             <img
-                                src={productImage.data || "abc"}
+                                src={productImage.url || "abc"}
                                 alt="product"
                                 className="w-full h-64 object-cover transform group-hover:scale-105 transition-transform duration-300"
                             />

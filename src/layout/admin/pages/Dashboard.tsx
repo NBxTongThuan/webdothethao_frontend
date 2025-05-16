@@ -24,7 +24,6 @@ import Column from 'antd/es/table/Column';
 import OrderDetailAdmin from '../components/OrderDetailAdmin';
 import { Link } from 'react-router-dom';
 import Notifications from './Notifications';
-import ChatBox from '../../component/ChatBox';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -56,8 +55,6 @@ const Dashboard: React.FC = () => {
     const [showAllNotificationModal, setShowAllNotificationModal] = useState<boolean>(false);
 
     const [listOrder, setListOrder] = useState<OrderResponse[]>([]);
-    const [totalElement, setTotalElement] = useState<number>(0);
-    const [size, setSize] = useState<number>(4);
 
     const [showOrderDetail, setShowOrderDetail] = useState<boolean>(false);
     const [selectedItem, setSelectedItem] = useState<string>("");
@@ -124,6 +121,27 @@ const Dashboard: React.FC = () => {
 
     }, [startDate, endDate, flag]);
 
+    const [totalRevenue, setTotalRevenue] = useState<number>(0);
+
+    useEffect(() => {
+        data.forEach(item => {
+            setTotalRevenue(prev => prev + item.total);
+        });
+    }, [data]);
+
+    
+
+    const [totalInterest, setTotalInterest] = useState<number>(0);
+
+    useEffect(() => {
+        data2.forEach(item => {
+            setTotalInterest(prev => prev + item.total);
+        });
+    }, [data2]);
+
+    console.log(totalRevenue);
+    console.log(totalInterest);
+
     useEffect(() => {
         if (startDate && endDate) {
             getInterestByDate(startDate, endDate).then(
@@ -153,7 +171,7 @@ const Dashboard: React.FC = () => {
                 tension: 0.4,
                 fill: true,
             }
-        ],
+        ]
     };
 
 
@@ -181,6 +199,8 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         getCountIsInStockProduct().then(setCountIsInStockProduct);
     }, []);
+
+
 
     return (
         <AdminLayout>
@@ -266,6 +286,7 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+
                         <div className="flex items-center">
                             <div className="p-4 rounded-xl bg-yellow-100">
                                 <i className="fas fa-dollar-sign text-yellow-500 text-2xl"></i>
@@ -299,6 +320,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 mb-8">
+                    
                     <div className="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                         <div className="flex items-center justify-between mb-6">
                             <h5 className="text-xl font-semibold text-gray-800">Biểu đồ doanh thu từ ngày {startDate} đến ngày {endDate}</h5>
@@ -315,46 +337,68 @@ const Dashboard: React.FC = () => {
                                         setStartDate(format(subDays(new Date(), 30), 'yyyy-MM-dd'));
                                         setEndDate(format(new Date(), 'yyyy-MM-dd'));
                                     }
-                                }
-
-                                }
-                            
-
-                            />
-                        </div>
-                        <div className="h-80">
-
-                            {data.length > 0 ? 
-                                
-                                <Line
-                                data={revenueData}
-                                options={{
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: {
-                                            position: 'top' as const,
-                                        },
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            grid: {
-                                                color: 'rgba(0, 0, 0, 0.05)',
-                                            },
-                                        },
-                                        x: {
-                                            grid: {
-                                                display: false,
-                                            },
-                                        },
-                                    },
                                 }}
                             />
+                        </div>
 
-                                 : <div className="flex items-center justify-center h-full">
-                                <p className="text-gray-500">Không có dữ liệu</p>
-                            </div>}
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-2'>
+                                    <div className='bg-white p-2 rounded-lg shadow-md'>
+                                        <h3 className="text-lg font-semibold text-gray-700">Tổng doanh thu</h3>
+                                        <p className="text-2xl font-bold text-blue-600">{NumberFormat(totalRevenue)} VNĐ</p>
+                                    </div>
+                                    <div className='bg-white p-2 rounded-lg shadow-md'> 
+                                        <h3 className="text-lg font-semibold text-gray-700">Tổng lãi</h3>
+                                        <p className="text-2xl font-bold text-red-600">{NumberFormat(totalInterest)} VNĐ</p>
+                                    </div>
+                                    
+                                </div>
+
+                        <div className="h-80">
+                            {data.length > 0 ? (
+                                <Line
+                                    data={revenueData}
+                                    options={{
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                position: 'top' as const,
+                                            },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        return `${context.dataset.label}: ${NumberFormat(Number(context.raw))} VNĐ`;
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                grid: {
+                                                    color: 'rgba(0, 0, 0, 0.05)',
+                                                },
+                                                ticks: {
+                                                    callback: function(value) {
+                                                        return NumberFormat(Number(value)) + ' VNĐ';
+                                                    }
+                                                }
+                                            },
+                                            x: {
+                                                grid: {
+                                                    display: false,
+                                                },
+                                            },
+                                        },
+                                    }}
+                                />
+                                
+                                
+                            ) : (
+                                <div className="flex items-center justify-center h-full">
+                                    <p className="text-gray-500">Không có dữ liệu</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

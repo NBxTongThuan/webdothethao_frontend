@@ -39,15 +39,16 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                 if (oldImage) {
                     updatedList.push({
                         ...oldImage,
-                        data: base64 || "",
+                        data: "",
+                        name: file.name,
+                        url: "/images/product_image/"+file.name
                     });
                 } else {
                     updatedList.push({
                         imageId: "",
                         name: file.name,
-                        data: base64 || "",
-                        url: ""
-
+                        data: "",
+                        url: "/images/product_image/"+file.name
                     });
                 }
             } else {
@@ -285,7 +286,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                 {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
                                                         {listImage[0] ?
-                                                            <img src={listImage[0].data} alt="Ảnh 1" className="w-full h-full object-cover" />
+                                                            <img src={listImage[0].url} alt="Ảnh 1" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>
@@ -303,7 +304,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                 {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
                                                         {listImage[1] ?
-                                                            <img src={listImage[1].data} alt="Ảnh 2" className="w-full h-full object-cover" />
+                                                            <img src={listImage[1].url} alt="Ảnh 2" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>
@@ -321,7 +322,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                                 {listImage.length > 0 ?
                                                     <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
                                                         {listImage[2] ?
-                                                            <img src={listImage[2].data} alt="Ảnh 3" className="w-full h-full object-cover" />
+                                                            <img src={listImage[2].url} alt="Ảnh 3" className="w-full h-full object-cover" />
                                                             : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
                                                         }
                                                     </div>

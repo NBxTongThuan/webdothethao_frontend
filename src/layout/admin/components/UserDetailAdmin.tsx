@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { User, Mail, Shield, Power, UserCircle, Phone, Calendar, MapPin, X } from "lucide-react";
 import { Button } from "antd";
 import { GenderAmbiguous } from "react-bootstrap-icons";
-
+import { adminGetUserDetail } from "../../../api/admin/UserAdminAPI";
 interface UserDetailAdminProps {
     user: UserResponse | null;
     onClose: () => void;
@@ -17,7 +17,7 @@ export const UserDetailAdmin: React.FC<UserDetailAdminProps> = (props) => {
 
     useEffect(() => {
         if (props.user) {
-            getUserDetail(props.user.username).then(setUserDetail);
+            adminGetUserDetail(props.user.username).then(setUserDetail);
         }
     }, [props.user]);
 

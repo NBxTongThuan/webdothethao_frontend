@@ -128,11 +128,11 @@ const ProductDetail: React.FC = () => {
 
   }, [selectedColor, selectedSize]);
 
-  const [mainImage, setMainImage] = useState(listImage[0]?.data || "");
+  const [mainImage, setMainImage] = useState(listImage[0]?.url || "");
 
   useEffect(() => {
     if (listImage.length > 0) {
-      setMainImage(listImage[0].data ? listImage[0].data : "");
+      setMainImage(listImage[0].url ? listImage[0].url : "");
     }
   }, [listImage])
 
@@ -241,16 +241,16 @@ const handleGetColorString = () => {
               {listImage.map((img, index) => (
                 <div
                   key={index}
-                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${mainImage === img.data ? "ring-2 ring-red-500 ring-offset-2" : ""
+                  className={`relative rounded-xl overflow-hidden cursor-pointer transform transition-all duration-200 hover:scale-105 ${mainImage === img.url ? "ring-2 ring-red-500 ring-offset-2" : ""
                     }`}
-                  onClick={() => setMainImage(img.data || "")}
+                  onClick={() => setMainImage(img.url || "")}
                 >
                   <img
-                    src={img.data}
+                    src={img.url}
                     alt={`Thumbnail ${index + 1}`}
                     className="w-24 h-24 object-cover"
                   />
-                  {mainImage === img.data && (
+                  {mainImage === img.url && (
                     <div className="absolute inset-0 bg-red-500 bg-opacity-10" />
                   )}
                 </div>

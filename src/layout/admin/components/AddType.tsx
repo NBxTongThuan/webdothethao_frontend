@@ -43,7 +43,7 @@ const AddType: React.FC<ModalProps> = (props) => {
 
     const checkTypeNameExist = async (typeName: string, categoryName: string) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/types/checkExistsType?typeName=${typeName}&categoryName=${categoryName}`);
+            const response = await fetch(`http://localhost:8080/api/admin/types/check-exists?typeName=${typeName}&categoryName=${categoryName}`);
             const data = await response.json();
             if (data == true) {
                 setTypeNameError("Tên thể loại này đã tồn tại trong danh mục");
@@ -96,7 +96,7 @@ const AddType: React.FC<ModalProps> = (props) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/admin/types/addTypes`, {
+            const response = await fetch(`http://localhost:8080/api/admin/types/add`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
