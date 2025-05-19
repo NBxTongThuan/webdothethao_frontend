@@ -15,20 +15,20 @@ const AboutUs: React.FC = () => {
             <div className="container mx-auto px-4 py-12">
                 {/* Company Introduction */}
                 <div className="bg-white rounded-xl shadow-md p-8 mb-12">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Giới thiệu về WebDoTheThao</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Giới thiệu về cửa hàng YouSport</h2>
                     <div className="prose max-w-none">
-                        <p className="text-gray-600 mb-4">
-                            WebDoTheThao là đơn vị tiên phong trong lĩnh vực bán lẻ sản phẩm thể thao tại Việt Nam. 
-                            Với hơn 5 năm kinh nghiệm, chúng tôi tự hào mang đến cho khách hàng những sản phẩm 
+                        <p className="text-gray-600 mb-4 text-left">
+                            YouSport là đơn vị tiên phong trong lĩnh vực bán lẻ sản phẩm thể thao tại Việt Nam.
+                            Với hơn 5 năm kinh nghiệm, chúng tôi tự hào mang đến cho khách hàng những sản phẩm
                             thể thao chất lượng cao từ các thương hiệu nổi tiếng trên thế giới.
                         </p>
-                        <p className="text-gray-600 mb-4">
-                            Chúng tôi hiểu rằng mỗi vận động viên đều cần những trang thiết bị phù hợp để 
-                            phát huy tối đa tiềm năng của mình. Vì vậy, chúng tôi luôn cập nhật và đa dạng hóa 
+                        <p className="text-gray-600 mb-4 text-left">
+                            Chúng tôi hiểu rằng mỗi vận động viên đều cần những trang thiết bị phù hợp để
+                            phát huy tối đa tiềm năng của mình. Vì vậy, chúng tôi luôn cập nhật và đa dạng hóa
                             sản phẩm để đáp ứng mọi nhu cầu của khách hàng.
                         </p>
-                        <p className="text-gray-600">
-                            Với đội ngũ nhân viên tận tâm và chuyên nghiệp, chúng tôi cam kết mang đến 
+                        <p className="text-gray-600 text-left">
+                            Với đội ngũ nhân viên tận tâm và chuyên nghiệp, chúng tôi cam kết mang đến
                             trải nghiệm mua sắm tốt nhất cho khách hàng.
                         </p>
                     </div>

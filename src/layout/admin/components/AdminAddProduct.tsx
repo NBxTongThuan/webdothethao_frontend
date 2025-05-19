@@ -10,6 +10,7 @@ import { getAllType, getTypeByCategoryName } from '../../../api/admin/AdminTypes
 import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
 import { getAllCategory } from '../../../api/admin/CategoryAPI';
 import { getAllImage } from '../../../api/admin/AdminImagesAPI';
+import ReactQuill from 'react-quill';
 const { Column } = Table;
 const { Item } = Descriptions;
 
@@ -131,7 +132,7 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                     imageId: "",
                     name: file.name,
                     data: "",
-                    url: "/images/product_image/"+file.name
+                    url: "/images/product_image/" + file.name
                 });
             }
         }
@@ -318,7 +319,7 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                                 className="mt-8"
                                 onFinish={handleSubmit}
                             >
-                                <div className="space-y-6">
+                                <div className="space-y-6 mb-4">
                                     <div className="grid grid-cols-2 gap-8">
                                         <div className="space-y-6">
                                             <Form.Item
@@ -411,19 +412,46 @@ const AdminAddProduct: React.FC<ModalProps> = (props) => {
                                             </Form.Item>
 
 
-                                        </div>
 
+                                        </div>
+                                        <Form.Item
+                                            label={
+                                                <span className="font-medium text-gray-700 flex items-center gap-2">
+                                                    <FileText className="h-4 w-4" /> Mô tả
+                                                </span>
+                                            }
+                                            name="description"
+                                            valuePropName="value"
+                                            getValueFromEvent={(content) => content}
+                                            className="col-span-2 mb-4"
+                                        >
+
+                                            <ReactQuill
+                                                theme="snow"
+                                                className="bg-white rounded-lg w-full mb-8"
+                                                placeholder="Nhập mô tả sản phẩm"
+                                                style={{ height: '100px' }}
+                                                modules={{
+                                                    toolbar: [
+                                                      [{ header: [1, 2, 3, false] }],
+                                                      ['bold', 'italic', 'underline', 'strike'],
+                                                      [{ color: [] }, { background: [] }],
+                                                      [{ font: [] }, { size: [] }],
+                                                      [{ align: [] }],
+                                                      [{ list: 'ordered' }, { list: 'bullet' }],
+                                                      ['blockquote', 'code-block'],
+                                                      ['link', 'image'],
+                                                      ['clean'],
+                                                    ]
+                                                  }}
+                                            />
+                                        </Form.Item>
                                     </div>
 
-                                    <Form.Item
-                                        label={<span className="font-medium text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả sản phẩm</span>}
-                                        name="description"
-                                        rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
-                                    >
-                                        <Input.TextArea placeholder="Nhập mô tả chi tiết về sản phẩm" className="rounded-lg" rows={4} />
-                                    </Form.Item>
                                 </div>
-                                <div className="mt-8 space-y-6">
+
+
+                                <div className="mt-4 space-y-6">
                                     <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
                                         <Image className="h-5 w-5 text-blue-600" />
                                         Hình ảnh sản phẩm

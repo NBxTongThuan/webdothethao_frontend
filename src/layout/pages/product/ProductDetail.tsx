@@ -15,6 +15,7 @@ import { getListReview } from "../../../api/user/ReviewsAPI";
 import { ReviewsModel } from "../../../model/ReviewsModel";
 import { SameTypeProduct } from "../../component/SameTypeProduct";
 import { useAuth } from "../../../util/AuthContext";
+import 'react-quill/dist/quill.snow.css';
 const ProductDetail: React.FC = () => {
 
   const [listProductAttribute, setListProductAttribute] = useState<ProductAttributeModel[]>([]);
@@ -198,43 +199,44 @@ const ProductDetail: React.FC = () => {
 
   const handleGetVNColor = (value: string) => {
     switch (value) {
-        case "RED":
-            return "Đỏ";
-        case "BLUE":
-            return "Xanh dương";
-        case "GREEN":
-            return "Xanh lá";
-        case "YELLOW":
-            return "Vàng";
-        case "WHITE":
-            return "Trắng";
-        case "BLACK":
-            return "Đen";
-        case "PINK":
-            return "Hồng";
-        case "PURPLE":
-            return "Tím";
-        case "ORANGE":
-            return "Cam";
-        case "BROWN":
-            return "Nâu";
-        case "GRAY":
-            return "Xám";
-        default:
-            return value;
+      case "RED":
+        return "Đỏ";
+      case "BLUE":
+        return "Xanh dương";
+      case "GREEN":
+        return "Xanh lá";
+      case "YELLOW":
+        return "Vàng";
+      case "WHITE":
+        return "Trắng";
+      case "BLACK":
+        return "Đen";
+      case "PINK":
+        return "Hồng";
+      case "PURPLE":
+        return "Tím";
+      case "ORANGE":
+        return "Cam";
+      case "BROWN":
+        return "Nâu";
+      case "GRAY":
+        return "Xám";
+      default:
+        return value;
     }
-}
+  }
 
-const handleGetColorString = () => {
-  if (!colors || colors.length === 0) return "Chưa có thông tin";
-  return colors.map(color => handleGetVNColor(color)).join(", ");
-}
+  const handleGetColorString = () => {
+    if (!colors || colors.length === 0) return "Chưa có thông tin";
+    return colors.map(color => handleGetVNColor(color)).join(", ");
+  }
 
   return (
     <div className="mt-4 container mx-auto p-6 bg-white shadow-xl rounded-2xl">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Phần trên: Ảnh sản phẩm và Thông tin sản phẩm */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         {/* Ảnh sản phẩm */}
-        <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+        <div className="md:col-span-5 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
           <div className="flex">
             {/* Carousel ảnh nhỏ */}
             <div className="flex flex-col items-center gap-4 mr-4">
@@ -272,7 +274,7 @@ const handleGetColorString = () => {
         </div>
 
         {/* Thông tin sản phẩm */}
-        <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300 space-y-8">
+        <div className="md:col-span-7 bg-white rounded-xl shadow-lg p-8 hover:shadow-xl transition-shadow duration-300 space-y-8">
           <div>
             <h3 className="text-3xl font-bold text-gray-900 mb-4">{product?.product_name}</h3>
             <div className="flex items-center space-x-6 text-sm text-gray-600">
@@ -296,29 +298,29 @@ const handleGetColorString = () => {
 
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-                {product?.moneyOff && product?.moneyOff > 0 ? (
-                    <div>
-                        <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
-                            {NumberFormat(product.price)} VNĐ
-                        </span>
-                        <div className="flex items-center gap-2">
-                            <span className="text-xl font-bold text-red-500">
-                                {NumberFormat(product.price - product.moneyOff)} VNĐ
-                            </span>
-                            <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
-                                -{Math.round((1 - (product.price - product.moneyOff) / product.price) * 100)}%
-                            </span>
-                        </div>
-                    </div>
-                ) : (
+              {product?.moneyOff && product?.moneyOff > 0 ? (
+                <div>
+                  <span className="text-gray-400 text-sm line-through decoration-2 decoration-gray-400 hover:decoration-red-400 transition-all duration-300">
+                    {NumberFormat(product.price)} VNĐ
+                  </span>
+                  <div className="flex items-center gap-2">
                     <span className="text-xl font-bold text-red-500">
-                        {NumberFormat(product?.price || 0)} VNĐ
+                      {NumberFormat(product.price - product.moneyOff)} VNĐ
                     </span>
-                )}
+                    <span className="bg-yellow-100 text-red-600 px-2 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap">
+                      -{Math.round((1 - (product.price - product.moneyOff) / product.price) * 100)}%
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <span className="text-xl font-bold text-red-500">
+                  {NumberFormat(product?.price || 0)} VNĐ
+                </span>
+              )}
             </div>
             <span className="text-sm text-gray-500 flex items-center">
-                <i className="fas fa-shopping-bag mr-1"></i>
-                Đã bán: {product?.quantity_sold}
+              <i className="fas fa-shopping-bag mr-1"></i>
+              Đã bán: {product?.quantity_sold}
             </span>
           </div>
 
@@ -333,23 +335,23 @@ const handleGetColorString = () => {
                 <button
                   key={color}
                   className={`group relative w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-105 ${selectedColor === color
-                      ? "ring-2 ring-red-500 ring-offset-2"
-                      : ""
+                    ? "ring-2 ring-red-500 ring-offset-2"
+                    : ""
                     }`}
                   onClick={() => setSelectedColor(color)}
                 >
                   <span
                     className={`block w-full h-full rounded-xl border ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
-                        ? 'border-gray-300'
-                        : 'border-transparent'
+                      ? 'border-gray-300'
+                      : 'border-transparent'
                       }`}
                     style={{ backgroundColor: color }}
                   />
                   {selectedColor === color && (
                     <span className="absolute inset-0 flex items-center justify-center">
                       <i className={`fas fa-check text-lg ${color.toLowerCase() === 'white' || color.toLowerCase() === '#ffffff' || color.toLowerCase() === '#fff'
-                          ? 'text-gray-800'
-                          : 'text-white'
+                        ? 'text-gray-800'
+                        : 'text-white'
                         }`}></i>
                     </span>
                   )}
@@ -369,8 +371,8 @@ const handleGetColorString = () => {
                 <button
                   key={size}
                   className={`w-16 py-3 rounded-xl transition-all duration-200 font-medium ${selectedSize === size
-                      ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-red-500 text-white shadow-lg shadow-red-500/30"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                     }`}
                   onClick={() => setSelectedSize(size)}
                 >
@@ -421,8 +423,8 @@ const handleGetColorString = () => {
             <button
               onClick={handleSubmitAddToCart}
               className={`flex-1 py-4 rounded-xl text-white font-bold transition-all duration-200 flex items-center justify-center space-x-2 ${remainingQuantity > 0
-                  ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
-                  : "bg-gray-400 cursor-not-allowed"
+                ? "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-500/30"
+                : "bg-gray-400 cursor-not-allowed"
                 }`}
               disabled={remainingQuantity === 0}
             >
@@ -433,64 +435,65 @@ const handleGetColorString = () => {
         </div>
       </div>
 
-      {/* Thông số kỹ thuật */}
-      <div className="mt-12">
-        <h3 className="text-2xl font-bold mb-6">Thông tin chi tiết</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-50 rounded-2xl overflow-hidden">
-            <table className="w-full">
-              <tbody>
-                <tr className="border-b border-gray-200">
-                  <th className="p-4 text-left text-gray-600">Tên sản phẩm</th>
-                  <td className="p-4">{product?.product_name}</td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <th className="p-4 text-left text-gray-600 w-1/3">Giá</th>
-                  <td className="p-4">
-                    {product?.moneyOff && product?.moneyOff > 0 ? (
-                      <>
-                        <span className="text-red-600 font-medium text-base">
-                            {NumberFormat(product.price - product.moneyOff)} VNĐ
-                          </span>
-                          <span className="bg-yellow-100 text-red-600 py-0.5 px-1.5 rounded-full text-xs font-semibold">
-                            -{Math.round(
-                              (1 - (product.price - product.moneyOff) / product.price) * 100
-                            )}
-                            %
-                          </span>
-                          <span className="text-gray-400 text-sx line-through decoration-2 decoration-gray-400">
-                            {NumberFormat(product.price)} VNĐ
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-red-600 font-medium text-base">
-                          {NumberFormat(product?.price || 0)} VNĐ
-                        </span>
-                      )}
+      {/* Thông tin chi tiết: Thông số kỹ thuật & Mô tả sản phẩm */}
+<div className="mt-12 space-y-10">
+  {/* Thông số kỹ thuật */}
+  <div>
+    <h3 className="text-2xl font-bold mb-6">Thông số kỹ thuật</h3>
+    <div className="bg-gray-50 rounded-2xl overflow-hidden">
+      <table className="w-full">
+        <tbody>
+          <tr className="border-b border-gray-200">
+            <th className="p-4 text-left text-gray-600 w-1/2">Tên sản phẩm</th>
+            <td className="p-4 text-left">{product?.product_name}</td>
+          </tr>
+          <tr className="border-b border-gray-200">
+            <th className="p-4 text-left text-gray-600 ">Giá</th>
+            <td className="p-4 text-left">
+              {product?.moneyOff && product?.moneyOff > 0 ? (
+                <>
+                  <span className="text-red-600 font-medium text-base">
+                    {NumberFormat(product.price - product.moneyOff)} VNĐ
+                  </span>
+                  <span className="bg-yellow-100 text-red-600 py-0.5 px-1.5 rounded-full text-xs font-semibold ml-2">
+                    -{Math.round((1 - (product.price - product.moneyOff) / product.price) * 100)}%
+                  </span>
+                  <span className="text-gray-400 text-sm line-through ml-2">
+                    {NumberFormat(product.price)} VNĐ
+                  </span>
+                </>
+              ) : (
+                <span className="text-red-600 font-medium text-base">
+                  {NumberFormat(product?.price || 0)} VNĐ
+                </span>
+              )}
+            </td>
+          </tr>
+          <tr className="border-b border-gray-200">
+            <th className="p-4 text-left text-gray-600">Xuất xứ</th>
+            <td className="p-4 text-left">{brand?.country}</td>
+          </tr>
+          <tr>
+            <th className="p-4 text-left text-gray-600">Màu sắc</th>
+            <td className="p-4 text-left">{handleGetColorString()}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-                  
-                    
-                  </td>
-                </tr>
-                <tr className="border-b border-gray-200">
-                  <th className="p-4 text-left text-gray-600">Xuất xứ</th>
-                  <td className="p-4">{brand?.country}</td>
-                </tr>
-                <tr>
-                  <th className="p-4 text-left text-gray-600">Màu sắc</th>
-                  <td className="p-4">{handleGetColorString()}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="bg-gray-50 rounded-2xl p-6">
-            <h4 className="font-semibold mb-4">Mô tả sản phẩm</h4>
-            <p className="text-gray-600 leading-relaxed">
-              {product?.description || "Chưa có mô tả chi tiết cho sản phẩm này."}
-            </p>
-          </div>
-        </div>
-      </div>
+  {/* Mô tả sản phẩm */}
+  <div>
+    <h3 className="text-2xl font-bold mb-6">Mô tả sản phẩm</h3>
+    <div className="bg-gray-50 rounded-2xl p-6">
+      <div
+        className="text-gray-600 text-left [p.ql-align-center]:text-center [p.ql-align-right]:text-right [p.ql-align-justify]:text-justify"
+        dangerouslySetInnerHTML={{ __html: product?.description || "Chưa có mô tả chi tiết cho sản phẩm này." }}
+      />
+    </div>
+  </div>
+</div>
+
       {/* Reviews */}
       <Reviews listReview={listReview} />
 

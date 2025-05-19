@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ImageResponse, AdminProductResponse, TypesResponse, BrandResponse } from '../../../api/interface/Responses';
 import { toast } from "react-toastify";
 import { X, ArrowLeft, Edit, Save, Hash, DollarSign, Folder, List, Image, ShoppingCart, FileText, Building } from 'lucide-react';
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
 
 import { getTypeByCategoryName } from '../../../api/admin/AdminTypesAPI';
 import { getAllBrand } from '../../../api/admin/AdminBrandAPI';
@@ -41,14 +43,14 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                         ...oldImage,
                         data: "",
                         name: file.name,
-                        url: "/images/product_image/"+file.name
+                        url: "/images/product_image/" + file.name
                     });
                 } else {
                     updatedList.push({
                         imageId: "",
                         name: file.name,
                         data: "",
-                        url: "/images/product_image/"+file.name
+                        url: "/images/product_image/" + file.name
                     });
                 }
             } else {
@@ -128,7 +130,7 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                 toast.success("Cập nhật sản phẩm thành công");
                 props.onClose();
                 props.setFlag();
-             
+
             } else {
                 toast.error("Cập nhật sản phẩm thất bại");
                 props.onClose();
@@ -268,69 +270,100 @@ const AdminProductDetail: React.FC<ModalProps> = (props) => {
                                         <Input disabled className="bg-gray-50 text-gray-500 rounded-lg" />
                                     </Form.Item>
 
-                                    <div className="col-span-2">
                                     <Form.Item
-                                        label={<span className="font-medium text-gray-700 flex items-center gap-2"><FileText className="h-4 w-4" /> Mô tả</span>}
+                                        label={
+                                            <span className="font-medium text-gray-700 flex items-center gap-2">
+                                                <FileText className="h-4 w-4" /> Mô tả
+                                            </span>
+                                        }
                                         name="description"
+                                        valuePropName="value"
+                                        getValueFromEvent={(content) => content}
+                                        className="col-span-2"
                                     >
-                                        <Input.TextArea placeholder="Nhập mô tả" className="rounded-lg" rows={4} />
+                                      
+                                            <ReactQuill
+                                                theme="snow"
+                                                className="bg-white rounded-lg w-full"
+                                                placeholder="Nhập mô tả sản phẩm"
+                                                style={{ height: '200px' }}
+                                                modules={{
+                                                    toolbar: [
+                                                      [{ header: [1, 2, 3, false] }],
+                                                      ['bold', 'italic', 'underline', 'strike'],
+                                                      [{ color: [] }, { background: [] }],
+                                                      [{ font: [] }, { size: [] }],
+                                                      [{ align: [] }],
+                                                      [{ list: 'ordered' }, { list: 'bullet' }],
+                                                      ['blockquote', 'code-block'],
+                                                      ['link', 'image'],
+                                                      ['clean'],
+                                                    ]
+                                                  }}
+                                            />
+                                       
                                     </Form.Item>
-                                    </div>
 
-                                    <div className="col-span-2 grid grid-cols-3 gap-6">
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 1</span>}
-                                            name="image1"
-                                        >
-                                            <div className="space-y-2">
-                                                {listImage.length > 0 ?
-                                                    <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[0] ?
-                                                            <img src={listImage[0].url} alt="Ảnh 1" className="w-full h-full object-cover" />
-                                                            : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                        }
-                                                    </div>
-                                                    : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                }
-                                                <Input type="file" onChange={(e) => setFile1(e.target.files?.[0] || null)} className="rounded-lg" />
-                                            </div>
-                                        </Form.Item>
+                                    <div className="col-span-2">
+                                        <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-6">
+                                            <Image className="h-5 w-5 text-blue-600" />
+                                            Hình ảnh sản phẩm
+                                        </h3>
+                                        <div className="grid grid-cols-3 gap-6">
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 1</span>}
+                                                name="image1"
+                                            >
+                                                <div className="space-y-2">
+                                                    {listImage.length > 0 ?
+                                                        <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+                                                            {listImage[0] ?
+                                                                <img src={listImage[0].url} alt="Ảnh 1" className="w-full h-full object-cover" />
+                                                                : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                            }
+                                                        </div>
+                                                        : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                    }
+                                                    <Input type="file" onChange={(e) => setFile1(e.target.files?.[0] || null)} className="rounded-lg" />
+                                                </div>
+                                            </Form.Item>
 
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 2</span>}
-                                            name="image2"
-                                        >
-                                            <div className="space-y-2">
-                                                {listImage.length > 0 ?
-                                                    <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[1] ?
-                                                            <img src={listImage[1].url} alt="Ảnh 2" className="w-full h-full object-cover" />
-                                                            : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                        }
-                                                    </div>
-                                                    : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                }
-                                                <Input type="file" onChange={(e) => setFile2(e.target.files?.[0] || null)} className="rounded-lg" />
-                                            </div>
-                                        </Form.Item>
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 2</span>}
+                                                name="image2"
+                                            >
+                                                <div className="space-y-2">
+                                                    {listImage.length > 0 ?
+                                                        <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+                                                            {listImage[1] ?
+                                                                <img src={listImage[1].url} alt="Ảnh 2" className="w-full h-full object-cover" />
+                                                                : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                            }
+                                                        </div>
+                                                        : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                    }
+                                                    <Input type="file" onChange={(e) => setFile2(e.target.files?.[0] || null)} className="rounded-lg" />
+                                                </div>
+                                            </Form.Item>
 
-                                        <Form.Item
-                                            label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 3</span>}
-                                            name="image3"
-                                        >
-                                            <div className="space-y-2">
-                                                {listImage.length > 0 ?
-                                                    <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
-                                                        {listImage[2] ?
-                                                            <img src={listImage[2].url} alt="Ảnh 3" className="w-full h-full object-cover" />
-                                                            : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                        }
-                                                    </div>
-                                                    : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
-                                                }
-                                                <Input type="file" onChange={(e) => setFile3(e.target.files?.[0] || null)} className="rounded-lg" />
-                                            </div>
-                                        </Form.Item>
+                                            <Form.Item
+                                                label={<span className="font-medium text-gray-700 flex items-center gap-2"><Image className="h-4 w-4" /> Ảnh 3</span>}
+                                                name="image3"
+                                            >
+                                                <div className="space-y-2">
+                                                    {listImage.length > 0 ?
+                                                        <div className="relative w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden">
+                                                            {listImage[2] ?
+                                                                <img src={listImage[2].url} alt="Ảnh 3" className="w-full h-full object-cover" />
+                                                                : <div className="w-full h-full flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                            }
+                                                        </div>
+                                                        : <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400">Chưa có ảnh</div>
+                                                    }
+                                                    <Input type="file" onChange={(e) => setFile3(e.target.files?.[0] || null)} className="rounded-lg" />
+                                                </div>
+                                            </Form.Item>
+                                        </div>
                                     </div>
                                 </div>
 

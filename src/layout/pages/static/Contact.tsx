@@ -56,7 +56,7 @@ const Contact: React.FC = () => {
                                 <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Địa chỉ</h3>
                                     <p className="text-gray-600">
-                                        123 Đường ABC, Quận 1, TP.HCM<br />
+                                        Số 30, Phùng Khoang, Hà Đông, Hà Nội<br />
                                         Việt Nam
                                     </p>
                                 </div>
@@ -69,8 +69,7 @@ const Contact: React.FC = () => {
                                 <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Điện thoại</h3>
                                     <p className="text-gray-600">
-                                        +84 123 456 789<br />
-                                        +84 987 654 321
+                                       0869 325 957
                                     </p>
                                 </div>
                             </div>
@@ -82,8 +81,8 @@ const Contact: React.FC = () => {
                                 <div className="text-left">
                                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
                                     <p className="text-gray-600">
-                                        info@webdothethao.com<br />
-                                        support@webdothethao.com
+                                        tongthuan15092003@gmail.com<br />
+                                        support@yousport.com
                                     </p>
                                 </div>
                             </div>
