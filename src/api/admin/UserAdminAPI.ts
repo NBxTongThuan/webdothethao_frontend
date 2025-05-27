@@ -1,5 +1,5 @@
 import UserDetailModel from "../../model/UserDetailModel";
-import { UserResponse, UserStatsResponse } from "../interface/Responses";
+import { TopBuyerResponse, UserResponse, UserStatsResponse } from "../interface/Responses";
 import requestAPI from "../user/RequestApi";
 
 const url = "http://localhost:8080/api/admin/users";
@@ -86,5 +86,41 @@ export async function adminGetUserDetail(userName: string): Promise<UserDetailMo
     );      
 
     return userDetail;
+}
+
+export const getTopBuyer = async (): Promise<TopBuyerResponse[]> => {
+    const response = await fetch(`${url}/top-buyer?page=0&size=5`,
+        {
+            method: "GET",
+            credentials: "include",
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch top buyer");
+    }
+
+    const data = await response.json();
+
+    const listTopBuyer = data._embedded?.topBuyerResponseList;
+
+    if (!listTopBuyer || listTopBuyer.length === 0) {
+        return [];
+    }
+
+    const topBuyer: TopBuyerResponse[] = listTopBuyer.map((item:any) => ({
+        user: {
+            userId: item?.userResponse?.userId,
+            username: item?.userResponse?.username,
+            email: item?.userResponse?.email,
+            role: item?.userResponse?.role,
+            active: item?.userResponse?.active,
+            createdDate: item?.userResponse?.createdDate,
+            enable: item?.userResponse?.enable
+        },
+        totalBuy: item.totalBuy
+    }));
+
+    return topBuyer;
 }
 

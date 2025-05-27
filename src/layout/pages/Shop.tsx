@@ -54,8 +54,13 @@ const Shop: React.FC<ShopProps> = (props) => {
 
             {/* Main Content */}
             <div className="container mx-auto px-4 py-8">
-                <div className="bg-white rounded-2xl shadow-lg p-6">
-                    <ListProduct searchKeyword={props.searchKeyword} categoryId={categoryIdNumber} />
+                <div className="flex gap-6">
+                  {/* Main product list */}
+                  <div className="flex-1">
+                    <div className="bg-white rounded-2xl shadow-lg p-6">
+                      <ListProduct searchKeyword={props.searchKeyword} categoryId={categoryIdNumber} />
+                    </div>
+                  </div>
                 </div>
             </div>
         </div>

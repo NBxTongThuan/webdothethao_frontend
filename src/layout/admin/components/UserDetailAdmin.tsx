@@ -67,25 +67,25 @@ export const UserDetailAdmin: React.FC<UserDetailAdminProps> = (props) => {
                                 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <User size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Tên đăng nhập:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Tên đăng nhập:</span>
                                     <span>{props.user?.username}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <Mail size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Email:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Email:</span>
                                     <span>{props.user?.email}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <Shield size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Vai trò:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Vai trò:</span>
                                     <span>{props.user?.role}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <Power size={24} className={`${props.user?.enable ? 'text-green-500' : 'text-red-500'}`} />
-                                    <span className="font-medium min-w-[120px]">Trạng thái:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Trạng thái:</span>
                                     <span className={props.user?.enable ? 'text-green-600' : 'text-red-600'}>
                                         {props.user?.enable ? 'Hoạt động' : 'Không hoạt động'}
                                     </span>
@@ -97,32 +97,32 @@ export const UserDetailAdmin: React.FC<UserDetailAdminProps> = (props) => {
                                 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <UserCircle size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Họ và tên:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Họ và tên:</span>
                                     <span>{userDetail?.firstName} {userDetail?.lastName}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <GenderAmbiguous size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Giới tính:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Giới tính:</span>
                                     <span>{getGenderText(userDetail?.gender || "")}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <Calendar size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Ngày sinh:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Ngày sinh:</span>
                                     <span>{userDetail?.dateOfBirth}</span>
                                 </div>
 
                                 <div className="flex items-center gap-4 text-gray-600">
                                     <Phone size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Số điện thoại:</span>
+                                    <span className="text-left font-medium min-w-[120px]">Số điện thoại:</span>
                                     <span>{userDetail?.phoneNumber}</span>
                                 </div>
 
-                                <div className="flex gap-4 text-gray-600">
-                                    <MapPin size={24} className="text-blue-500" />
-                                    <span className="font-medium min-w-[120px]">Địa chỉ:</span>
-                                    <span>{userDetail?.ward}, {userDetail?.district}, {userDetail?.province}</span>
+                                <div className="flex items-center gap-4 text-gray-600">
+                                    <MapPin size={24} className=" text-blue-500" />
+                                    <span className="text-left font-medium min-w-[120px]">Địa chỉ:</span>
+                                    <span className="text-left font-normal">{userDetail?.ward}, {userDetail?.district}, {userDetail?.province}</span>
                                 </div>
                             </div>
                         </div>

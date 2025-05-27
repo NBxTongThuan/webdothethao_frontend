@@ -1,5 +1,5 @@
 import { promises } from "dns";
-import { RevenueResponse, AdminOrderResponse, InterestResponse } from "../interface/Responses";
+import { RevenueResponse, AdminOrderResponse, InterestResponse, CountRateOrder } from "../interface/Responses";
 
 
 const API_URL = 'http://localhost:8080/api/admin/orders';
@@ -241,3 +241,22 @@ export const getOrderAdminById = async (orderId: string): Promise<AdminOrderResp
         throw error;
     }
 };
+
+export const getCountRateOrder = async (): Promise<CountRateOrder> => {
+    try {
+        const response = await fetch(`${API_URL}/get-rate-by-status`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching count rate order:', error);
+        throw error;
+    }
+}   

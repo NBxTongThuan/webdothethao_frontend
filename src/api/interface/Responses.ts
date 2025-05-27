@@ -1,3 +1,15 @@
+export interface TopBuyerResponse{
+    user: UserResponse;
+    totalBuy: number;
+}
+
+export interface CountRateOrder{
+    orderCancel: number;
+    orderDelivered: number;
+    // orderProcessing: number;
+    // orderReceived: number;
+}
+
 export interface ChatMessageResponse {
     sender: string;
     receiver: string;

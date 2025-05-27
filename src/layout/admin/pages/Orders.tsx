@@ -10,6 +10,7 @@ import NumberFormat from '../../../util/NumberFormat';
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import Column from 'antd/es/table/Column';
+import dayjs from 'dayjs';
 
 const { Option } = Select;
 
@@ -177,6 +178,11 @@ const Orders: React.FC = () => {
                                 dataIndex="createdDate"
                                 key="createdDate"
                                 width={120}
+                                render={(createdDate) => (
+                                    <span className={`px-2 py-1 rounded-full text-sm font-medium ${createdDate}`}>
+                                        {dayjs(createdDate).format('DD/MM/YYYY HH:mm')}
+                                    </span>
+                                )}
                             // ellipsis={true}
                             />
                             {/* <Column

@@ -30,7 +30,7 @@ import { AuthProvider } from './util/AuthContext';
 import OrderSuccess from './result-page/OrderSuccess';
 import DiscountingProducts from './layout/admin/pages/DiscoutingProducs';
 import MyAddress from './layout/pages/user/MyAddress';
-
+import Statistical from './layout/admin/pages/Statistical';
 
 
 const MyRoute = () => {
@@ -77,6 +77,7 @@ const MyRoute = () => {
         <Route path="/admin/types" element={<Types />} />
         <Route path='/admin' element={<LoginAdmin />} />
         <Route path="/admin/discounting-product" element={<DiscountingProducts />} />
+        <Route path="/admin/statistical" element={<Statistical />} />
       </Routes>
       {!isAdminPath && <Footer />}
     </div>

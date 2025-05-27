@@ -14,7 +14,8 @@ import {
     AppstoreOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    PercentageOutlined
+    PercentageOutlined,
+    BarChartOutlined
 } from '@ant-design/icons';
 
 const Sidebar: React.FC = () => {
@@ -47,30 +48,31 @@ const Sidebar: React.FC = () => {
         { path: '/admin/orders', icon: <ShoppingCartOutlined />, label: 'Quản lý đơn hàng' },
         { path: '/admin/categories', icon: <TagsOutlined />, label: 'Quản lý danh mục' },
         { path: '/admin/types', icon: <AppstoreOutlined />, label: 'Quản lý thể loại' },
-        { path: '/admin/discounting-product', icon: <PercentageOutlined />, label: 'Sản phẩm giảm giá' }
+        { path: '/admin/discounting-product', icon: <PercentageOutlined />, label: 'Sản phẩm giảm giá' },
+        { path: '/admin/statistical', icon: <BarChartOutlined />, label: 'Thống kê' }
     ];
 
     return (
-        <div className={`${collapsed ? 'w-20' : 'w-64'} bg-gradient-to-b from-gray-800 to-gray-900 text-white min-h-screen transition-all duration-300 ease-in-out relative`}>
-            <div className="absolute right-0 top-4">
-                <Button
-                    type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    onClick={() => setCollapsed(!collapsed)}
-                    className="text-white hover:text-blue-400"
-                />
-            </div>
-            
-            <div className="p-4">
-                <div className="flex items-center justify-center mb-6">
-                    <img 
-                        src="/images/logo192.png" 
-                        alt="logo" 
-                        className={`transition-all duration-300 ${collapsed ? 'w-10' : 'w-24'}`}
+        <div className={`${collapsed ? 'w-20' : 'w-64'} bg-gradient-to-b from-gray-800 to-gray-900 text-white h-screen transition-all duration-300 ease-in-out relative overflow-y-auto`}>
+            <div className="sticky top-0 bg-gradient-to-b from-gray-800 to-gray-900 z-10">
+                <div className="absolute right-0 top-4">
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        className="text-white hover:text-blue-400"
                     />
                 </div>
                 
-                <div className="flex items-center justify-center mb-6">
+                <div className="p-4">
+                    <div className="flex items-center justify-center mb-6">
+                        <img 
+                            src="/images/logo192.png" 
+                            alt="logo" 
+                            className={`transition-all duration-300 ${collapsed ? 'w-10' : 'w-24'}`}
+                        />
+                    </div>
+                    
                     <Popover
                         content={
                             <Space direction="vertical" style={{ width: '100%' }}>
@@ -111,11 +113,9 @@ const Sidebar: React.FC = () => {
                 </div>
             </div>
 
-            {!collapsed && (
-                <div className="px-5 mb-6">
-                    <h4 className="text-xl font-semibold text-center text-blue-400">Admin Panel</h4>
-                </div>
-            )}
+            <div className="px-5 mb-6">
+                <h4 className="text-xl font-semibold text-center text-blue-400">Admin Panel</h4>
+            </div>
 
             <nav className="mt-4">
                 {menuItems.map((item) => (

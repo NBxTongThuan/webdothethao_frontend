@@ -114,9 +114,9 @@ const ProductProps: React.FC<ProductPropsInterface> = (props) => {
                            đã bán {props.product.quantity_sold}
                         </div>
                     </div>
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
+                    {/* <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
                         {props.product.description}
-                    </p>
+                    </p> */}
                     <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-1">
                             {props.product.moneyOff > 0 && (

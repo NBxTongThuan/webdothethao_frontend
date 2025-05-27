@@ -148,3 +148,38 @@ export async function getDiscountingProduct(page:number): Promise<ProductModel[]
 
     return listProducts;
 }
+
+export async function getByFilter(page:number, categoryId: number, price:number): Promise<ProductModel[]>{
+
+    let link:string = `http://localhost:8080/api/products/get-all?page=${page}&size=8`
+
+    if(categoryId == 0 && price !=0)
+    {
+        link = `http://localhost:8080/api/products/get-by-price?price=${price}&page=${page}&size=8`;
+    }
+    
+    else if(categoryId !=0 && price ==0)
+    {
+        link = `http://localhost:8080/api/products/page-by-category-id?categoryId=${categoryId}&page=${page}&size=8`
+    }
+    else if(categoryId != 0 && price !=0)
+    {
+        link = `http://localhost:8080/api/products/get-by-cate-price?categoryId=${categoryId}&price=${price}&page=${page}&size=8`
+    }
+
+   
+    const response = await requestAPI(link);
+
+    const responseDATA = response._embedded?.productsResponseList ?? [];
+
+    const listProducts: ProductModel[] = responseDATA.map((item: any) => ({
+        product_id: item.productId,
+        description: item.description,
+        product_name: item.productName,
+        moneyOff: item.moneyOff,
+        price: item.price,
+        quantity_sold: item.quantitySold
+    }));
+
+    return listProducts;
+}
