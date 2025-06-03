@@ -7,6 +7,7 @@ import { Modal } from "antd";
 interface PrintInvoicePageProps {
     orderId: string;
     customerName: string;
+    dateReceive:string;
     address: string;
     phone: string;
     email: string;
@@ -30,6 +31,7 @@ const PrintInvoicePage: React.FC<PrintInvoicePageProps> = ({
     phone,
     email,
     items,
+    dateReceive,
     total,
     onClose,
     visible
@@ -66,6 +68,7 @@ const PrintInvoicePage: React.FC<PrintInvoicePageProps> = ({
                         <Invoice
                             orderId={orderId}
                             customerName={customerName}
+                            dateReceive={dateReceive}
                             address={address}
                             phone={phone}
                             email={email}

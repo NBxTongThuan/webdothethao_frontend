@@ -186,7 +186,35 @@ const OrderDetail:React.FC = () => {
             default:
                 return 'bg-gray-100 text-gray-800';
         }
-    };
+    }
+
+    const handleGetVNColor = async (value: string) => {
+        switch (value) {
+            case "RED":
+                return "Đỏ";
+            case "BLUE":
+                return "Xanh";
+            case "GREEN":
+                return "Xanh lá";
+            case "YELLOW":
+                return "Vàng";
+            case "WHITE":
+                return "Trắng";
+            case "BLACK":
+                return "Đen";
+            case "PINK":
+                return "Hồng";
+            case "PURPLE":
+                return "Tím";
+            case "ORANGE":
+                return "Cam";
+            case "BROWN":
+                return "Nâu";
+            case "GRAY":
+                return "Xám";
+        }
+    }
+
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -449,6 +477,7 @@ const OrderDetail:React.FC = () => {
             {showPrintInvoice && (
                 <PrintInvoicePage
                     orderId={order.orderId}
+                    dateReceive = {order.dateReceive+""}
                     customerName={order.toName}
                     address={order.toAddress}
                     phone={order.toPhone}
