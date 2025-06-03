@@ -9,6 +9,7 @@ import { AdminGetOrderItemsByOrderId } from "../../../api/admin/AdminOrderItemAP
 import { AdminGetPaymentByOrderId } from "../../../api/admin/AdminPaymentAPI";
 import { AdminGet1Image } from "../../../api/admin/AdminImagesAPI";
 import NumberFormat from "../../../util/NumberFormat";
+import PrintInvoicePage from "../../component/PrintInvoicePage";
 interface ModalProps {
     orderId: string;
     onClose: () => void;
@@ -27,6 +28,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     const [showShipedConfirm, setShowShipedConfirm] = useState(false);
     const [showDontReceiptedConfirm, setShowDontReceiptedConfirm] = useState(false);
     const [showDeliveredConfirm, setShowDeliveredConfirm] = useState(false);
+    const [showPrintInvoice, setShowPrintInvoice] = useState(false);
     useEffect(() => {
         if (props.orderId) {
             getOrderAdminById(props.orderId)
@@ -75,7 +77,7 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
     useEffect(() => {
         const fetchImages = async () => {
             const imagePromises = orderItems.map(item =>
-                    AdminGet1Image(item.productId)
+                AdminGet1Image(item.productId)
                     .then(image => ({ id: item.productId, url: image?.url || '' }))
                     .catch(() => ({ id: item.productId, url: '' }))
             );
@@ -367,9 +369,18 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                             <div className="bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-lg p-6 mb-6 border border-gray-100">
                                 <div className="flex justify-between items-center mb-6">
                                     <h1 className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">Chi tiết đơn hàng</h1>
-                                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)} shadow-sm`}>
-                                        {getStatusText(order.status)}
-                                    </span>
+                                    <div className="flex items-center gap-4">
+                                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)} shadow-sm`}>
+                                            {getStatusText(order.status)}
+                                        </span>
+                                        <button
+                                            onClick={() => setShowPrintInvoice(true)}
+                                            className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 hover:text-blue-700 transition-colors duration-200 font-medium shadow-sm"
+                                        >
+                                            <i className="fas fa-print mr-2"></i>
+                                            In hóa đơn
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
@@ -599,7 +610,27 @@ const OrderDetailAdmin: React.FC<ModalProps> = (props) => {
                                     </Button>
                                 </div>
                             </div>
+                            {showPrintInvoice && (
+                                <PrintInvoicePage
+                                    orderId={order.orderId}
+                                    dateReceive={order.dateReceive + ""}
+                                    customerName={order.toName}
+                                    address={order.toAddress}
+                                    phone={order.toPhone}
+                                    email={order.toEmail}
+                                    items={orderItems.map(item => ({
+                                        name: item.productName,
+                                        quantity: item.quantity,
+                                        price: item.finalPrice,
+                                        color: item.color,
+                                        size: item.size
 
+                                    }))}
+                                    total={order.finalPrice}
+                                    onClose={() => setShowPrintInvoice(false)}
+                                    visible={showPrintInvoice}
+                                />
+                            )}
                         </div>
                     </motion.div>
                 </motion.div>

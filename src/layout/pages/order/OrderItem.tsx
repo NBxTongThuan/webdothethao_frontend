@@ -89,7 +89,12 @@ const OrderItem: React.FC<OrderItemProps> = ({ cartItem }) => {
                         </span>
                     )}
                     <p className="text-sm text-gray-600">
-                        Tổng: {NumberFormat(cartItem.price * cartItem.quantity)} VNĐ
+                        Tổng: {
+
+                            cartItem?.moneyOff && cartItem?.moneyOff > 0 ?
+                                NumberFormat((cartItem.price - cartItem.moneyOff) * cartItem.quantity)
+                                : NumberFormat(cartItem.price * cartItem.quantity)
+                        } VNĐ
                     </p>
                 </div>
             </div>

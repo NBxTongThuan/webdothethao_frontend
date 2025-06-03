@@ -122,8 +122,9 @@ const Dashboard: React.FC = () => {
     }, [startDate, endDate, flag]);
 
     const [totalRevenue, setTotalRevenue] = useState<number>(0);
-
+    
     useEffect(() => {
+        setTotalRevenue(0);
         data.forEach(item => {
             setTotalRevenue(prev => prev + item.total);
         });
