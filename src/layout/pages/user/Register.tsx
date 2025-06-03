@@ -15,6 +15,8 @@ const Register: React.FC = () => {
     const [errorRePassword, setErrorRePassword] = useState('');
 
 
+    
+
     //HANDLE SUBMIT
     const handleSubmit = async (e: React.FormEvent) => {
         setErrorUserName('');
@@ -28,8 +30,9 @@ const Register: React.FC = () => {
         const isEmailValid = !await checkEmailExist(email);
         const isPasswordValid = !checkPassword(password);
         const isRePasswordValid = !checkRePassword(rePassword);
+        const isUserNameRegexValid = !checkUserName(userName);
 
-        if(isUserNameValid && isEmailValid && isPasswordValid && isRePasswordValid){
+        if(isUserNameValid && isEmailValid && isPasswordValid && isRePasswordValid && isUserNameRegexValid){
             const url = 'http://localhost:8080/api/account/register';
             const data = {
                 userName: userName,
@@ -85,6 +88,7 @@ const Register: React.FC = () => {
 
         checkUserNameExist(e.target.value);
 
+        checkUserName(e.target.value);
     }
     //HANDLE USERNAME
 
@@ -125,6 +129,16 @@ const Register: React.FC = () => {
             return true;
         }
         setErrorPassword('');
+        return false;
+    }
+
+    const checkUserName = (userName: string) => {
+        const userNameRegex = /^(?=.*[a-z])[a-z0-9]{4,}$/;
+        if (!userName.match(userNameRegex)) {
+            setErrorUserName('Tên đăng nhập phải chứa ít nhất 4 ký tự, bao gồm chữ cái và số');
+            return true;
+        }
+        setErrorUserName('');
         return false;
     }
 

@@ -134,13 +134,12 @@ const Dashboard: React.FC = () => {
     const [totalInterest, setTotalInterest] = useState<number>(0);
 
     useEffect(() => {
+        setTotalInterest(0);
         data2.forEach(item => {
             setTotalInterest(prev => prev + item.total);
         });
     }, [data2]);
 
-    console.log(totalRevenue);
-    console.log(totalInterest);
 
     useEffect(() => {
         if (startDate && endDate) {
